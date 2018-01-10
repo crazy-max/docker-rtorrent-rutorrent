@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  rtorrent:
+    image: crazymax/rtorrent:latest
+    container_name: rtorrent
+    ports:
+      - 5000:5000
+      - 6881:6881/udp
+      - 50000:50000
+      - 50000:50000/udp
+    environment:
+      - UID=1000
+      - GID=1000
+      - TZ=Europe/Paris
+    volumes:
+      - ./data:/home/rtorrent:rw
+    tty: true
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000
+    restart: always
