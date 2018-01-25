@@ -9,7 +9,8 @@
 
 ## About
 
-[rTorrent](https://github.com/rakshasa/rtorrent) Docker image based on Alpine Linux.
+🐳 [rTorrent](https://github.com/rakshasa/rtorrent) Docker image based on Alpine Linux.<br />
+If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 🐳 Docker images!
 
 ## Features
 
