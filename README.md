@@ -3,7 +3,7 @@
   <a href="https://travis-ci.org/crazy-max/docker-rtorrent"><img src="https://img.shields.io/travis/crazy-max/docker-rtorrent/master.svg?style=flat-square" alt="Build Status"></a>
   <a href="https://hub.docker.com/r/crazymax/rtorrent/"><img src="https://img.shields.io/docker/stars/crazymax/rtorrent.svg?style=flat-square" alt="Docker Stars"></a>
   <a href="https://hub.docker.com/r/crazymax/rtorrent/"><img src="https://img.shields.io/docker/pulls/crazymax/rtorrent.svg?style=flat-square" alt="Docker Pulls"></a>
-  <a href="https://saythanks.io/to/crazymax"><img src="https://img.shields.io/badge/thank-crazymax-426aa5.svg?style=flat-square" alt="Say Thanks"></a>
+  <a href="https://quay.io/repository/crazymax/rtorrent"><img src="https://quay.io/repository/crazymax/rtorrent/status?style=flat-square" alt="Docker Repository on Quay"></a>
   <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=EE33GDGPLZ4Q6"><img src="https://img.shields.io/badge/donate-paypal-7057ff.svg?style=flat-square" alt="Donate Paypal"></a>
 </p>
 
