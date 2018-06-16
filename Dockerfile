@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM alpine:3.7
 MAINTAINER CrazyMax <crazy-max@users.noreply.github.com>
 
 ARG BUILD_DATE
@@ -15,17 +15,18 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
   org.label-schema.vendor="CrazyMax" \
   org.label-schema.schema-version="1.0"
 
-ARG RTORRENT_VERSION=0.9.6
-ARG LIBTORRENT_VERSION=0.13.6
+ARG RTORRENT_VERSION=0.9.7
+ARG LIBTORRENT_VERSION=0.13.7
 ARG XMLRPC_VERSION=01.51.00
 ARG LIBSIG_VERSION=2.10.0
-ARG CARES_VERSION=1.13.0
-ARG CURL_VERSION=7.55.1
+ARG CARES_VERSION=1.14.0
+ARG CURL_VERSION=7.60.0
 
 RUN apk --update --no-cache add -t build-dependencies \
     build-base \
     git \
     libtool \
+    linux-headers \
     automake \
     autoconf \
     subversion \
@@ -49,41 +50,46 @@ RUN apk --update --no-cache add -t build-dependencies \
   && cd /tmp && wget https://curl.haxx.se/download/curl-${CURL_VERSION}.tar.gz \
   && tar zxf curl-${CURL_VERSION}.tar.gz \
   && cd curl-${CURL_VERSION}  && ./configure --enable-ares --enable-tls-srp --enable-gnu-tls --with-ssl --with-zlib && make && make install \
-  && cd /tmp && git clone https://github.com/rakshasa/libtorrent.git && cd libtorrent && git checkout tags/${LIBTORRENT_VERSION} \
+  && cd /tmp && git clone https://github.com/rakshasa/libtorrent.git && cd libtorrent && git checkout tags/v${LIBTORRENT_VERSION} \
   && ./autogen.sh && ./configure --with-posix-fallocate && make && make install \
-  && cd /tmp && git clone https://github.com/rakshasa/rtorrent.git && cd rtorrent && git checkout tags/${RTORRENT_VERSION} \
+  && cd /tmp && git clone https://github.com/rakshasa/rtorrent.git && cd rtorrent && git checkout tags/v${RTORRENT_VERSION} \
   && ./autogen.sh && ./configure --with-xmlrpc-c --with-ncurses && make && make install \
   && cd /tmp && rm -rf * \
   && apk del build-dependencies \
   && rm -rf /var/cache/apk/*
 
 RUN apk --update --no-cache add \
+    apache2-utils \
     ca-certificates \
     bind-tools \
     dhclient \
     libressl \
     libstdc++ \
     ncurses \
+    nginx \
     shadow \
     supervisor \
     tzdata \
     zlib \
+  && mkdir -p /var/log/supervisord \
   && rm -rf /var/cache/apk/*
 
-ENV HOME_PATH="/home/rtorrent" \
-  UID=1000 \
-  GID=1000
+ENV RTORRENT_HOME="/var/rtorrent" \
+  PUID=1000 \
+  PGID=1000
 
 ADD entrypoint.sh /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh \
-  && addgroup -g ${GID} rtorrent \
-  && adduser -u ${UID} -G rtorrent -h ${HOME_PATH} -s /bin/sh -D rtorrent
+  && addgroup -g ${PGID} rtorrent \
+  && adduser -u ${PUID} -G rtorrent -h /home/rtorrent -s /bin/sh -D rtorrent \
+  && usermod -a -G rtorrent nginx \
+  && chown -R nginx. /var/lib/nginx /var/log/nginx /var/tmp/nginx
 
 ADD assets /
 
-EXPOSE 5000 6881/udp 50000 50000/udp
-VOLUME [ "${HOME_PATH}" ]
+EXPOSE 6881/udp 8000 50000 50000/udp
+VOLUME [ "${RTORRENT_HOME}" ]
 
 ENTRYPOINT [ "/entrypoint.sh" ]
-CMD [ "/usr/bin/supervisord" ]
+CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]

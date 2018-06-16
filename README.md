@@ -1,3 +1,5 @@
+<p align="center"><a href="https://github.com/crazy-max/docker-rtorrent" target="_blank"><img height="128"src="https://raw.githubusercontent.com/crazy-max/docker-rtorrent/master/.res/docker-rtorrent.jpg"></a></p>
+
 <p align="center">
   <a href="https://microbadger.com/images/crazymax/rtorrent"><img src="https://images.microbadger.com/badges/version/crazymax/rtorrent.svg?style=flat-square" alt="Version"></a>
   <a href="https://travis-ci.org/crazy-max/docker-rtorrent"><img src="https://img.shields.io/travis/crazy-max/docker-rtorrent/master.svg?style=flat-square" alt="Build Status"></a>
@@ -15,50 +17,75 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 ## Features
 
 * Latest stable [rTorrent](https://github.com/rakshasa/rtorrent) / [libTorrent](https://github.com/rakshasa/libtorrent) release compiled from source
-* Enhanced [rTorrent config](assets/home/rtorrent/.rtorrent.rc) by default
+* Enhanced [rTorrent config](assets/var/rtorrent/.rtorrent.rc) by default
 * Name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) for asynchronous DNS requests (including name resolves)
 * Ability to remap user and group (UID/GID)
 * WAN IP address automatically resolved for reporting to the tracker
+* XMLRPC through nginx over SCGI socket with basic auth
 
 ## Environment variables
 
 * `TZ` : The timezone assigned to the container (default to `UTC`)
-* `UID` : The user id (default to `1000`)
-* `GID` : The group id (default to `1000`)
+* `PUID` : The user id (default to `1000`)
+* `PGID` : The group id (default to `1000`)
 * `WAN_IP` : Public IP address reported to the tracker (default auto resolved with `dig +short myip.opendns.com @resolver1.opendns.com`)
 
 ## Volumes
 
-* `/home/rtorrent` : rTorrent config, downloads, session files, log, ...
+* `/var/rtorrent` : rTorrent config, downloads, session files, log, ...
 
 ## Ports
 
-* `5000` : SCGI port (`scgi_port`)
-* `6881` : DHT UDP port (`dht_port`)
-* `50000` : Incoming connections (`port_range`)
+* `6881` : DHT UDP port (`dht.port.set`)
+* `8000` : XMLRPC port through nginx over SCGI socket with basic auth
+* `50000` : Incoming connections (`network.port_range.set`)
 
 ## Usage
 
-Docker compose is the recommended way to run this image. You can use the following [docker compose template](docker-compose.yml), then run the container :
+### Docker Compose
+
+Docker compose is the recommended way to run this image. Copy the content of folder [examples/compose](examples/compose) in `/var/rtorrent/` on your host for example. Edit the compose file with your preferences and run the following command :
 
 ```bash
 $ docker-compose up -d
 ```
 
-Or use the following command:
+### Command line
+
+You can also use the following command :
 
 ```bash
-$ docker run -d --name rtorrent -it \
+$ docker run -d --name rtorrent \
   --ulimit nproc=65535 nofile=32000:40000 \
-  -p 5000:5000 \
   -p 6881:6881/udp \
+  -p 8000:8000 \
   -p 50000:50000 \
   -p 50000:50000/udp \
   -e TZ="Europe/Paris" \
-  -e UID=1000 \
-  -e GID=1000 \
-  -v $(pwd)/data:/home/rtorrent \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -v $(pwd)/data:/var/rtorrent \
   crazymax/rtorrent:latest
+```
+
+## Notes
+
+### XMLRPC through nginx
+
+rTorrent 0.9.7+ has a built-in daemon mode disabling the user interface, so you can only control it via XMLRPC.<br />
+Nginx will route XMLRPC requests to rtorrent through port `8000`. These requests are secured with basic authentication through the `/var/rtorrent/rpc.htpasswd` file in which you will need to add a username with his password. You can use the following command to populate this file :
+
+```
+docker run --rm -it crazymax/rtorrent:latest htpasswd -Bbn <username> <password> > $(pwd)/data/rpc.htpasswd
+```
+
+## Upgrade
+
+To upgrade, pull the newer image and launch the container :
+
+```bash
+docker-compose pull
+docker-compose up -d
 ```
 
 ## How can i help ?
