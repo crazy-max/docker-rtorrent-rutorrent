@@ -6,7 +6,7 @@ method.insert = cfg.download_temp, private|const|string, (cat,(cfg.download),"te
 method.insert = cfg.logs, private|const|string, (cat,(cfg.basedir),"log/")
 method.insert = cfg.session, private|const|string, (cat,(cfg.basedir),".session/")
 method.insert = cfg.watch, private|const|string, (cat,(cfg.basedir),"watch/")
-method.insert = cfg.rundir, private|const|string, "/run/rtorrent/"
+method.insert = cfg.rundir, private|const|string, (cat,(cfg.basedir),"run/")
 
 # Run the rTorrent process as a daemon in the background
 # (and control via XMLRPC sockets)

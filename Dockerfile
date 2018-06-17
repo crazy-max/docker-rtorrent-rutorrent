@@ -7,7 +7,7 @@ ARG VERSION
 
 LABEL org.label-schema.build-date=$BUILD_DATE \
   org.label-schema.name="rtorrent" \
-  org.label-schema.description="rTorrent Docker image based on Alpine" \
+  org.label-schema.description="rTorrent Docker image based on Alpine Linux" \
   org.label-schema.version=$VERSION \
   org.label-schema.url="https://github.com/crazy-max/docker-rtorrent" \
   org.label-schema.vcs-ref=$VCS_REF \
@@ -59,6 +59,8 @@ RUN apk --update --no-cache add -t build-dependencies \
   && rm -rf /var/cache/apk/*
 
 RUN apk --update --no-cache add \
+    apache2 \
+    apache2-webdav \
     apache2-utils \
     ca-certificates \
     bind-tools \
@@ -83,12 +85,16 @@ ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh \
   && addgroup -g ${PGID} rtorrent \
   && adduser -u ${PUID} -G rtorrent -h /home/rtorrent -s /bin/sh -D rtorrent \
+  && usermod -a -G rtorrent apache \
+  && sed -i "s/^Listen 80/#Listen 80/g" /etc/apache2/httpd.conf \
+  && mkdir -p /etc/apache2/dav /run/apache2 \
+  && chown apache. /etc/apache2/dav \
   && usermod -a -G rtorrent nginx \
   && chown -R nginx. /var/lib/nginx /var/log/nginx /var/tmp/nginx
 
 ADD assets /
 
-EXPOSE 6881/udp 8000 50000 50000/udp
+EXPOSE 6881/udp 8000 9000 50000
 VOLUME [ "${RTORRENT_HOME}" ]
 
 ENTRYPOINT [ "/entrypoint.sh" ]

@@ -22,6 +22,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 * Ability to remap user and group (UID/GID)
 * WAN IP address automatically resolved for reporting to the tracker
 * XMLRPC through nginx over SCGI socket with basic auth
+* WebDAV on completed downloads with basic auth
 
 ## Environment variables
 
@@ -38,6 +39,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 * `6881` : DHT UDP port (`dht.port.set`)
 * `8000` : XMLRPC port through nginx over SCGI socket with basic auth
+* `9000` : WebDAV port with basic auth on completed downloads
 * `50000` : Incoming connections (`network.port_range.set`)
 
 ## Usage
@@ -59,8 +61,8 @@ $ docker run -d --name rtorrent \
   --ulimit nproc=65535 nofile=32000:40000 \
   -p 6881:6881/udp \
   -p 8000:8000 \
+  -p 9000:9000 \
   -p 50000:50000 \
-  -p 50000:50000/udp \
   -e TZ="Europe/Paris" \
   -e PUID=1000 \
   -e PGID=1000 \
@@ -70,10 +72,23 @@ $ docker run -d --name rtorrent \
 
 ## Notes
 
+### SCGI unix domain socket
+
+rTorrent socket is available in `/var/rtorrent/run/scgi.socket` if you want to use it with your favorite client (ruTorrent, Flood).
+
 ### XMLRPC through nginx
 
 rTorrent 0.9.7+ has a built-in daemon mode disabling the user interface, so you can only control it via XMLRPC.<br />
 Nginx will route XMLRPC requests to rtorrent through port `8000`. These requests are secured with basic authentication through the `/var/rtorrent/rpc.htpasswd` file in which you will need to add a username with his password. You can use the following command to populate this file :
+
+```
+docker run --rm -it crazymax/rtorrent:latest htpasswd -Bbn <username> <password> > $(pwd)/data/rpc.htpasswd
+```
+
+### WebDAV
+
+WebDAV allows you to retrieve your completed torrent files in `/var/rtorrent/downloads/completed` on port `9000`.<br />
+Like XMLRPC, these requests are secured with basic authentication through the `/var/rtorrent/webdav.htpasswd` file in which you will need to add a username with his password. You can use the following command to populate this file :
 
 ```
 docker run --rm -it crazymax/rtorrent:latest htpasswd -Bbn <username> <password> > $(pwd)/data/rpc.htpasswd

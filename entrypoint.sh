@@ -23,13 +23,13 @@ fi
 mkdir -p ${RTORRENT_HOME}/downloads/complete \
   ${RTORRENT_HOME}/downloads/temp \
   ${RTORRENT_HOME}/log \
+  ${RTORRENT_HOME}/run \
   ${RTORRENT_HOME}/.session \
-  ${RTORRENT_HOME}/watch \
-  /run/rtorrent
-touch ${RTORRENT_HOME}/rpc.htpasswd
+  ${RTORRENT_HOME}/watch
+touch ${RTORRENT_HOME}/rpc.htpasswd ${RTORRENT_HOME}/webdav.htpasswd ${RTORRENT_HOME}/log/rtorrent.log
 
 # Perms
-chown -R rtorrent. ${RTORRENT_HOME} /run/rtorrent
-chmod 644 ${RTORRENT_HOME}/.rtorrent.rc
+chown -R rtorrent. ${RTORRENT_HOME}
+chmod 644 ${RTORRENT_HOME}/.rtorrent.rc ${RTORRENT_HOME}/*.htpasswd
 
 exec "$@"
