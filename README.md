@@ -91,7 +91,7 @@ WebDAV allows you to retrieve your completed torrent files in `/var/rtorrent/dow
 Like XMLRPC, these requests are secured with basic authentication through the `/var/rtorrent/webdav.htpasswd` file in which you will need to add a username with his password. You can use the following command to populate this file :
 
 ```
-docker run --rm -it crazymax/rtorrent:latest htpasswd -Bbn <username> <password> > $(pwd)/data/rpc.htpasswd
+docker run --rm -it crazymax/rtorrent:latest htpasswd -Bbn <username> <password> > $(pwd)/data/webdav.htpasswd
 ```
 
 ## Upgrade
