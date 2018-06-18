@@ -27,6 +27,9 @@ mkdir -p ${RTORRENT_HOME}/downloads/complete \
   ${RTORRENT_HOME}/.session \
   ${RTORRENT_HOME}/watch
 touch ${RTORRENT_HOME}/rpc.htpasswd ${RTORRENT_HOME}/webdav.htpasswd ${RTORRENT_HOME}/log/rtorrent.log
+if [ ! -f ${RTORRENT_HOME}/.rtorrent.rc ]; then
+  cp /tpls/.rtorrent.rc ${RTORRENT_HOME}/.rtorrent.rc
+fi
 
 # Perms
 chown -R rtorrent. ${RTORRENT_HOME}

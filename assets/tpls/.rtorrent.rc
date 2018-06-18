@@ -8,10 +8,6 @@ method.insert = cfg.session, private|const|string, (cat,(cfg.basedir),".session/
 method.insert = cfg.watch, private|const|string, (cat,(cfg.basedir),"watch/")
 method.insert = cfg.rundir, private|const|string, (cat,(cfg.basedir),"run/")
 
-# Run the rTorrent process as a daemon in the background
-# (and control via XMLRPC sockets)
-system.daemon.set = true
-
 # Maximum and minimum number of peers to connect to per torrent.
 throttle.min_peers.normal.set = 1
 throttle.max_peers.normal.set = 100

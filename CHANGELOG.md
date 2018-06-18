@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.7-0.13.7-RC3 (2018/06/18)
+
+* Force rTorrent process as a daemon through command flag
+* Add .rtorrent.rc if not exist
+
 ## 0.9.7-0.13.7-RC2 (2018/06/17)
 
 * Move runtime data in `/var/rtorrent/run`
