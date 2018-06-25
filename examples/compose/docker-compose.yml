@@ -1,20 +1,63 @@
 version: '3.2'
 
 services:
-  rtorrent:
-    image: crazymax/rtorrent:latest
-    container_name: rtorrent
+  traefik:
+    image: traefik:1.6-alpine
+    command:
+      - --logLevel=INFO
+      - --defaultentrypoints=http,https
+      - --entryPoints=Name:http Address::80 Redirect.EntryPoint:https
+      - --entryPoints=Name:https Address::443 TLS
+      - --docker
+      - --docker.exposedbydefault=false
+      - --docker.domain=example.com
+      - --acme=false
+      - --acme.acmelogging=true
+      - --acme.email=webmaster@example.com
+      - --acme.storage=acme.json
+      - --acme.entryPoint=https
+      - --acme.onhostrule=true
+      - --acme.httpchallenge=true
     ports:
-      - "6881:6881/udp"
-      - "8000:8000"
-      - "9000:9000"
-      - "50000:50000"
-    environment:
-      - "PUID=1000"
-      - "PGID=1000"
-      - "TZ=Europe/Paris"
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
     volumes:
-      - ./data:/var/rtorrent
+      - ./acme.json:/acme.json
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+
+  rtorrent-rutorrent:
+    image: crazymax/rtorrent-rutorrent:latest
+    container_name: rtorrent-rutorrent
+    ports:
+      - target: 6881
+        published: 6881
+        protocol: udp
+      - target: 8000
+        published: 8000
+        protocol: tcp
+      - target: 9000
+        published: 9000
+        protocol: tcp
+      - target: 50000
+        published: 50000
+        protocol: tcp
+    env_file:
+      - rtorrent-rutorrent.env
+    volumes:
+      - ./data:/data
+      - ./passwd:/passwd
+    labels:
+      - traefik.enable=true
+      - traefik.backend=rutorrent
+      - traefik.port=80
+      - traefik.frontend.rule=Host:rutorrent.example.com
     ulimits:
       nproc: 65535
       nofile:

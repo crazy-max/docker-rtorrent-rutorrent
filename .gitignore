@@ -4,4 +4,4 @@
 
 # Custom
 /.dev
-/assets/var/rtorrent/*.htpasswd
+/assets/passwd/*.htpasswd

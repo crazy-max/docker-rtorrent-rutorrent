@@ -1,5 +1,20 @@
 # Changelog
 
+## 3.8-0.9.7-0.13.7-RC1 (2018/06/22)
+
+* Add ruTorrent 3.8 web client
+* Add option to remove core plugins of ruTorrent (default `erasedata,httprpc`)
+* Add a boostrap (default) config for rTorrent in `/etc/.rtlocal.rc`
+* Move `/var/rtorrent` to `/data/rtorrent`
+* Use Nginx WebDAV module instead of Apache
+* Compile Nginx from source for better performance
+* Remove Apache2 and implement Nginx WebDAV
+* Do not process entrypoint on `htpasswd` command
+* Add reverse proxy example with Traefik
+* Remove old docker tags `0.9.6-0.13.6` and `0.9.7-0.13.7`
+* Do not persist runtime data
+* Rename repository `rtorrent-rutorrent` (github and docker hub)
+
 ## 0.9.7-0.13.7-RC3 (2018/06/18)
 
 * Force rTorrent process as a daemon through command flag
