@@ -1,7 +1,7 @@
 <p align="center"><a href="https://github.com/crazy-max/docker-rtorrent-rutorrent" target="_blank"><img height="128"src="https://raw.githubusercontent.com/crazy-max/docker-rtorrent-rutorrent/master/.res/docker-rtorrent-rutorrent.jpg"></a></p>
 
 <p align="center">
-  <a href="https://microbadger.com/images/crazymax/rtorrent"><img src="https://images.microbadger.com/badges/version/crazymax/rtorrent.svg?style=flat-square" alt="Version"></a>
+  <a href="https://microbadger.com/images/crazymax/rtorrent-rutorrent"><img src="https://images.microbadger.com/badges/version/crazymax/rtorrent-rutorrent.svg?style=flat-square" alt="Version"></a>
   <a href="https://travis-ci.org/crazy-max/docker-rtorrent-rutorrent"><img src="https://img.shields.io/travis/crazy-max/docker-rtorrent-rutorrent/master.svg?style=flat-square" alt="Build Status"></a>
   <a href="https://hub.docker.com/r/crazymax/rtorrent-rutorrent/"><img src="https://img.shields.io/docker/stars/crazymax/rtorrent-rutorrent.svg?style=flat-square" alt="Docker Stars"></a>
   <a href="https://hub.docker.com/r/crazymax/rtorrent-rutorrent/"><img src="https://img.shields.io/docker/pulls/crazymax/rtorrent-rutorrent.svg?style=flat-square" alt="Docker Pulls"></a>
