@@ -79,7 +79,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 ### Docker Compose
 
-Docker compose is the recommended way to run this image. Copy the content of folder [examples/compose](examples/compose) in `/var/rtorrent/` on your host for example. Edit the compose file with your preferences and run the following command :
+Docker compose is the recommended way to run this image. Copy the content of folder [examples/compose](examples/compose) in `/var/rtorrent-rutorrent/` on your host for example. Edit the compose file with your preferences and run the following command :
 
 ```bash
 $ touch acme.json
@@ -93,7 +93,7 @@ $ docker-compose logs -f
 You can also use the following minimal command :
 
 ```bash
-$ docker run -d --name rtorrent \
+$ docker run -d --name rtorrent-rutorrent \
   --ulimit nproc=65535 nofile=32000:40000 \
   -p 80:80 \
   -p 6881:6881/udp \

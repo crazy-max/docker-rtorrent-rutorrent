@@ -32,7 +32,7 @@ install:
 
 before_script:
   - docker run -d --name $DOCKER_REPONAME $DOCKER_USERNAME/$DOCKER_REPONAME
-  - sleep 5
+  - sleep 10
   - docker logs $DOCKER_REPONAME
 
 script:
