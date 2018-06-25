@@ -39,15 +39,12 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 * `PUID` : The user id (default: `1000`)
 * `PGID` : The group id (default: `1000`)
 * `WAN_IP` : Public IP address reported to the tracker (default auto resolved with `dig +short myip.opendns.com @resolver1.opendns.com`)
-
 * `MEMORY_LIMIT` : PHP memory limit (default: `256M`)
 * `UPLOAD_MAX_SIZE` : Upload max size (default: `16M`)
 * `OPCACHE_MEM_SIZE` : PHP OpCache memory consumption (default: `128`)
-
 * `RT_LOG_LEVEL` : rTorrent log level (default: `info`)
 * `RT_LOG_EXECUTE` : Log executed commands to `/data/rtorrent/log/execute.log` (default: `false`)
 * `RT_LOG_XMLRPC` : Log XMLRPC queries to `/data/rtorrent/log/xmlrpc.log` (default: `false`)
-
 * `RU_REMOVE_CORE_PLUGINS` : Remove ruTorrent core plugins ; comma separated (default: `erasedata,httprpc`)
 * `RU_HTTP_USER_AGENT` : ruTorrent HTTP user agent (default: `Mozilla/5.0 (Windows NT 6.0; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0`)
 * `RU_HTTP_TIME_OUT` : ruTorrent HTTP timeout in seconds (default: `30`)
