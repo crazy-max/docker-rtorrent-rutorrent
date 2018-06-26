@@ -167,6 +167,8 @@ Here are the particular properties of this file :
 You can add a plugin for ruTorrent in `/data/rutorrent/plugins/`. If you add a plugin that already exists in ruTorrent, it will be removed from ruTorrent core plugins and yours will be used.<br />
 And you can also add a theme in `/data/rutorrent/themes/`. The same principle as for plugins will be used if you want to override one.
 
+> ⚠️ Container has to be restarted to propagate changes
+
 ### Edit a ruTorrent plugin configuration
 
 As you probably know, plugin configuration is not outsourced in ruTorrent. Loading the configuration of a plugin is done via a `conf.php` file placed at the root of the plugin folder.<br />
@@ -181,6 +183,8 @@ $notifySpaceLimit = 512;	// in Mb
 $partitionDirectory = null;	// if null, then we will check rtorrent download directory (or $topDirectory if rtorrent is unavailable)
 				// otherwise, set this to the absolute path for checked partition. 
 ```
+
+> ⚠️ Container has to be restarted to propagate changes
 
 ## Upgrade
 

@@ -1,6 +1,10 @@
 # Changelog
 
-## 3.8-0.9.7-0.13.7-RC1 (2018/06/22)
+## 3.8-0.9.7-0.13.7-RC2 (2018/06/26)
+
+* Include path error for custom plugins and themes
+
+## 3.8-0.9.7-0.13.7-RC1 (2018/06/25)
 
 * Add ruTorrent 3.8 web client
 * Add option to remove core plugins of ruTorrent (default `erasedata,httprpc`)

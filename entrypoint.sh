@@ -243,11 +243,10 @@ for plugin in ${plugins}; do
     echo "  WARNING: Plugin theme cannot be overriden"
     continue
   fi
-  if [ -d "/var/www/rutorrent/plugins/${plugin}" ]; then
-    rm -rf "/var/www/rutorrent/plugins/${plugin}"
-  fi
-  echo "  Symlinking custom plugin ${plugin}..."
-  ln -sf "${RUTORRENT_HOME}/plugins/${plugin}" "/var/www/rutorrent/plugins/${plugin}"
+  echo "  Copying custom plugin ${plugin}..."
+  rm -rf "/var/www/rutorrent/plugins/${plugin}"
+  cp -Rf "${RUTORRENT_HOME}/plugins/${plugin}" "/var/www/rutorrent/plugins/${plugin}"
+  chown -R rtorrent. "/var/www/rutorrent/plugins/${plugin}"
 done
 
 # Check ruTorrent plugins config
@@ -266,20 +265,19 @@ for pluginConfFile in ${RUTORRENT_HOME}/plugins-conf/*.php; do
     echo "  WARNING: Plugin $pluginName already present in ${RUTORRENT_HOME}/plugins/"
     continue
   fi
-  echo "  Symlinking ${pluginName} plugin config..."
-  rm -f "/var/www/rutorrent/plugins/${pluginName}/conf.php"
-  ln -sf "${pluginConfFile}" "/var/www/rutorrent/plugins/${pluginName}/conf.php"
+  echo "  Copying ${pluginName} plugin config..."
+  cp -f "${pluginConfFile}" "/var/www/rutorrent/plugins/${pluginName}/conf.php"
+  chown rtorrent. "/var/www/rutorrent/plugins/${pluginName}/conf.php"
 done
 
 # Check ruTorrent themes
 echo "Checking ruTorrent custom themes..."
 themes=$(ls -l ${RUTORRENT_HOME}/themes | egrep '^d' | awk '{print $9}')
 for theme in ${themes}; do
-  if [ -d "/var/www/rutorrent/plugins/theme/themes/${theme}" ]; then
-    rm -rf "/var/www/rutorrent/plugins/theme/themes/${theme}"
-  fi
-  echo "  Symlinking custom theme ${theme}..."
-  ln -sf "${RUTORRENT_HOME}/themes/${theme}" "/var/www/rutorrent/plugins/theme/themes/${theme}"
+  echo "  Copying custom theme ${theme}..."
+  rm -rf "/var/www/rutorrent/plugins/theme/themes/${theme}"
+  cp -Rf "${RUTORRENT_HOME}/themes/${theme}" "/var/www/rutorrent/plugins/theme/themes/${theme}"
+  chown -R rtorrent. "/var/www/rutorrent/plugins/theme/themes/${theme}"
 done
 
 # Perms
