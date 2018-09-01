@@ -1,11 +1,11 @@
-FROM alpine:3.7
-MAINTAINER CrazyMax <crazy-max@users.noreply.github.com>
+FROM alpine:3.8
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
-LABEL org.label-schema.build-date=$BUILD_DATE \
+LABEL maintainer="CrazyMax" \
+  org.label-schema.build-date=$BUILD_DATE \
   org.label-schema.name="rtorrent-rutorrent" \
   org.label-schema.description="rTorrent and ruTorrent Docker image based on Alpine Linux" \
   org.label-schema.version=$VERSION \
