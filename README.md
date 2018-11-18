@@ -6,6 +6,7 @@
   <a href="https://hub.docker.com/r/crazymax/rtorrent-rutorrent/"><img src="https://img.shields.io/docker/stars/crazymax/rtorrent-rutorrent.svg?style=flat-square" alt="Docker Stars"></a>
   <a href="https://hub.docker.com/r/crazymax/rtorrent-rutorrent/"><img src="https://img.shields.io/docker/pulls/crazymax/rtorrent-rutorrent.svg?style=flat-square" alt="Docker Pulls"></a>
   <a href="https://quay.io/repository/crazymax/rtorrent-rutorrent"><img src="https://quay.io/repository/crazymax/rtorrent-rutorrent/status?style=flat-square" alt="Docker Repository on Quay"></a>
+  <a href="https://www.codacy.com/app/crazy-max/docker-rtorrent-rutorrent"><img src="https://img.shields.io/codacy/grade/6474c343fbe745579b1cb12c8d193647.svg?style=flat-square" alt="Code Quality"></a>
   <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=EE33GDGPLZ4Q6"><img src="https://img.shields.io/badge/donate-paypal-7057ff.svg?style=flat-square" alt="Donate Paypal"></a>
 </p>
 
@@ -94,7 +95,8 @@ You can also use the following minimal command :
 
 ```bash
 $ docker run -d --name rtorrent-rutorrent \
-  --ulimit nproc=65535 nofile=32000:40000 \
+  --ulimit nproc=65535 \
+  --ulimit nofile=32000:40000 \
   -p 80:80 \
   -p 6881:6881/udp \
   -p 8000:8000 \
