@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.8-0.9.7-0.13.7-RC3 (2018/11/03)
+
+* Based on `nginx:stable-alpine`
+* Optimize layers
+
 ## 3.8-0.9.7-0.13.7-RC2 (2018/06/26)
 
 * Include path error for custom plugins and themes
