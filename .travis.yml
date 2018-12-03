@@ -6,52 +6,21 @@ services:
 env:
   global:
     - VERSION=3.8-0.9.7-0.13.7
-    - GITHUB_REPO=crazy-max/docker-rtorrent-rutorrent
+    - DOCKER_LOGIN=crazymax
     - DOCKER_USERNAME=crazymax
     - DOCKER_REPONAME=rtorrent-rutorrent
+    - QUAY_LOGIN=crazymax
     - QUAY_USERNAME=crazymax
     - QUAY_REPONAME=rtorrent-rutorrent
     - MICROBADGER_HOOK=https://hooks.microbadger.com/images/crazymax/rtorrent-rutorrent/HoI-Fu3Q-RfiARHShkfwWnnz350=
     - secure: aL467eTsXh/TyinxRTVf189zMr5LxLtbwDQIc2he5uJy3hqLcjSUEKtqFZ+RvePlHAFqRJQ+sg/Te8A6k11+lMf08Mu4lxbE33+wWlB6Mx8l8FV90fiDusZt6RQcCm0HKuhA1mk2uLnuPW3SJR+dvdgs4Vsee8xqbgJytEbu2/YFWPwm1pOC/I2ZGXk1769sBNrL9NYZBrXOjSDsbUa91hioGNjhUHRQ6lpzNPbxRCDqkwZS7ORnhcQe4r+EjecGPQwPOVTRvzkP0klUUvHknquEQ98acyv3tTy2zO2QYzaZ9dvD8ga26aChXc+0hhgs7QOY799Ok0A+hKWZxXH5vYfbd+uMkzTfMauwezYlJZG/t1XVsh4zex7go9QPfnwInMGSJgrvJ9kM1mbeHnTfLrFHIiSZ4WFYKmtPWsPywbHh30S4+uCfjuvYeAjzp2SmcmMpWpCUJXCRqCSIhKyyLksSdnmQD+FiV3Yrib2SYhPmWTUq8QooCPqNqn6jtqgyUNu8dPzH8z3JNwPuAa1qj90KyZr5wBBVF4+FFVbPvaeHXCZbNhfA1rrKh1TRFEDaUPmu2SpVo9N2pDwbuPS7qjryhM5cAGi2I8+Lf2Z/xipUgTp/My8RTdsbu/Lm65UFw3HTbOEMct2Nev6ebZDq75Rax9WdaZ3VJC0exWfxSUM= # DOCKER_PASSWORD
     - secure: b19wY7+mykJcNEL9rf6qwLQ2ABMf60KBHQ8BWUUl9dPThvM0WGAesFXEpK0MBS5m+qnkZQC6yLGZsL1hhMOYo8p8lwVmGPklrEEMBb9NIQ2pWUaV6QnP4cUQBECle8CBC29e8BYPtiKhShO/KQ659FPrPiIE/CynisDsCFJkXRcUs4H6+RR4P1ANsT0XV8UzY/VL9S9DDD7V//zVplo7LKU/MzzDT6XDRjdGRcgZ1WF+eARDcwsepic/JcmupOIiMDMXMinAj5dBGs1e2uQbKN9PNKxm4bXRkXGI8tsKlB5hiZFHBPfyI+yoDuGLyOtFoA7cSY7VdLT716p6fCz71OmmYRdquVZMgJUYejB2FRiExJ5IQPTZN1VB8l4N4XbA12ZJ3G/qwtGPEV47oPKUiSgAx8+2fc6JhVQn1lO+5U+pwLuPNu8TEnnJBC/6Irobrebq9KG0rwpVdbRTHzoRk+XPJIeOYmPSZ2wTga5u3pPjmx43dM6/6SOU38bXeogbOnM8aT+vawzHj4tlhLrj3f89eQQVU6+TubS1h+cquROpUtvRf0+JUs4QWeM6b8dX1hvV+7ti1/nJFG3jRVsFE5mC48e8S0duNNcHH4h8GrsBi4oc7GDBFWV3vJoVmtbpg4ZI4/PXyMC56LEjMP5UnoXd2Falm2CSWY0bsEZi6F0= # QUAY_PASSWORD
-    - secure: 3JIuGBmtHpmPGRpSz/HQcW3WcI4g604AkMNlYnQAv7lMnQFu+wOuROqRRUAXp5aKiGldOO5o2zaj6jq8pfroHUfJac5JkRgFk0tpUYUDC0Ib5x9UPCBz2F/ocGiLkDGNpLEIqy5W0ACa1emBtcQuETbuK+FkcwybDmvcx06g2BFl8z5yg1uuA3VEnLYaMa2U9nnpjlo5CRF8KHSKKJg8QOcgolUQX/pN2uP0wpQoQwnqOR90yGksgDz9PF+XgHeIWlhptitU91KXRRJbByrtmFyntd8KSTp/2LjpAPQHF8Jyddi7igyJd7DUxi4WELrduVpkeLa/EhvpcZO/4Cf4jE8pIsSHyFrRx8mV2ZOd7pzYQMgIOB/abQ5vL+InIvHHgMT5ZLgbqaVkjsIsnVJSUL48YT67gwj2gVBevDIDx7pgIhf4NGp+O3g0a3jGZy4JBEXe/GJR8DZc+fddiUikGtvBNkTvPElaVQsUucK7Atw6s50yOfuCWzZ1CXyL2Z8adwHuPWZoDKJvDBXnZU0tsjMrShF1daTAn1nm3wx66YQHqUjGA7Mp6r9v4cxNln382Q9YVYABEyeKdTILZF5IaRD25l3Rb4lyT5QfjWyO1umdb3zuD+/HTMoMMFtUgk41z4/x63X/I33CVYz8SBJJDwkOFpMwQrjDMsSCbciODMw= # GITHUB_TOKEN
 
 before_install:
   - sudo apt-get update
   - docker --version
-  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
-  - export DOCKER_TAG=$(if [ "$BRANCH" == "master" ]; then echo "latest"; else echo $BRANCH; fi)
-  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH, DOCKER_TAG=$DOCKER_TAG"
 
-install:
-  - |
-    docker build --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-    --build-arg VCS_REF=${TRAVIS_COMMIT::8} \
-    --build-arg VERSION=${VERSION} \
-    -t docker_build .
-
-before_script:
-  - docker run -d --name $DOCKER_REPONAME docker_build
-  - sleep 10
-  - docker logs $DOCKER_REPONAME
-
-script:
-  - docker ps | grep $DOCKER_REPONAME
-  - |
-    test $TRAVIS_PULL_REQUEST = false \
-    && echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin \
-    && docker tag docker_build $DOCKER_USERNAME/$DOCKER_REPONAME:$DOCKER_TAG \
-    && docker tag docker_build $DOCKER_USERNAME/$DOCKER_REPONAME:$VERSION \
-    && docker push $DOCKER_USERNAME/$DOCKER_REPONAME \
-    && curl -X POST $MICROBADGER_HOOK \
-    && echo "$QUAY_PASSWORD" | docker login quay.io --username "$QUAY_USERNAME" --password-stdin \
-    && docker tag docker_build quay.io/$DOCKER_USERNAME/$DOCKER_REPONAME:$DOCKER_TAG \
-    && docker tag docker_build quay.io/$DOCKER_USERNAME/$DOCKER_REPONAME:$VERSION \
-    && docker push quay.io/$QUAY_USERNAME/$QUAY_REPONAME
-
-branches:
-  except:
-    - /^[0-9]/
+script: ./build.sh
 
 notifications:
   webhooks:
