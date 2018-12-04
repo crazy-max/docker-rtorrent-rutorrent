@@ -87,8 +87,15 @@ while read LOGLINE; do
     exit 1
   fi
 done < <(docker logs -f ${PROJECT} 2>&1)
-docker rm -f ${PROJECT} > /dev/null 2>&1 || true
 echo
+
+CONTAINER_STATUS=$(docker container inspect --format "{{.State.Status}}" ${PROJECT})
+if [[ ${CONTAINER_STATUS} != "running" ]]; then
+  >&2 echo "ERROR: Container ${PROJECT} returned status '$CONTAINER_STATUS'"
+  docker rm -f ${PROJECT} > /dev/null 2>&1 || true
+  exit 1
+fi
+docker rm -f ${PROJECT} > /dev/null 2>&1 || true
 
 if [ "${VERSION}" == "local" -o "${TRAVIS_PULL_REQUEST}" == "true" ]; then
   echo "INFO: This is a PR or a local build, skipping push..."
