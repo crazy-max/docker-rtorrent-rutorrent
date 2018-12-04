@@ -1,6 +1,10 @@
 # Changelog
 
-## 3.8-0.9.7-0.13.7-RC3 (2018/11/03)
+## 3.8-0.9.7-0.13.7-RC4 (2018/12/04)
+
+* Nginx `default.conf` overrides our conf (Issue #1)
+
+## 3.8-0.9.7-0.13.7-RC3 (2018/12/03)
 
 * Based on `nginx:stable-alpine`
 * Optimize layers

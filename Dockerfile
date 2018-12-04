@@ -127,7 +127,8 @@ RUN apk --update --no-cache add \
   && usermod -a -G rtorrent nginx \
   && chown -R rtorrent. /data /var/log/php7 /var/www/rutorrent \
   && apk del build-dependencies \
-  && rm -rf /usr/src/nginx* \
+  && rm -rf /etc/nginx/conf.d/* \
+    /usr/src/nginx* \
     /tmp/* \
     /var/cache/apk/* \
     /var/www/rutorrent/.git* \
