@@ -73,6 +73,8 @@ RUN apk --update --no-cache add \
     grep \
     gzip \
     libressl \
+    libxml2-dev \
+    libxslt-dev \
     libstdc++ \
     mediainfo \
     ncurses \
