@@ -70,9 +70,9 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 ## Ports
 
-* `80` : ruTorrent HTTP port
 * `6881` : DHT UDP port (`dht.port.set`)
 * `8000` : XMLRPC port through nginx over SCGI socket
+* `8080` : ruTorrent HTTP port
 * `9000` : WebDAV port on completed downloads
 * `50000` : Incoming connections (`network.port_range.set`)
 
@@ -97,9 +97,9 @@ You can also use the following minimal command :
 $ docker run -d --name rtorrent-rutorrent \
   --ulimit nproc=65535 \
   --ulimit nofile=32000:40000 \
-  -p 80:80 \
   -p 6881:6881/udp \
   -p 8000:8000 \
+  -p 8080:8080 \
   -p 9000:9000 \
   -p 50000:50000 \
   -v $(pwd)/data:/data \

@@ -65,9 +65,9 @@ docker rm -f ${PROJECT} > /dev/null 2>&1 || true
 docker run -d \
   --ulimit nproc=65535 \
   --ulimit nofile=32000:40000 \
-  -p 80:80 \
   -p 6881:6881/udp \
   -p 8000:8000 \
+  -p 8080:8080 \
   -p 9000:9000 \
   -p 50000:50000 \
   --name ${PROJECT} ${BUILD_TAG}

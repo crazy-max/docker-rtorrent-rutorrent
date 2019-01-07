@@ -20,7 +20,8 @@ ENV RTORRENT_VERSION=0.9.7 \
   XMLRPC_VERSION=01.51.00 \
   LIBSIG_VERSION=2.10.0 \
   CARES_VERSION=1.14.0 \
-  CURL_VERSION=7.60.0
+  CURL_VERSION=7.60.0 \
+  NGINX_DAV_VERSION=3.0.0
 
 RUN apk --update --no-cache add -t build-dependencies \
     autoconf \
@@ -103,17 +104,17 @@ RUN apk --update --no-cache add \
     zlib \
   && apk --update --no-cache add -t build-dependencies \
     build-base \
-    git \
-    libressl-dev \
-    libxml2-dev \
     libxslt-dev \
+    libxml2-dev \
+    git \
     linux-headers \
+    libressl-dev \
     pcre-dev \
     zlib-dev \
   && cd /usr/src \
   && wget http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz \
   && tar zxvf nginx-$NGINX_VERSION.tar.gz \
-  && git clone -b master --single-branch https://github.com/arut/nginx-dav-ext-module.git \
+  && git clone -b v${NGINX_DAV_VERSION} --single-branch --depth 1 https://github.com/arut/nginx-dav-ext-module.git \
   && cd nginx-$NGINX_VERSION \
   && ./configure --with-compat --add-dynamic-module=../nginx-dav-ext-module \
   && make modules \
@@ -142,7 +143,7 @@ COPY assets /
 RUN chmod a+x /entrypoint.sh \
   && chown -R nginx. /etc/nginx/conf.d /var/log/nginx
 
-EXPOSE 80 6881/udp 8000 9000 50000
+EXPOSE 6881/udp 8000 8080 9000 50000
 VOLUME [ "/data", "/passwd" ]
 
 ENTRYPOINT [ "/entrypoint.sh" ]

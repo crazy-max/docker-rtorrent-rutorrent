@@ -55,7 +55,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.backend=rutorrent"
-      - "traefik.port=80"
+      - "traefik.port=8080"
       - "traefik.frontend.rule=Host:rutorrent.example.com"
     ulimits:
       nproc: 65535
