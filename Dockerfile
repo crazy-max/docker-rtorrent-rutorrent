@@ -103,10 +103,11 @@ RUN apk --update --no-cache add \
     zlib \
   && apk --update --no-cache add -t build-dependencies \
     build-base \
-    expat-dev \
     git \
-    linux-headers \
     libressl-dev \
+    libxml2-dev \
+    libxslt-dev \
+    linux-headers \
     pcre-dev \
     zlib-dev \
   && cd /usr/src \
