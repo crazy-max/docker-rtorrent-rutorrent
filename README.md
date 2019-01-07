@@ -36,6 +36,8 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 ## Environment variables
 
+### General
+
 * `TZ` : The timezone assigned to the container (default: `UTC`)
 * `PUID` : The user id (default: `1000`)
 * `PGID` : The group id (default: `1000`)
@@ -43,9 +45,15 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 * `MEMORY_LIMIT` : PHP memory limit (default: `256M`)
 * `UPLOAD_MAX_SIZE` : Upload max size (default: `16M`)
 * `OPCACHE_MEM_SIZE` : PHP OpCache memory consumption (default: `128`)
+
+### rTorrent
+
 * `RT_LOG_LEVEL` : rTorrent log level (default: `info`)
 * `RT_LOG_EXECUTE` : Log executed commands to `/data/rtorrent/log/execute.log` (default: `false`)
 * `RT_LOG_XMLRPC` : Log XMLRPC queries to `/data/rtorrent/log/xmlrpc.log` (default: `false`)
+
+### ruTorrent
+
 * `RU_REMOVE_CORE_PLUGINS` : Remove ruTorrent core plugins ; comma separated (default: `erasedata,httprpc`)
 * `RU_HTTP_USER_AGENT` : ruTorrent HTTP user agent (default: `Mozilla/5.0 (Windows NT 6.0; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0`)
 * `RU_HTTP_TIME_OUT` : ruTorrent HTTP timeout in seconds (default: `30`)
@@ -94,7 +102,7 @@ $ docker-compose logs -f
 You can also use the following minimal command :
 
 ```bash
-$ docker run -d --name rtorrent-rutorrent \
+$ docker run -d --name rtorrent_rutorrent \
   --ulimit nproc=65535 \
   --ulimit nofile=32000:40000 \
   -p 6881:6881/udp \

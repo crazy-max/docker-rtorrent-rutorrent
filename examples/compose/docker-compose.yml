@@ -3,6 +3,7 @@ version: "3.2"
 services:
   traefik:
     image: traefik:1.6-alpine
+    container_name: traefik
     command:
       - "--logLevel=INFO"
       - "--defaultentrypoints=http,https"
@@ -33,7 +34,7 @@ services:
 
   rtorrent-rutorrent:
     image: crazymax/rtorrent-rutorrent:latest
-    container_name: rtorrent-rutorrent
+    container_name: rtorrent_rutorrent
     ports:
       - target: 6881
         published: 6881
