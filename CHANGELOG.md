@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.8-0.9.7-0.13.7-RC5 (2019/01/07)
+## 3.8-0.9.7-0.13.7-RC5 (2019/01/08)
 
 * Bind ruTorrent HTTP port to unprivileged port : `8080`
 * Fix Nginx WebDAV module version
