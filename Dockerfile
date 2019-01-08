@@ -17,10 +17,10 @@ LABEL maintainer="CrazyMax" \
 
 ENV RTORRENT_VERSION=0.9.7 \
   LIBTORRENT_VERSION=0.13.7 \
-  XMLRPC_VERSION=01.51.00 \
-  LIBSIG_VERSION=2.10.0 \
+  XMLRPC_VERSION=01.54.00 \
+  LIBSIG_VERSION=2.10.1 \
   CARES_VERSION=1.14.0 \
-  CURL_VERSION=7.60.0 \
+  CURL_VERSION=7.63.0 \
   NGINX_DAV_VERSION=3.0.0
 
 RUN apk --update --no-cache add -t build-dependencies \
@@ -59,7 +59,7 @@ RUN apk --update --no-cache add -t build-dependencies \
   && rm -rf /tmp/* /var/cache/apk/*
 
 ENV RUTORRENT_VERSION="3.8" \
-  RUTORRENT_REVISION="44d43229f07212f20b53b6301fb25882125876c3"
+  RUTORRENT_REVISION="4d3029c"
 
 RUN apk --update --no-cache add \
     apache2-utils \
@@ -67,7 +67,6 @@ RUN apk --update --no-cache add \
     binutils \
     ca-certificates \
     coreutils \
-    curl \
     dhclient \
     ffmpeg \
     geoip \
