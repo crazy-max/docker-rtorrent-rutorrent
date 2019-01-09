@@ -2,7 +2,7 @@ version: "3.2"
 
 services:
   traefik:
-    image: traefik:1.6-alpine
+    image: traefik:1.7-alpine
     container_name: traefik
     command:
       - "--logLevel=INFO"
