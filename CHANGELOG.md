@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.8-0.9.7-0.13.7-RC6 (2019/01/09)
+
+* Allow to customize auth basic string (Issue #5)
+
 ## 3.8-0.9.7-0.13.7-RC5 (2019/01/08)
 
 * Bind ruTorrent HTTP port to unprivileged port : `8080`

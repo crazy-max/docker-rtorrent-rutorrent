@@ -45,6 +45,9 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 * `MEMORY_LIMIT` : PHP memory limit (default: `256M`)
 * `UPLOAD_MAX_SIZE` : Upload max size (default: `16M`)
 * `OPCACHE_MEM_SIZE` : PHP OpCache memory consumption (default: `128`)
+* `XMLRPC_AUTHBASIC_STRING` : Message displayed during validation of XMLRPC Basic Auth (default: `rTorrent XMLRPC restricted access`)
+* `RUTORRENT_AUTHBASIC_STRING` : Message displayed during validation of ruTorrent Basic Auth (default: `ruTorrent restricted access`)
+* `WEBDAV_AUTHBASIC_STRING` : Message displayed during validation of WebDAV Basic Auth (default: `WebDAV restricted access`)
 
 ### rTorrent
 

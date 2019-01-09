@@ -22,6 +22,10 @@ MEMORY_LIMIT=${MEMORY_LIMIT:-256M}
 UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-16M}
 OPCACHE_MEM_SIZE=${OPCACHE_MEM_SIZE:-128}
 
+XMLRPC_AUTHBASIC_STRING=${XMLRPC_AUTHBASIC_STRING:-rTorrent XMLRPC restricted access}
+RUTORRENT_AUTHBASIC_STRING=${RUTORRENT_AUTHBASIC_STRING:-ruTorrent restricted access}
+WEBDAV_AUTHBASIC_STRING=${WEBDAV_AUTHBASIC_STRING:-WebDAV restricted access}
+
 RT_LOG_LEVEL=${RT_LOG_LEVEL:-info}
 RT_LOG_EXECUTE=${RT_LOG_EXECUTE:-false}
 RT_LOG_XMLRPC=${RT_LOG_XMLRPC:-false}
@@ -72,18 +76,21 @@ sed -e "s/@OPCACHE_MEM_SIZE@/$OPCACHE_MEM_SIZE/g" \
 echo "Setting Nginx XMLRPC over SCGI configuration..."
 sed -e "s!@RTORRENT_RUN_PATH@!$RTORRENT_RUN_PATH!g" \
   -e "s!@PASSWD_PATH@!$PASSWD_PATH!g" \
+  -e "s!@XMLRPC_AUTHBASIC_STRING@!$XMLRPC_AUTHBASIC_STRING!g" \
   /tpls/etc/nginx/conf.d/rpc.conf > /etc/nginx/conf.d/rpc.conf
 
 # Nginx ruTorrent
 echo "Setting Nginx ruTorrent configuration..."
 sed -e "s!@PASSWD_PATH@!$PASSWD_PATH!g" \
   -e "s!@UPLOAD_MAX_SIZE@!$UPLOAD_MAX_SIZE!g" \
+  -e "s!@RUTORRENT_AUTHBASIC_STRING@!$RUTORRENT_AUTHBASIC_STRING!g" \
   /tpls/etc/nginx/conf.d/rutorrent.conf > /etc/nginx/conf.d/rutorrent.conf
 
 # Nginx WebDAV
 echo "Setting Nginx WebDAV configuration..."
 sed -e "s!@RTORRENT_HOME@!$RTORRENT_HOME!g" \
   -e "s!@PASSWD_PATH@!$PASSWD_PATH!g" \
+  -e "s!@WEBDAV_AUTHBASIC_STRING@!$WEBDAV_AUTHBASIC_STRING!g" \
   /tpls/etc/nginx/conf.d/webdav.conf > /etc/nginx/conf.d/webdav.conf
 
 # Init
