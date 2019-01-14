@@ -29,6 +29,8 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 * WebDAV on completed downloads (basic auth optional)
 * Ability to add a custom ruTorrent plugin / theme
 * Allow to persist specific configuration for ruTorrent plugins
+* ruTorrent [GeoIP2 plugin](https://github.com/Micdu70/geoip2-rutorrent)
+* [mktorrent](https://github.com/Rudde/mktorrent) installed for ruTorrent create plugin
 
 ### From docker-compose
 

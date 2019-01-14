@@ -242,6 +242,17 @@ do
   rm -rf /var/www/rutorrent/plugins/${i}
 done
 
+# Override ruTorrent plugins config
+echo "Overriding ruTorrent plugins config (create)..."
+cat > /var/www/rutorrent/plugins/create/conf.php <<EOL
+<?php
+
+\$useExternal = 'mktorrent';
+\$pathToCreatetorrent = '/usr/local/bin/mktorrent';
+\$recentTrackersMaxCount = 15;
+EOL
+chown nginx. /var/www/rutorrent/plugins/create/conf.php
+
 # Check ruTorrent plugins
 echo "Checking ruTorrent custom plugins..."
 plugins=$(ls -l ${RUTORRENT_HOME}/plugins | egrep '^d' | awk '{print $9}')

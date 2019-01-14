@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.8-0.9.7-0.13.7-RC7 (2019/01/14)
+
+* Add mktorrent for ruTorrent create plugin
+* Replace core ruTorrent GeoIP plugin with [GeoIP2 plugin](https://github.com/Micdu70/geoip2-rutorrent)
+
 ## 3.8-0.9.7-0.13.7-RC6 (2019/01/09)
 
 * Allow to customize auth basic string (Issue #5)
