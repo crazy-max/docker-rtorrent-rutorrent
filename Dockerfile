@@ -99,8 +99,8 @@ RUN apk --update --no-cache add -t build-dependencies \
   && apk del build-dependencies \
   && rm -rf /tmp/* /var/cache/apk/*
 
-ENV RUTORRENT_VERSION="3.8" \
-  RUTORRENT_REVISION="4d3029c"
+ENV RUTORRENT_VERSION="3.9" \
+  RUTORRENT_REVISION="702afd3"
 
 RUN apk --update --no-cache add \
     apache2-utils \
