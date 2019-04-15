@@ -49,7 +49,7 @@ services:
         published: 50000
         protocol: tcp
     env_file:
-      - rtorrent-rutorrent.env
+      - "./rtorrent-rutorrent.env"
     volumes:
       - "./data:/data"
       - "./passwd:/passwd"

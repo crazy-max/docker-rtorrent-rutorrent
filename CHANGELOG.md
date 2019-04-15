@@ -1,6 +1,10 @@
 # Changelog
 
-## 3.9-0.9.7-0.13.7-RC7 (2019/04/09)
+## 3.9-0.9.7-0.13.7-RC2 (2019/04/15)
+
+* Add `REAL_IP_FROM`, `REAL_IP_HEADER` and `LOG_IP_VAR` environment variables
+
+## 3.9-0.9.7-0.13.7-RC1 (2019/04/09)
 
 * ruTorrent 3.9
 
@@ -60,7 +64,7 @@
 
 ## 0.9.7-0.13.7-RC1 (2018/06/16)
 
-* Upgrade to rTorrent 0.9.7 and libTorrent 0.13.7
+* rTorrent 0.9.7 and libTorrent 0.13.7
 * Base image updated to Alpine Linux 3.7
 * Update c-ares to 1.14.0
 * Update curl to 7.60.0

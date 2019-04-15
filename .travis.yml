@@ -23,5 +23,8 @@ before_install:
 script: ./build.sh
 
 notifications:
-  webhooks:
-    secure: l8rFdiNwzvIFqeoi47bNHnZLLVF/VlwCj0JvLzKuchziQayKzDj9Ed4PEvZGM685cRgsIKR1fMg19yXB2OV4pZyImp4emwq5zcC5W4g46jjqG/3H7CDly5Lu6evIYeV3j4g0PeyzXYlSwB5fgrIOhwIcMzwFWaeZEJXbz+bpl7Qiz+Xpg5+7+ojyakPS5qRNnKeGgJY4KFgFPTJ8PzQQUGXVdgyQPn6Q114+efqVzbB0fX2F99J7d4J3w6uD1iX3suUnkSM+uot53qduGtP/sTD7egf7KZZENj0pTqUhLA69ZIwlp5DlDFyeX580w0YLy0M5k4YiHRJ49XVq0/HIAnyKrdjb+5iAjdIouKA8AW+IIisjF9RH7kqwAtMuwGM71YuCvGYEcOrHSteZMissUxBh3wF/R8pO8Jri6Fljb3pguQ3/Rz+07YrxLHTEZkDe5TGUApoOoNoGR2bTb+Ie6hSdGkaAWlG0Gko2dP0S5z1gjCEcYW+SKqHRl9GVqkz46tdwLhJ59YqYOKf9CAJ5JZC0TRoFelPv0qionMtNtFpGdNKHRHLv2z3qg6QK3BMDPQx37SRe5Tk2uccRcZjuvX2WuMa73SvCiNRQtebGsP7+fBx0y06cGk3tramn46y1T/oAkEVNquB0kpmVYFNZ4hsFYFF/Qi3ln794IiB+vgM=
+  email:
+    recipients:
+      - travisci@crazymax.dev
+    on_success: always
+    on_failure: always
