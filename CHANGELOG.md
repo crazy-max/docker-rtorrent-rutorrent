@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.9-0.9.7-0.13.7-RC3 (2019/04/28)
+
+* Add `large_client_header_buffers` Nginx config
+
 ## 3.9-0.9.7-0.13.7-RC2 (2019/04/15)
 
 * Add `REAL_IP_FROM`, `REAL_IP_HEADER` and `LOG_IP_VAR` environment variables
