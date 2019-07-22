@@ -101,7 +101,7 @@ RUN apk --update --no-cache add -t build-dependencies \
 
 ENV RUTORRENT_VERSION="3.9" \
   RUTORRENT_REVISION="ec8d8f1" \
-  GEOIP_EXT_VERSION="1.1.1" \
+  GEOIP_EXT_VERSION="1.1.1"
 
 RUN apk --update --no-cache add \
     apache2-utils \
