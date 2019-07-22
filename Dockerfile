@@ -15,12 +15,12 @@ LABEL maintainer="CrazyMax" \
   org.label-schema.vendor="CrazyMax" \
   org.label-schema.schema-version="1.0"
 
-ENV RTORRENT_VERSION=0.9.7 \
-  LIBTORRENT_VERSION=0.13.7 \
-  XMLRPC_VERSION=01.54.00 \
+ENV RTORRENT_VERSION=0.9.8 \
+  LIBTORRENT_VERSION=0.13.8 \
+  XMLRPC_VERSION=01.55.00 \
   LIBSIG_VERSION=2.10.1 \
   CARES_VERSION=1.14.0 \
-  CURL_VERSION=7.63.0 \
+  CURL_VERSION=7.65.3 \
   MKTORRENT_VERSION=1.1 \
   NGINX_DAV_VERSION=3.0.0
 
@@ -100,7 +100,8 @@ RUN apk --update --no-cache add -t build-dependencies \
   && rm -rf /tmp/* /var/cache/apk/*
 
 ENV RUTORRENT_VERSION="3.9" \
-  RUTORRENT_REVISION="702afd3"
+  RUTORRENT_REVISION="ec8d8f1" \
+  GEOIP_EXT_VERSION="1.1.1" \
 
 RUN apk --update --no-cache add \
     apache2-utils \
@@ -132,6 +133,7 @@ RUN apk --update --no-cache add \
     php7-xml \
     php7-zip \
     php7-zlib \
+    python2 \
     shadow \
     sox \
     supervisor \
@@ -147,10 +149,18 @@ RUN apk --update --no-cache add \
     build-base \
     libxslt-dev \
     libxml2-dev \
+    geoip-dev \
     git \
-    linux-headers \
+    libc-dev \
+    libffi-dev \
     libressl-dev \
+    linux-headers \
+    openssl-dev \
     pcre-dev \
+    php7-dev \
+    php7-pear \
+    py2-pip \
+    python2-dev \
     zlib-dev \
   # nginx webdav
   && mkdir -p /usr/src \
@@ -168,6 +178,7 @@ RUN apk --update --no-cache add \
   && git clone https://github.com/Novik/ruTorrent.git rutorrent \
   && cd rutorrent \
   && git checkout ${RUTORRENT_REVISION} \
+  && pip2 install cfscrape cloudscraper \
   # geoip2
   && git clone https://github.com/Micdu70/geoip2-rutorrent /var/www/rutorrent/plugins/geoip2 \
   && cd /var/www/rutorrent/plugins/geoip2/database \
@@ -176,6 +187,9 @@ RUN apk --update --no-cache add \
   && tar -xvzf GeoLite2-City.tar.gz --strip-components=1 \
   && tar -xvzf GeoLite2-Country.tar.gz --strip-components=1 \
   && rm -f *.gz \
+  && wget -q https://pecl.php.net/get/geoip-${GEOIP_EXT_VERSION}.tgz \
+  && pecl install geoip-${GEOIP_EXT_VERSION}.tgz \
+  && rm -f geoip-${GEOIP_EXT_VERSION}.tgz \
   # perms
   && addgroup -g 1000 rtorrent \
   && adduser -u 1000 -G rtorrent -h /home/rtorrent -s /sbin/nologin -D rtorrent \
@@ -191,6 +205,8 @@ RUN apk --update --no-cache add \
     /var/www/rutorrent/plugins/geoip \
     /var/www/rutorrent/plugins/geoip2/.git \
     /var/www/rutorrent/share
+
+ENV PYTHONPATH="$PYTHONPATH:/var/www/rutorrent"
 
 COPY entrypoint.sh /entrypoint.sh
 COPY assets /

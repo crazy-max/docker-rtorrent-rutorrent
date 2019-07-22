@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.9-0.9.8-0.13.8-RC1 (2019/07/22)
+
+* ruTorrent 3.9 revision [Novik/ruTorrent@ec8d8f1](https://github.com/Novik/ruTorrent/commit/ec8d8f1887af57793a671258072b59193a5d8d6c)
+* rTorrent 0.9.8 and libTorrent 0.13.8
+* XMLRPC 01.55.00
+* cURL 7.65.3
+
 ## 3.9-0.9.7-0.13.7-RC3 (2019/04/28)
 
 * Add `large_client_header_buffers` Nginx config
@@ -70,8 +77,8 @@
 
 * rTorrent 0.9.7 and libTorrent 0.13.7
 * Base image updated to Alpine Linux 3.7
-* Update c-ares to 1.14.0
-* Update curl to 7.60.0
+* c-ares 1.14.0
+* curl 7.60.0
 * Move `RTORRENT_HOME` to `/var/rtorrent`
 * XMLRPC through nginx over SCGI socket with basic auth
 * Do not expose SCGI port (use a local socket instead)
