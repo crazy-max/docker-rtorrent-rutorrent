@@ -5,7 +5,7 @@ services:
 
 env:
   global:
-    - VERSION=3.9-0.9.7-0.13.7
+    - VERSION=3.9-0.9.8-0.13.8
     - DOCKER_LOGIN=crazymax
     - DOCKER_USERNAME=crazymax
     - DOCKER_REPONAME=rtorrent-rutorrent
