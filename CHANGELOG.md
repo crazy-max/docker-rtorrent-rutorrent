@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.9-0.9.8-0.13.8-RC2 (2019/08/07)
+
+* Add healthcheck
+* Allow directory listing for WebDAV
+* Remove php-fpm access log (already mirrored by nginx)
+
 ## 3.9-0.9.8-0.13.8-RC1 (2019/07/22)
 
 * ruTorrent 3.9 revision [Novik/ruTorrent@ec8d8f1](https://github.com/Novik/ruTorrent/commit/ec8d8f1887af57793a671258072b59193a5d8d6c)

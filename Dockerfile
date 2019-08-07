@@ -211,7 +211,7 @@ ENV PYTHONPATH="$PYTHONPATH:/var/www/rutorrent"
 COPY entrypoint.sh /entrypoint.sh
 COPY assets /
 
-RUN chmod a+x /entrypoint.sh \
+RUN chmod a+x /entrypoint.sh /usr/local/bin/* \
   && chown -R nginx. /etc/nginx/conf.d /var/log/nginx
 
 EXPOSE 6881/udp 8000 8080 9000 50000
@@ -219,3 +219,6 @@ VOLUME [ "/data", "/passwd" ]
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
+
+HEALTHCHECK --interval=10s --timeout=5s \
+  CMD /usr/local/bin/healthcheck
