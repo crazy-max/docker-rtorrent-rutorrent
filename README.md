@@ -16,6 +16,8 @@
 🐳 [rTorrent](https://github.com/rakshasa/rtorrent) and [ruTorrent](https://github.com/Novik/ruTorrent) Docker image based on Alpine Linux.<br />
 If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 🐳 Docker images!
 
+💡 Want to be notified of new releases? Check out 🔔 [Diun (Docker Image Update Notifier)](https://github.com/crazy-max/diun) project!
+
 ## Features
 
 ### Included
