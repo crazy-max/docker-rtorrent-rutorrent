@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.9-0.9.8-0.13.8-RC3 (2019/09/04)
+
+* Create `share/torrents` for ruTorrent
+
 ## 3.9-0.9.8-0.13.8-RC2 (2019/08/07)
 
 * Add healthcheck
