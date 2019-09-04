@@ -115,6 +115,7 @@ mkdir -p ${PASSWD_PATH} \
   ${RUTORRENT_HOME}/plugins \
   ${RUTORRENT_HOME}/plugins-conf \
   ${RUTORRENT_HOME}/share/users \
+  ${RUTORRENT_HOME}/share/torrents \
   ${RUTORRENT_HOME}/themes \
   /run/rtorrent
 touch ${PASSWD_PATH}/rpc.htpasswd \
