@@ -220,5 +220,5 @@ VOLUME [ "/data", "/passwd" ]
 ENTRYPOINT [ "/entrypoint.sh" ]
 CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
 
-HEALTHCHECK --interval=10s --timeout=5s \
+HEALTHCHECK --interval=10s --timeout=5s --start-period=300s \
   CMD /usr/local/bin/healthcheck
