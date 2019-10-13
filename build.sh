@@ -55,9 +55,9 @@ echo
 echo "### Build"
 docker build \
   --build-arg BUILD_DATE=${BUILD_DATE} \
-  --build-arg VCS_REF=${VCS_REF} \
+  --build-arg VCS_REF="${VCS_REF}" \
   --build-arg VERSION=${VERSION} \
-  -t ${BUILD_TAG} -f ${DOCKERFILE} ${BUILD_WORKINGDIR}
+  -t ${BUILD_TAG} -f "${DOCKERFILE}" "${BUILD_WORKINGDIR}"
 echo
 
 echo "### Test"
@@ -75,8 +75,8 @@ echo
 
 echo "### Waiting for ${PROJECT} to be up..."
 TIMEOUT=$((SECONDS + RUNNING_TIMEOUT))
-while read LOGLINE; do
-  echo ${LOGLINE}
+while read -r LOGLINE; do
+  echo "${LOGLINE}"
   if [[ ${LOGLINE} == *"${RUNNING_LOG_CHECK}"* ]]; then
     echo "Container up!"
     break
@@ -97,31 +97,31 @@ if [[ ${CONTAINER_STATUS} != "running" ]]; then
 fi
 docker rm -f ${PROJECT} > /dev/null 2>&1 || true
 
-if [ "${VERSION}" == "local" -o "${TRAVIS_PULL_REQUEST}" == "true" ]; then
+if [[ "${VERSION}" == "local" ]] || [[ "${TRAVIS_PULL_REQUEST}" == "true" ]]; then
   echo "INFO: This is a PR or a local build, skipping push..."
   exit 0
 fi
-if [[ ! -z ${DOCKER_PASSWORD} ]]; then
+if [[ -n ${DOCKER_PASSWORD} ]]; then
   echo "### Push to Docker Hub..."
   echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_LOGIN" --password-stdin > /dev/null 2>&1
-  if [ "${DOCKER_TAG}" == "latest" -a "${PUSH_LATEST}" == "true" ]; then
-    docker tag ${BUILD_TAG} ${DOCKER_USERNAME}/${DOCKER_REPONAME}:${DOCKER_TAG}
+  if [[ "${DOCKER_TAG}" == "latest" ]] && [[ "${PUSH_LATEST}" == "true" ]]; then
+    docker tag ${BUILD_TAG} "${DOCKER_USERNAME}"/"${DOCKER_REPONAME}":${DOCKER_TAG}
   fi
   if [[ "${VERSION}" != "latest" ]]; then
-    docker tag ${BUILD_TAG} ${DOCKER_USERNAME}/${DOCKER_REPONAME}:${VERSION}
+    docker tag ${BUILD_TAG} "${DOCKER_USERNAME}"/"${DOCKER_REPONAME}":${VERSION}
   fi
-  docker push ${DOCKER_USERNAME}/${DOCKER_REPONAME}
+  docker push "${DOCKER_USERNAME}"/"${DOCKER_REPONAME}"
   echo
 fi
-if [[ ! -z ${QUAY_PASSWORD} ]]; then
+if [[ -n ${QUAY_PASSWORD} ]]; then
   echo "### Push to Quay..."
   echo "$QUAY_PASSWORD" | docker login quay.io --username "$QUAY_LOGIN" --password-stdin > /dev/null 2>&1
-  if [ "${DOCKER_TAG}" == "latest" -a "${PUSH_LATEST}" == "true" ]; then
-    docker tag ${BUILD_TAG} quay.io/${QUAY_USERNAME}/${QUAY_REPONAME}:${DOCKER_TAG}
+  if [[ "${DOCKER_TAG}" == "latest" ]] && [[ "${PUSH_LATEST}" == "true" ]]; then
+    docker tag ${BUILD_TAG} quay.io/"${QUAY_USERNAME}"/"${QUAY_REPONAME}":${DOCKER_TAG}
   fi
   if [[ "${VERSION}" != "latest" ]]; then
-    docker tag ${BUILD_TAG} quay.io/${QUAY_USERNAME}/${QUAY_REPONAME}:${VERSION}
+    docker tag ${BUILD_TAG} quay.io/"${QUAY_USERNAME}"/"${QUAY_REPONAME}":${VERSION}
   fi
-  docker push quay.io/${QUAY_USERNAME}/${QUAY_REPONAME}
+  docker push quay.io/"${QUAY_USERNAME}"/"${QUAY_REPONAME}"
   echo
 fi

@@ -1,13 +1,31 @@
 # Maximum and minimum number of peers to connect to per torrent
-throttle.min_peers.normal.set = 1
+throttle.min_peers.normal.set = 99
 throttle.max_peers.normal.set = 100
 
 # Same as above but for seeding completed torrents (-1 = same as downloading)
-throttle.min_peers.seed.set = 1
-throttle.max_peers.seed.set = 50
+throttle.min_peers.seed.set = -1
+throttle.max_peers.seed.set = -1
 
-# Maximum number of simultanious uploads per torrent
-throttle.max_uploads.set = 15
+# Maximum number of simultaneous downloads and uploads slots per torrent (`max_uploads`) Default: `50` for both
+throttle.max_downloads.set = 50
+throttle.max_uploads.set = 50
+
+# Maximum number of simultaneous downloads and uploads slots (global slots!) (`max_downloads_global`, `max_uploads_global`)
+throttle.max_downloads.global.set = 300
+throttle.max_uploads.global.set = 300
+
+# Set the numwant field sent to the tracker, which indicates how many peers we want.
+# A negative value disables this feature. Default: `-1` (`tracker_numwant`)
+trackers.numwant.set = 100
+
+# Maximum number of connections rtorrent can accept/make (`sockets`)
+network.max_open_sockets.set = 999
+
+# Maximum number of open files rtorrent can keep open (you have to modify the system wide settings with ulimit!) (`set_max_open_files`)
+network.max_open_files.set = 600
+
+# Maximum number of simultaneous HTTP request (used by announce or scrape requests) Default: `32` (`set_max_open_http`)
+network.http.max_open.set = 99
 
 # Global upload and download rate in KiB. "0" for unlimited
 throttle.global_down.max_rate.set_kb = 0
@@ -26,7 +44,7 @@ protocol.pex.set = yes
 
 # Check hash for finished torrents. Might be usefull until the bug is
 # fixed that causes lack of diskspace not to be properly reported
-pieces.hash.on_completion.set = yes
+pieces.hash.on_completion.set = no
 
 # Set whether the client should try to connect to UDP trackers
 #trackers.use_udp.set = yes
@@ -34,7 +52,7 @@ pieces.hash.on_completion.set = yes
 # Set the max amount of memory address space used to mapping file chunks. This refers to memory mapping, not
 # physical memory allocation. Default: 1GB (max_memory_usage)
 # This may also be set using ulimit -m where 3/4 will be allocated to file chunks
-#pieces.memory.max.set = 1GB
+pieces.memory.max.set = 2048M
 
 # Alternative calls to bind and ip that should handle dynamic ip's
 #schedule2 = ip_tick,0,1800,ip=rakshasa

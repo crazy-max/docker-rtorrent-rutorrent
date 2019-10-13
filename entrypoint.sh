@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Htpasswd ?
-if [ "$1" == "htpasswd" ]; then
+if [ "$1" = "htpasswd" ]; then
   exec "$@" || exit 0
 fi
 
@@ -52,16 +52,16 @@ RU_LOCALE=${RU_LOCALE:-UTF8}
 
 # Timezone
 echo "Setting timezone to ${TZ}..."
-ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime
-echo ${TZ} > /etc/timezone
+ln -snf /usr/share/zoneinfo/"${TZ}" /etc/localtime
+echo "${TZ}" > /etc/timezone
 
 # Change rtorrent UID / GID
 echo "Checking if rtorrent UID / GID has changed..."
-if [ $(id -u rtorrent) != ${PUID} ]; then
-  usermod -u ${PUID} rtorrent
+if [ "$(id -u rtorrent)" != "${PUID}" ]; then
+  usermod -u "${PUID}" rtorrent
 fi
-if [ $(id -g rtorrent) != ${PGID} ]; then
-  groupmod -g ${PGID} rtorrent
+if [ "$(id -g rtorrent)" != "${PGID}" ]; then
+  groupmod -g "${PGID}" rtorrent
 fi
 
 # PHP
@@ -122,7 +122,7 @@ touch ${PASSWD_PATH}/rpc.htpasswd \
   ${PASSWD_PATH}/rutorrent.htpasswd \
   ${PASSWD_PATH}/webdav.htpasswd \
   ${RTORRENT_HOME}/log/rtorrent.log \
-  ${RU_LOG_FILE}
+  "${RU_LOG_FILE}"
 rm -f ${RTORRENT_HOME}/.session/rtorrent.lock
 
 # Check htpasswd files
@@ -146,11 +146,11 @@ fi
 echo "Checking rTorrent local configuration..."
 sed -e "s!@RT_LOG_LEVEL@!$RT_LOG_LEVEL!g" \
   /tpls/etc/.rtlocal.rc > /etc/.rtlocal.rc
-if [ "${RT_LOG_EXECUTE}" == "true" ]; then
+if [ "${RT_LOG_EXECUTE}" = "true" ]; then
   echo "  Enabling rTorrent execute log..."
   sed -i "s!#log\.execute.*!log\.execute = (cat,(cfg.logs),\"execute.log\")!g" /etc/.rtlocal.rc
 fi
-if [ "${RT_LOG_XMLRPC}" == "true" ]; then
+if [ "${RT_LOG_XMLRPC}" = "true" ]; then
   echo "  Enabling rTorrent xmlrpc log..."
   sed -i "s!#log\.xmlrpc.*!log\.xmlrpc = (cat,(cfg.logs),\"xmlrpc.log\")!g" /etc/.rtlocal.rc
 fi
@@ -266,9 +266,9 @@ chown nginx. /var/www/rutorrent/plugins/create/conf.php
 
 # Check ruTorrent plugins
 echo "Checking ruTorrent custom plugins..."
-plugins=$(ls -l ${RUTORRENT_HOME}/plugins | egrep '^d' | awk '{print $9}')
+plugins=$(find ${RUTORRENT_HOME}/plugins -type d | awk -F / '{print $5}')
 for plugin in ${plugins}; do
-  if [ "${plugin}" == "theme" ]; then
+  if [ "${plugin}" = "theme" ]; then
     echo "  WARNING: Plugin theme cannot be overriden"
     continue
   fi
@@ -280,7 +280,7 @@ done
 
 # Check ruTorrent plugins config
 echo "Checking ruTorrent plugins configuration..."
-for pluginConfFile in ${RUTORRENT_HOME}/plugins-conf/*.php; do
+for pluginConfFile in "${RUTORRENT_HOME}"/plugins-conf/*.php; do
   if [ ! -f "$pluginConfFile" ]; then
     continue
   fi
@@ -301,7 +301,7 @@ done
 
 # Check ruTorrent themes
 echo "Checking ruTorrent custom themes..."
-themes=$(ls -l ${RUTORRENT_HOME}/themes | egrep '^d' | awk '{print $9}')
+themes=$(find ${RUTORRENT_HOME}/themes -type d | awk -F / '{print $5}')
 for theme in ${themes}; do
   echo "  Copying custom theme ${theme}..."
   rm -rf "/var/www/rutorrent/plugins/theme/themes/${theme}"

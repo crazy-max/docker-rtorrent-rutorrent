@@ -1,4 +1,4 @@
-FROM nginx:stable-alpine
+FROM nginx:mainline-alpine
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -16,13 +16,15 @@ LABEL maintainer="CrazyMax" \
   org.label-schema.schema-version="1.0"
 
 ENV RTORRENT_VERSION=0.9.8 \
-  LIBTORRENT_VERSION=0.13.8 \
-  XMLRPC_VERSION=01.55.00 \
-  LIBSIG_VERSION=2.10.1 \
-  CARES_VERSION=1.14.0 \
-  CURL_VERSION=7.65.3 \
-  MKTORRENT_VERSION=1.1 \
-  NGINX_DAV_VERSION=3.0.0
+    LIBTORRENT_VERSION=0.13.8 \
+    XMLRPC_VERSION=01.56.00 \
+    LIBSIG_VERSION=3.0.0 \
+    CARES_VERSION=1.14.0 \
+    CURL_VERSION=7.66.0 \
+    MKTORRENT_VERSION=1.1 \
+    NGINX_DAV_VERSION=3.0.0 \
+    RUTORRENT_VERSION=3.10-beta \
+    GEOIP_EXT_VERSION=1.1.1
 
 RUN apk --update --no-cache add -t build-dependencies \
     autoconf \
@@ -35,6 +37,7 @@ RUN apk --update --no-cache add -t build-dependencies \
     libressl-dev \
     linux-headers \
     ncurses-dev \
+    nghttp2-dev \
     subversion \
     tar \
     wget \
@@ -42,16 +45,15 @@ RUN apk --update --no-cache add -t build-dependencies \
     zlib-dev \
   # xmlrpc
   && cd /tmp \
-  && svn checkout http://svn.code.sf.net/p/xmlrpc-c/code/release_number/${XMLRPC_VERSION}/ xmlrpc-c \
+  && svn checkout https://svn.code.sf.net/p/xmlrpc-c/code/release_number/${XMLRPC_VERSION}/ xmlrpc-c \
   && cd xmlrpc-c \
   && ./configure \
   && make \
   && make install \
   # libsig
   && cd /tmp \
-  && wget http://ftp.gnome.org/pub/GNOME/sources/libsigc++/2.10/libsigc++-${LIBSIG_VERSION}.tar.xz \
-  && unxz libsigc++-${LIBSIG_VERSION}.tar.xz \
-  && tar -xf libsigc++-${LIBSIG_VERSION}.tar \
+  && wget https://ftp.gnome.org/pub/GNOME/sources/libsigc++/3.0/libsigc++-${LIBSIG_VERSION}.tar.xz \
+  && tar xJf libsigc++-${LIBSIG_VERSION}.tar.xz \
   && cd libsigc++-${LIBSIG_VERSION} \
   && ./configure \
   && make \
@@ -59,7 +61,7 @@ RUN apk --update --no-cache add -t build-dependencies \
   # cares
   && cd /tmp \
   && wget https://c-ares.haxx.se/download/c-ares-${CARES_VERSION}.tar.gz \
-  && tar zxf c-ares-${CARES_VERSION}.tar.gz \
+  && tar xzf c-ares-${CARES_VERSION}.tar.gz \
   && cd c-ares-${CARES_VERSION} \
   && ./configure \
   && make \
@@ -67,41 +69,34 @@ RUN apk --update --no-cache add -t build-dependencies \
   # curl
   && cd /tmp \
   && wget https://curl.haxx.se/download/curl-${CURL_VERSION}.tar.gz \
-  && tar zxf curl-${CURL_VERSION}.tar.gz \
+  && tar xzf curl-${CURL_VERSION}.tar.gz \
   && cd curl-${CURL_VERSION} \
-  && ./configure --enable-ares --enable-tls-srp --enable-gnu-tls --with-ssl --with-zlib \
+  && ./configure --enable-ares --enable-tls-srp --enable-gnu-tls --with-ssl --with-zlib --with-nghttp2 \
   && make \
   && make install \
   # libtorrent
   && cd /tmp \
-  && git clone https://github.com/rakshasa/libtorrent.git \
+  && git clone -b v${LIBTORRENT_VERSION} --single-branch --depth=1 https://github.com/rakshasa/libtorrent.git \
   && cd libtorrent \
-  && git checkout tags/v${LIBTORRENT_VERSION} \
   && ./autogen.sh \
   && ./configure --with-posix-fallocate \
   && make \
   && make install \
   # rtorrent
   && cd /tmp \
-  && git clone https://github.com/rakshasa/rtorrent.git \
+  && git clone -b v${RTORRENT_VERSION} --single-branch --depth=1 https://github.com/rakshasa/rtorrent.git \
   && cd rtorrent \
-  && git checkout tags/v${RTORRENT_VERSION} \
   && ./autogen.sh \
   && ./configure --with-xmlrpc-c --with-ncurses \
   && make \
   && make install \
   # mktorrent
-  && git clone https://github.com/esmil/mktorrent.git \
+  && git clone -b v${MKTORRENT_VERSION} --single-branch --depth=1 https://github.com/esmil/mktorrent.git \
   && cd mktorrent \
-  && git checkout tags/v${MKTORRENT_VERSION} \
   && make \
   && make install \
   && apk del build-dependencies \
   && rm -rf /tmp/* /var/cache/apk/*
-
-ENV RUTORRENT_VERSION="3.9" \
-  RUTORRENT_REVISION="ec8d8f1" \
-  GEOIP_EXT_VERSION="1.1.1"
 
 RUN apk --update --no-cache add \
     apache2-utils \
@@ -165,8 +160,8 @@ RUN apk --update --no-cache add \
   # nginx webdav
   && mkdir -p /usr/src \
   && cd /usr/src \
-  && wget http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz \
-  && tar zxvf nginx-$NGINX_VERSION.tar.gz \
+  && wget https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz \
+  && tar xzf nginx-$NGINX_VERSION.tar.gz \
   && git clone -b v${NGINX_DAV_VERSION} --single-branch --depth 1 https://github.com/arut/nginx-dav-ext-module.git \
   && cd nginx-$NGINX_VERSION \
   && ./configure --with-compat --add-dynamic-module=../nginx-dav-ext-module \
@@ -175,17 +170,16 @@ RUN apk --update --no-cache add \
   # ruTorrent
   && mkdir -p /data /var/log/supervisord /var/www \
   && cd /var/www \
-  && git clone https://github.com/Novik/ruTorrent.git rutorrent \
+  && git clone --branch=v${RUTORRENT_VERSION} --depth=1 https://github.com/Novik/ruTorrent.git rutorrent \
   && cd rutorrent \
-  && git checkout ${RUTORRENT_REVISION} \
   && pip2 install cfscrape cloudscraper \
   # geoip2
-  && git clone https://github.com/Micdu70/geoip2-rutorrent /var/www/rutorrent/plugins/geoip2 \
+  && git clone --single-branch --depth=1 https://github.com/Micdu70/geoip2-rutorrent /var/www/rutorrent/plugins/geoip2 \
   && cd /var/www/rutorrent/plugins/geoip2/database \
-  && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz \
-  && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz \
-  && tar -xvzf GeoLite2-City.tar.gz --strip-components=1 \
-  && tar -xvzf GeoLite2-Country.tar.gz --strip-components=1 \
+  && wget -q https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz \
+  && wget -q https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz \
+  && tar xzf GeoLite2-City.tar.gz --strip-components=1 \
+  && tar xzf GeoLite2-Country.tar.gz --strip-components=1 \
   && rm -f *.gz \
   && wget -q https://pecl.php.net/get/geoip-${GEOIP_EXT_VERSION}.tgz \
   && pecl install geoip-${GEOIP_EXT_VERSION}.tgz \
