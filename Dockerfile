@@ -19,7 +19,6 @@ ENV RTORRENT_VERSION=0.9.8 \
     LIBTORRENT_VERSION=0.13.8 \
     XMLRPC_VERSION=01.56.00 \
     LIBSIG_VERSION=3.0.0 \
-    CARES_VERSION=1.14.0 \
     CURL_VERSION=7.66.0 \
     MKTORRENT_VERSION=1.1 \
     NGINX_DAV_VERSION=3.0.0 \
@@ -31,6 +30,7 @@ RUN apk --update --no-cache add -t build-dependencies \
     automake \
     binutils \
     build-base \
+    c-ares-dev \
     cppunit-dev \
     git \
     libtool \
@@ -55,14 +55,6 @@ RUN apk --update --no-cache add -t build-dependencies \
   && wget https://ftp.gnome.org/pub/GNOME/sources/libsigc++/3.0/libsigc++-${LIBSIG_VERSION}.tar.xz \
   && tar xJf libsigc++-${LIBSIG_VERSION}.tar.xz \
   && cd libsigc++-${LIBSIG_VERSION} \
-  && ./configure \
-  && make \
-  && make install \
-  # cares
-  && cd /tmp \
-  && wget https://c-ares.haxx.se/download/c-ares-${CARES_VERSION}.tar.gz \
-  && tar xzf c-ares-${CARES_VERSION}.tar.gz \
-  && cd c-ares-${CARES_VERSION} \
   && ./configure \
   && make \
   && make install \
@@ -102,6 +94,7 @@ RUN apk --update --no-cache add \
     apache2-utils \
     bind-tools \
     binutils \
+    c-ares \
     ca-certificates \
     coreutils \
     dhclient \
