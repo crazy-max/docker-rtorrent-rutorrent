@@ -17,7 +17,7 @@ LABEL maintainer="CrazyMax" \
 
 ENV RTORRENT_VERSION=0.9.8 \
     LIBTORRENT_VERSION=0.13.8 \
-    XMLRPC_VERSION=01.56.00 \
+    XMLRPC_VERSION=advanced \
     LIBSIG_VERSION=3.0.0 \
     CURL_VERSION=7.66.0 \
     MKTORRENT_VERSION=1.1 \
@@ -38,21 +38,20 @@ RUN apk --update --no-cache add -t build-dependencies \
     linux-headers \
     ncurses-dev \
     nghttp2-dev \
-    subversion \
     tar \
     wget \
     xz \
     zlib-dev \
   # xmlrpc
   && cd /tmp \
-  && svn checkout https://svn.code.sf.net/p/xmlrpc-c/code/release_number/${XMLRPC_VERSION}/ xmlrpc-c \
-  && cd xmlrpc-c \
+  && git clone -q --depth 1 https://github.com/mirror/xmlrpc-c.git \
+  && cd xmlrpc-c/${XMLRPC_VERSION} \
   && ./configure \
   && make \
   && make install \
   # libsig
   && cd /tmp \
-  && wget https://ftp.gnome.org/pub/GNOME/sources/libsigc++/3.0/libsigc++-${LIBSIG_VERSION}.tar.xz \
+  && wget -q https://ftp.gnome.org/pub/GNOME/sources/libsigc++/3.0/libsigc++-${LIBSIG_VERSION}.tar.xz \
   && tar xJf libsigc++-${LIBSIG_VERSION}.tar.xz \
   && cd libsigc++-${LIBSIG_VERSION} \
   && ./configure \
@@ -60,7 +59,7 @@ RUN apk --update --no-cache add -t build-dependencies \
   && make install \
   # curl
   && cd /tmp \
-  && wget https://curl.haxx.se/download/curl-${CURL_VERSION}.tar.gz \
+  && wget -q https://curl.haxx.se/download/curl-${CURL_VERSION}.tar.gz \
   && tar xzf curl-${CURL_VERSION}.tar.gz \
   && cd curl-${CURL_VERSION} \
   && ./configure --enable-ares --enable-tls-srp --enable-gnu-tls --with-ssl --with-zlib --with-nghttp2 \
@@ -68,7 +67,7 @@ RUN apk --update --no-cache add -t build-dependencies \
   && make install \
   # libtorrent
   && cd /tmp \
-  && git clone -b v${LIBTORRENT_VERSION} --single-branch --depth=1 https://github.com/rakshasa/libtorrent.git \
+  && git clone -b v${LIBTORRENT_VERSION} -q --depth 1 https://github.com/rakshasa/libtorrent.git \
   && cd libtorrent \
   && ./autogen.sh \
   && ./configure --with-posix-fallocate \
@@ -76,14 +75,14 @@ RUN apk --update --no-cache add -t build-dependencies \
   && make install \
   # rtorrent
   && cd /tmp \
-  && git clone -b v${RTORRENT_VERSION} --single-branch --depth=1 https://github.com/rakshasa/rtorrent.git \
+  && git clone -b v${RTORRENT_VERSION} -q --depth 1 https://github.com/rakshasa/rtorrent.git \
   && cd rtorrent \
   && ./autogen.sh \
   && ./configure --with-xmlrpc-c --with-ncurses \
   && make \
   && make install \
   # mktorrent
-  && git clone -b v${MKTORRENT_VERSION} --single-branch --depth=1 https://github.com/esmil/mktorrent.git \
+  && git clone -b v${MKTORRENT_VERSION} -q --depth 1 https://github.com/esmil/mktorrent.git \
   && cd mktorrent \
   && make \
   && make install \
@@ -153,9 +152,9 @@ RUN apk --update --no-cache add \
   # nginx webdav
   && mkdir -p /usr/src \
   && cd /usr/src \
-  && wget https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz \
+  && wget -q https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz \
   && tar xzf nginx-$NGINX_VERSION.tar.gz \
-  && git clone -b v${NGINX_DAV_VERSION} --single-branch --depth 1 https://github.com/arut/nginx-dav-ext-module.git \
+  && git clone -b v${NGINX_DAV_VERSION} -q --depth 1 https://github.com/arut/nginx-dav-ext-module.git \
   && cd nginx-$NGINX_VERSION \
   && ./configure --with-compat --add-dynamic-module=../nginx-dav-ext-module \
   && make modules \
@@ -163,11 +162,11 @@ RUN apk --update --no-cache add \
   # ruTorrent
   && mkdir -p /data /var/log/supervisord /var/www \
   && cd /var/www \
-  && git clone --branch=v${RUTORRENT_VERSION} --depth=1 https://github.com/Novik/ruTorrent.git rutorrent \
+  && git clone -b v${RUTORRENT_VERSION} -q --depth 1 https://github.com/Novik/ruTorrent.git rutorrent \
   && cd rutorrent \
   && pip2 install cfscrape cloudscraper \
   # geoip2
-  && git clone --single-branch --depth=1 https://github.com/Micdu70/geoip2-rutorrent /var/www/rutorrent/plugins/geoip2 \
+  && git clone -q --depth 1 https://github.com/Micdu70/geoip2-rutorrent /var/www/rutorrent/plugins/geoip2 \
   && cd /var/www/rutorrent/plugins/geoip2/database \
   && wget -q https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz \
   && wget -q https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz \
