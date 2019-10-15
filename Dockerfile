@@ -23,21 +23,26 @@ ENV RTORRENT_VERSION=0.9.8 \
     MKTORRENT_VERSION=1.1 \
     NGINX_DAV_VERSION=3.0.0 \
     RUTORRENT_VERSION=3.10-beta \
-    GEOIP_EXT_VERSION=1.1.1
+    GEOIP_EXT_VERSION=1.1.1 \
+    PYTHONPATH="/var/www/rutorrent"
 
 RUN apk --update --no-cache add -t build-dependencies \
     autoconf \
     automake \
     binutils \
+    brotli-dev \
     build-base \
     c-ares-dev \
     cppunit-dev \
+    gawk \
     git \
+    grep \
     libtool \
-    libressl-dev \
     linux-headers \
     ncurses-dev \
     nghttp2-dev \
+    openssl-dev \
+    sed \
     tar \
     wget \
     xz \
@@ -46,15 +51,15 @@ RUN apk --update --no-cache add -t build-dependencies \
   && cd /tmp \
   && git clone -q --depth 1 https://github.com/mirror/xmlrpc-c.git \
   && cd xmlrpc-c/${XMLRPC_VERSION} \
-  && ./configure \
+  && ./configure --disable-libwww-client --disable-wininet-client --disable-abyss-server --disable-cgi-server \
   && make \
   && make install \
   # libsig
   && cd /tmp \
-  && wget -q https://ftp.gnome.org/pub/GNOME/sources/libsigc++/3.0/libsigc++-${LIBSIG_VERSION}.tar.xz \
+  && wget -q https://download.gnome.org/sources/libsigc++/3.0/libsigc++-${LIBSIG_VERSION}.tar.xz \
   && tar xJf libsigc++-${LIBSIG_VERSION}.tar.xz \
   && cd libsigc++-${LIBSIG_VERSION} \
-  && ./configure \
+  && ./configure --disable-documentation \
   && make \
   && make install \
   # curl
@@ -62,7 +67,25 @@ RUN apk --update --no-cache add -t build-dependencies \
   && wget -q https://curl.haxx.se/download/curl-${CURL_VERSION}.tar.gz \
   && tar xzf curl-${CURL_VERSION}.tar.gz \
   && cd curl-${CURL_VERSION} \
-  && ./configure --enable-ares --enable-tls-srp --enable-gnu-tls --with-ssl --with-zlib --with-nghttp2 \
+  && ./configure \
+  --enable-ares \
+  --with-brotli \
+  --disable-dict \
+  --disable-ftp \
+  --disable-ftps \
+  --disable-gopher \
+  --disable-imap \
+  --disable-imaps \
+  --disable-pop3 \
+  --disable-pop3s \
+  --disable-rtsp \
+  --disable-smb \
+  --disable-smbs \
+  --disable-smtp \
+  --disable-smtps \
+  --disable-telnet \
+  --disable-tftp \
+  --disable-verbose \
   && make \
   && make install \
   # libtorrent
@@ -70,7 +93,7 @@ RUN apk --update --no-cache add -t build-dependencies \
   && git clone -b v${LIBTORRENT_VERSION} -q --depth 1 https://github.com/rakshasa/libtorrent.git \
   && cd libtorrent \
   && ./autogen.sh \
-  && ./configure --with-posix-fallocate \
+  && ./configure --with-posix-fallocate --disable-debug \
   && make \
   && make install \
   # rtorrent
@@ -78,7 +101,7 @@ RUN apk --update --no-cache add -t build-dependencies \
   && git clone -b v${RTORRENT_VERSION} -q --depth 1 https://github.com/rakshasa/rtorrent.git \
   && cd rtorrent \
   && ./autogen.sh \
-  && ./configure --with-xmlrpc-c --with-ncurses \
+  && ./configure --with-xmlrpc-c --with-ncurses --disable-debug \
   && make \
   && make install \
   # mktorrent
@@ -93,19 +116,22 @@ RUN apk --update --no-cache add \
     apache2-utils \
     bind-tools \
     binutils \
+    brotli \
     c-ares \
     ca-certificates \
     coreutils \
     dhclient \
     ffmpeg \
+    gawk \
     geoip \
     grep \
     gzip \
-    libressl \
     libstdc++ \
     mediainfo \
     ncurses \
+    openssl \
     pcre \
+    pcre2 \
     php7 \
     php7-cli \
     php7-ctype \
@@ -121,6 +147,7 @@ RUN apk --update --no-cache add \
     php7-zip \
     php7-zlib \
     python2 \
+    sed \
     shadow \
     sox \
     supervisor \
@@ -140,7 +167,6 @@ RUN apk --update --no-cache add \
     git \
     libc-dev \
     libffi-dev \
-    libressl-dev \
     linux-headers \
     openssl-dev \
     pcre-dev \
@@ -164,7 +190,7 @@ RUN apk --update --no-cache add \
   && cd /var/www \
   && git clone -b v${RUTORRENT_VERSION} -q --depth 1 https://github.com/Novik/ruTorrent.git rutorrent \
   && cd rutorrent \
-  && pip2 install cfscrape cloudscraper \
+  && pip2 install --no-cache-dir -U cfscrape cloudscraper \
   # geoip2
   && git clone -q --depth 1 https://github.com/Micdu70/geoip2-rutorrent /var/www/rutorrent/plugins/geoip2 \
   && cd /var/www/rutorrent/plugins/geoip2/database \
@@ -173,9 +199,7 @@ RUN apk --update --no-cache add \
   && tar xzf GeoLite2-City.tar.gz --strip-components=1 \
   && tar xzf GeoLite2-Country.tar.gz --strip-components=1 \
   && rm -f *.gz \
-  && wget -q https://pecl.php.net/get/geoip-${GEOIP_EXT_VERSION}.tgz \
-  && pecl install geoip-${GEOIP_EXT_VERSION}.tgz \
-  && rm -f geoip-${GEOIP_EXT_VERSION}.tgz \
+  && pecl install geoip-${GEOIP_EXT_VERSION} \
   # perms
   && addgroup -g 1000 rtorrent \
   && adduser -u 1000 -G rtorrent -h /home/rtorrent -s /sbin/nologin -D rtorrent \
@@ -189,10 +213,8 @@ RUN apk --update --no-cache add \
     /var/www/rutorrent/.git* \
     /var/www/rutorrent/conf/users \
     /var/www/rutorrent/plugins/geoip \
-    /var/www/rutorrent/plugins/geoip2/.git \
+    /var/www/rutorrent/plugins/geoip2/.git* \
     /var/www/rutorrent/share
-
-ENV PYTHONPATH="$PYTHONPATH:/var/www/rutorrent"
 
 COPY entrypoint.sh /entrypoint.sh
 COPY assets /

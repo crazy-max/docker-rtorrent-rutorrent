@@ -246,11 +246,11 @@ if [ ! -f ${RUTORRENT_HOME}/conf/plugins.ini ]; then
 fi
 
 # Remove ruTorrent core plugins
-for i in ${RU_REMOVE_CORE_PLUGINS//,/ }
+for i in $(echo "${RU_REMOVE_CORE_PLUGINS}" | sed 's/,/ /g')
 do
   if [ -z "$i" ]; then continue; fi
   echo "Removing core plugin $i..."
-  rm -rf /var/www/rutorrent/plugins/${i}
+  rm -rf /var/www/rutorrent/plugins/"${i}"
 done
 
 # Override ruTorrent plugins config
