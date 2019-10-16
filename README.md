@@ -1,11 +1,10 @@
 <p align="center"><a href="https://github.com/crazy-max/docker-rtorrent-rutorrent" target="_blank"><img height="128"src="https://raw.githubusercontent.com/crazy-max/docker-rtorrent-rutorrent/master/.res/docker-rtorrent-rutorrent.jpg"></a></p>
 
 <p align="center">
-  <a href="https://hub.docker.com/r/crazymax/rtorrent-rutorrent/"><img src="https://img.shields.io/badge/dynamic/json.svg?label=version&query=$.results[1].name&url=https://hub.docker.com/v2/repositories/crazymax/rtorrent-rutorrent/tags&style=flat-square" alt="Latest Version"></a>
-  <a href="https://travis-ci.com/crazy-max/docker-rtorrent-rutorrent"><img src="https://img.shields.io/travis/com/crazy-max/docker-rtorrent-rutorrent/master.svg?style=flat-square" alt="Build Status"></a>
+  <a href="https://hub.docker.com/r/crazymax/rtorrent-rutorrent/tags?page=1&ordering=last_updated"><img src="https://img.shields.io/github/v/tag/crazy-max/docker-rtorrent-rutorrent?label=version&style=flat-square" alt="Latest Version"></a>
+  <a href="https://github.com/crazy-max/docker-rtorrent-rutorrent/actions?workflow=build"><img src="https://github.com/crazy-max/docker-rtorrent-rutorrent/workflows/build/badge.svg" alt="Build Status"></a>
   <a href="https://hub.docker.com/r/crazymax/rtorrent-rutorrent/"><img src="https://img.shields.io/docker/stars/crazymax/rtorrent-rutorrent.svg?style=flat-square" alt="Docker Stars"></a>
   <a href="https://hub.docker.com/r/crazymax/rtorrent-rutorrent/"><img src="https://img.shields.io/docker/pulls/crazymax/rtorrent-rutorrent.svg?style=flat-square" alt="Docker Pulls"></a>
-  <a href="https://quay.io/repository/crazymax/rtorrent-rutorrent"><img src="https://quay.io/repository/crazymax/rtorrent-rutorrent/status?style=flat-square" alt="Docker Repository on Quay"></a>
   <a href="https://www.codacy.com/app/crazy-max/docker-rtorrent-rutorrent"><img src="https://img.shields.io/codacy/grade/6474c343fbe745579b1cb12c8d193647.svg?style=flat-square" alt="Code Quality"></a>
   <br /><a href="https://www.patreon.com/crazymax"><img src="https://img.shields.io/badge/donate-patreon-f96854.svg?logo=patreon&style=flat-square" alt="Support me on Patreon"></a>
   <a href="https://www.paypal.me/crazyws"><img src="https://img.shields.io/badge/donate-paypal-00457c.svg?logo=paypal&style=flat-square" alt="Donate Paypal"></a>
@@ -20,12 +19,10 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 ## Features
 
-### Included
-
 * Latest [rTorrent](https://github.com/rakshasa/rtorrent) / [libTorrent](https://github.com/rakshasa/libtorrent) release compiled from source
 * Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
 * Name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) for asynchronous DNS requests (including name resolves)
-* Enhanced [rTorrent config](assets/tpls/.rtorrent.rc) and bootstraping with a [local config](assets/tpls/etc/.rtlocal.rc)
+* Enhanced [rTorrent config](assets/tpls/.rtorrent.rc) and bootstraping with a [local config](assets/tpls/etc/rtorrent/.rtlocal.rc)
 * Ability to remap user and group (UID/GID)
 * WAN IP address automatically resolved for reporting to the tracker
 * XMLRPC through nginx over SCGI socket (basic auth optional)
@@ -34,10 +31,6 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 * Allow to persist specific configuration for ruTorrent plugins
 * ruTorrent [GeoIP2 plugin](https://github.com/Micdu70/geoip2-rutorrent)
 * [mktorrent](https://github.com/Rudde/mktorrent) installed for ruTorrent create plugin
-
-### From docker-compose
-
-* [Traefik](https://github.com/containous/traefik-library-image) as reverse proxy and creation/renewal of Let's Encrypt certificates
 
 ## Environment variables
 
@@ -86,6 +79,8 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 * `/data` : rTorrent / ruTorrent config, downloads, session files, log, ...
 * `/passwd` : Contains htpasswd files for basic auth
+
+> :warning: Note that the volumes should be owned by the user/group with the PUID/PGID specified. If you don’t give the volume correct permissions, the container may not start.
 
 ## Ports
 
@@ -156,7 +151,7 @@ Htpasswd files used :
 
 ### Boostrap config `.rtlocal.rc`
 
-When rTorrent is started the bootstrap config [/etc/.rtlocal.rc](assets/tpls/etc/.rtlocal.rc) is imported.<br />
+When rTorrent is started the bootstrap config [/etc/rtorrent/.rtlocal.rc](assets/tpls/etc/rtorrent/.rtlocal.rc) is imported.<br />
 This configuration cannot be changed unless you rebuild the image or overwrite these elements in your `.rtorrent.rc`.<br />
 Here are the particular properties of this file :
 
@@ -169,11 +164,11 @@ Here are the particular properties of this file :
   * `cfg.logs` : Logs directory (`/data/rtorrent/log/`)
   * `cfg.session` : Session directory (`/data/rtorrent/.session/`)
   * `cfg.watch` : Watch directory for torrents (`/data/rtorrent/watch/`)
-  * `cfg.rundir` : Runtime data of rtorrent (`/run/rtorrent/`)
+  * `cfg.rundir` : Runtime data of rtorrent (`/var/run/rtorrent/`)
 * `d.data_path` : Config var to get the full path of data of a torrent (workaround for the possibly empty `d.base_path` attribute)
 * `directory.default.set` : Default directory to save the downloaded torrents (`cfg.download_temp`)
 * `session.path.set` : Default session directory (`cfg.session`)
-* PID file to `/run/rtorrent/rtorrent.pid`
+* PID file to `/var/run/rtorrent/rtorrent.pid`
 * `network.scgi.open_local` : SCGI local socket and make it group-writable and secure
 * `network.port_range.set` : Listening port for incoming peer traffic (`50000-50000`)
 * `dht.port.set` : UDP port to use for DHT (`6881`)
