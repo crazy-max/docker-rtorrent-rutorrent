@@ -1,5 +1,23 @@
 # Changelog
 
+## 3.9-0.9.8-0.13.8-RC4 (2019/10/16)
+
+* Switch to GitHub Actions
+* :warning: Stop publishing Docker image on Quay
+* Move boostrap (default) config for rTorrent to `/etc/rtorrent/.rtlocal.rc`
+* :warning: Run as non-root user
+* Prevent exposing nginx version
+* Set timezone through tzdata
+
+> :warning: **UPGRADE NOTES**
+> As the Docker container now runs as a non-root user, you have to first stop the container and change permissions to volumes:
+> ```
+> docker-compose stop
+> chown -R ${PUID}:${PGID} data/ passwd/
+> docker-compose pull
+> docker-compose up -d
+> ```
+
 ## 3.9-0.9.8-0.13.8-RC3 (2019/09/04)
 
 * Create `share/torrents` for ruTorrent
