@@ -14,7 +14,6 @@ export RUTORRENT_HOME="/data/rutorrent"
 
 export PASSWD_PATH="/passwd"
 
-TZ=${TZ:-UTC}
 PUID=${PUID:-1000}
 PGID=${PGID:-1000}
 
@@ -49,11 +48,6 @@ RU_SAVE_UPLOADED_TORRENTS=${RU_SAVE_UPLOADED_TORRENTS:-true}
 RU_OVERWRITE_UPLOADED_TORRENTS=${RU_OVERWRITE_UPLOADED_TORRENTS:-false}
 RU_FORBID_USER_SETTINGS=${RU_FORBID_USER_SETTINGS:-false}
 RU_LOCALE=${RU_LOCALE:-UTF8}
-
-# Timezone
-echo "Setting timezone to ${TZ}..."
-ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime
-echo ${TZ} > /etc/timezone
 
 # Change rtorrent UID / GID
 echo "Checking if rtorrent UID / GID has changed..."

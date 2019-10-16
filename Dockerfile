@@ -199,7 +199,8 @@ RUN apk --update --no-cache add \
     /var/www/rutorrent/plugins/geoip2/.git \
     /var/www/rutorrent/share
 
-ENV PYTHONPATH="$PYTHONPATH:/var/www/rutorrent"
+ENV PYTHONPATH="$PYTHONPATH:/var/www/rutorrent" \
+  TZ="UTC"
 
 COPY entrypoint.sh /entrypoint.sh
 COPY assets /
