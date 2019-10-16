@@ -166,7 +166,7 @@ RUN apk --update --no-cache add \
   && make modules \
   && cp objs/ngx_http_dav_ext_module.so /etc/nginx/modules \
   # ruTorrent
-  && mkdir -p /data /var/log/supervisord /var/www \
+  && mkdir -p /var/www \
   && cd /var/www \
   && git clone https://github.com/Novik/ruTorrent.git rutorrent \
   && cd rutorrent \
@@ -183,11 +183,6 @@ RUN apk --update --no-cache add \
   && wget -q https://pecl.php.net/get/geoip-${GEOIP_EXT_VERSION}.tgz \
   && pecl install geoip-${GEOIP_EXT_VERSION}.tgz \
   && rm -f geoip-${GEOIP_EXT_VERSION}.tgz \
-  # perms
-  && addgroup -g 1000 rtorrent \
-  && adduser -u 1000 -G rtorrent -h /home/rtorrent -s /sbin/nologin -D rtorrent \
-  && usermod -a -G rtorrent nginx \
-  && chown -R rtorrent. /data /var/log/php7 /var/www/rutorrent \
   && apk del build-dependencies \
   && rm -rf /etc/nginx/conf.d/* \
     /usr/src/nginx* \
@@ -206,13 +201,47 @@ COPY entrypoint.sh /entrypoint.sh
 COPY assets /
 
 RUN chmod a+x /entrypoint.sh /usr/local/bin/* \
-  && chown -R nginx. /etc/nginx/conf.d /var/log/nginx
+  && addgroup -g 1000 rtorrent \
+  && adduser -D -H -u 1000 -G rtorrent -s /bin/sh rtorrent \
+  && mkdir -p \
+    /data \
+    /passwd \
+    /etc/rtorrent \
+    /var/cache/nginx \
+    /var/lib/nginx \
+    /var/log/supervisord \
+    /var/run/nginx \
+    /var/run/php-fpm \
+    /var/run/rtorrent \
+    /var/run/supervisord \
+    /var/tmp/nginx \
+  && chown -R rtorrent. \
+    /data \
+    /etc/nginx \
+    /etc/php7 \
+    /etc/rtorrent \
+    /passwd \
+    /tpls \
+    /var/cache/nginx \
+    /var/lib/nginx \
+    /var/log/nginx \
+    /var/log/php7 \
+    /var/log/supervisord \
+    /var/run/nginx \
+    /var/run/php-fpm \
+    /var/run/rtorrent \
+    /var/run/supervisord \
+    /var/tmp/nginx \
+    /var/www
+
+USER rtorrent
 
 EXPOSE 6881/udp 8000 8080 9000 50000
+WORKDIR /data
 VOLUME [ "/data", "/passwd" ]
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
 
-HEALTHCHECK --interval=10s --timeout=5s \
+HEALTHCHECK --interval=30s --timeout=20s --start-period=10s \
   CMD /usr/local/bin/healthcheck

@@ -8,7 +8,7 @@ fi
 export WAN_IP=${WAN_IP:-$(dig +short myip.opendns.com @resolver1.opendns.com)}
 
 export RTORRENT_HOME="/data/rtorrent"
-export RTORRENT_RUN_PATH="/run/rtorrent"
+export RTORRENT_RUN_PATH="/var/run/rtorrent"
 
 export RUTORRENT_HOME="/data/rutorrent"
 
@@ -51,11 +51,12 @@ RU_LOCALE=${RU_LOCALE:-UTF8}
 
 # Change rtorrent UID / GID
 echo "Checking if rtorrent UID / GID has changed..."
-if [ $(id -u rtorrent) != ${PUID} ]; then
-  usermod -u ${PUID} rtorrent
+if [ -n "${PGID}" ] && [ "${PGID}" != "`id -g rtorrent`" ]; then
+  sed -i -e "s/^rtorrent:\([^:]*\):[0-9]*/rtorrent:\1:${PGID}/" /etc/group
+  sed -i -e "s/^rtorrent:\([^:]*\):\([0-9]*\):[0-9]*/rtorrent:\1:\2:${PGID}/" /etc/passwd
 fi
-if [ $(id -g rtorrent) != ${PGID} ]; then
-  groupmod -g ${PGID} rtorrent
+if [ -n "${PUID}" ] && [ "${PUID}" != "`id -u rtorrent`" ]; then
+  sed -i -e "s/^rtorrent:\([^:]*\):[0-9]*:\([0-9]*\)/rtorrent:\1:${PUID}:\2/" /etc/passwd
 fi
 
 # PHP
@@ -99,8 +100,7 @@ sed -e "s!@RTORRENT_HOME@!$RTORRENT_HOME!g" \
 
 # Init
 echo "Initializing files and folders..."
-mkdir -p ${PASSWD_PATH} \
-  ${RTORRENT_HOME}/downloads/complete \
+mkdir -p ${RTORRENT_HOME}/downloads/complete \
   ${RTORRENT_HOME}/downloads/temp \
   ${RTORRENT_HOME}/log \
   ${RTORRENT_HOME}/.session \
@@ -110,8 +110,7 @@ mkdir -p ${PASSWD_PATH} \
   ${RUTORRENT_HOME}/plugins-conf \
   ${RUTORRENT_HOME}/share/users \
   ${RUTORRENT_HOME}/share/torrents \
-  ${RUTORRENT_HOME}/themes \
-  /run/rtorrent
+  ${RUTORRENT_HOME}/themes
 touch ${PASSWD_PATH}/rpc.htpasswd \
   ${PASSWD_PATH}/rutorrent.htpasswd \
   ${PASSWD_PATH}/webdav.htpasswd \
@@ -139,14 +138,14 @@ fi
 # rTorrent local config
 echo "Checking rTorrent local configuration..."
 sed -e "s!@RT_LOG_LEVEL@!$RT_LOG_LEVEL!g" \
-  /tpls/etc/.rtlocal.rc > /etc/.rtlocal.rc
+  /tpls/etc/rtorrent/.rtlocal.rc > /etc/rtorrent/.rtlocal.rc
 if [ "${RT_LOG_EXECUTE}" == "true" ]; then
   echo "  Enabling rTorrent execute log..."
-  sed -i "s!#log\.execute.*!log\.execute = (cat,(cfg.logs),\"execute.log\")!g" /etc/.rtlocal.rc
+  sed -i "s!#log\.execute.*!log\.execute = (cat,(cfg.logs),\"execute.log\")!g" /etc/rtorrent/.rtlocal.rc
 fi
 if [ "${RT_LOG_XMLRPC}" == "true" ]; then
   echo "  Enabling rTorrent xmlrpc log..."
-  sed -i "s!#log\.xmlrpc.*!log\.xmlrpc = (cat,(cfg.logs),\"xmlrpc.log\")!g" /etc/.rtlocal.rc
+  sed -i "s!#log\.xmlrpc.*!log\.xmlrpc = (cat,(cfg.logs),\"xmlrpc.log\")!g" /etc/rtorrent/.rtlocal.rc
 fi
 
 # rTorrent config
@@ -224,7 +223,6 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 
 \$locale = '${RU_LOCALE}';
 EOL
-chown nginx. /var/www/rutorrent/conf/config.php
 
 # Symlinking ruTorrent config
 ln -sf ${RUTORRENT_HOME}/conf/users /var/www/rutorrent/conf/users
@@ -256,7 +254,6 @@ cat > /var/www/rutorrent/plugins/create/conf.php <<EOL
 \$pathToCreatetorrent = '/usr/local/bin/mktorrent';
 \$recentTrackersMaxCount = 15;
 EOL
-chown nginx. /var/www/rutorrent/plugins/create/conf.php
 
 # Check ruTorrent plugins
 echo "Checking ruTorrent custom plugins..."
@@ -269,7 +266,6 @@ for plugin in ${plugins}; do
   echo "  Copying custom plugin ${plugin}..."
   rm -rf "/var/www/rutorrent/plugins/${plugin}"
   cp -Rf "${RUTORRENT_HOME}/plugins/${plugin}" "/var/www/rutorrent/plugins/${plugin}"
-  chown -R rtorrent. "/var/www/rutorrent/plugins/${plugin}"
 done
 
 # Check ruTorrent plugins config
@@ -290,7 +286,6 @@ for pluginConfFile in ${RUTORRENT_HOME}/plugins-conf/*.php; do
   fi
   echo "  Copying ${pluginName} plugin config..."
   cp -f "${pluginConfFile}" "/var/www/rutorrent/plugins/${pluginName}/conf.php"
-  chown rtorrent. "/var/www/rutorrent/plugins/${pluginName}/conf.php"
 done
 
 # Check ruTorrent themes
@@ -300,13 +295,10 @@ for theme in ${themes}; do
   echo "  Copying custom theme ${theme}..."
   rm -rf "/var/www/rutorrent/plugins/theme/themes/${theme}"
   cp -Rf "${RUTORRENT_HOME}/themes/${theme}" "/var/www/rutorrent/plugins/theme/themes/${theme}"
-  chown -R rtorrent. "/var/www/rutorrent/plugins/theme/themes/${theme}"
 done
 
 # Perms
 echo "Fixing permissions..."
-chown -R rtorrent. /data /etc/.rtlocal.rc /run/rtorrent
-chown -R nginx. /passwd
-chmod 644 ${RTORRENT_HOME}/.rtorrent.rc ${PASSWD_PATH}/*.htpasswd /etc/.rtlocal.rc
+chmod 644 ${RTORRENT_HOME}/.rtorrent.rc ${PASSWD_PATH}/*.htpasswd /etc/rtorrent/.rtlocal.rc
 
 exec "$@"
