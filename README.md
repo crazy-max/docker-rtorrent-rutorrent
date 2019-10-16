@@ -7,8 +7,8 @@
   <a href="https://hub.docker.com/r/crazymax/rtorrent-rutorrent/"><img src="https://img.shields.io/docker/pulls/crazymax/rtorrent-rutorrent.svg?style=flat-square" alt="Docker Pulls"></a>
   <a href="https://quay.io/repository/crazymax/rtorrent-rutorrent"><img src="https://quay.io/repository/crazymax/rtorrent-rutorrent/status?style=flat-square" alt="Docker Repository on Quay"></a>
   <a href="https://www.codacy.com/app/crazy-max/docker-rtorrent-rutorrent"><img src="https://img.shields.io/codacy/grade/6474c343fbe745579b1cb12c8d193647.svg?style=flat-square" alt="Code Quality"></a>
-  <br /><a href="https://www.patreon.com/crazymax"><img src="https://img.shields.io/badge/donate-patreon-fb664e.svg?style=flat-square" alt="Support me on Patreon"></a>
-  <a href="https://www.paypal.me/crazyws"><img src="https://img.shields.io/badge/donate-paypal-7057ff.svg?style=flat-square" alt="Donate Paypal"></a>
+  <br /><a href="https://www.patreon.com/crazymax"><img src="https://img.shields.io/badge/donate-patreon-f96854.svg?logo=patreon&style=flat-square" alt="Support me on Patreon"></a>
+  <a href="https://www.paypal.me/crazyws"><img src="https://img.shields.io/badge/donate-paypal-00457c.svg?logo=paypal&style=flat-square" alt="Donate Paypal"></a>
 </p>
 
 ## About
