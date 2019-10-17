@@ -37,8 +37,6 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 ### General
 
 * `TZ` : The timezone assigned to the container (default: `UTC`)
-* `PUID` : The user id (default: `1000`)
-* `PGID` : The group id (default: `1000`)
 * `WAN_IP` : Public IP address reported to the tracker (default auto resolved with `dig +short myip.opendns.com @resolver1.opendns.com`)
 * `MEMORY_LIMIT` : PHP memory limit (default: `256M`)
 * `UPLOAD_MAX_SIZE` : Upload max size (default: `16M`)
@@ -80,7 +78,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 * `/data` : rTorrent / ruTorrent config, downloads, session files, log, ...
 * `/passwd` : Contains htpasswd files for basic auth
 
-> :warning: Note that the volumes should be owned by the user/group with the PUID/PGID specified. If you don’t give the volume correct permissions, the container may not start.
+> :warning: Note that the volume should be owned by uid `1000` and gid `1000`. If you don't give the volume correct permissions, the container may not start.
 
 ## Ports
 

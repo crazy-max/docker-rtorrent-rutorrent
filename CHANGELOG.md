@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.9-0.9.8-0.13.8-RC5 (2019/10/17)
+
+* Remove `PUID` / `PGID` vars
+
 ## 3.9-0.9.8-0.13.8-RC4 (2019/10/16)
 
 * Switch to GitHub Actions
@@ -13,7 +17,7 @@
 > As the Docker container now runs as a non-root user, you have to first stop the container and change permissions to volumes:
 > ```
 > docker-compose stop
-> chown -R ${PUID}:${PGID} data/ passwd/
+> chown -R 1000:1000 data/ passwd/
 > docker-compose pull
 > docker-compose up -d
 > ```

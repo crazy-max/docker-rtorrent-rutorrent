@@ -14,9 +14,6 @@ export RUTORRENT_HOME="/data/rutorrent"
 
 export PASSWD_PATH="/passwd"
 
-PUID=${PUID:-1000}
-PGID=${PGID:-1000}
-
 MEMORY_LIMIT=${MEMORY_LIMIT:-256M}
 UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-16M}
 OPCACHE_MEM_SIZE=${OPCACHE_MEM_SIZE:-128}
@@ -48,16 +45,6 @@ RU_SAVE_UPLOADED_TORRENTS=${RU_SAVE_UPLOADED_TORRENTS:-true}
 RU_OVERWRITE_UPLOADED_TORRENTS=${RU_OVERWRITE_UPLOADED_TORRENTS:-false}
 RU_FORBID_USER_SETTINGS=${RU_FORBID_USER_SETTINGS:-false}
 RU_LOCALE=${RU_LOCALE:-UTF8}
-
-# Change rtorrent UID / GID
-echo "Checking if rtorrent UID / GID has changed..."
-if [ -n "${PGID}" ] && [ "${PGID}" != "`id -g rtorrent`" ]; then
-  sed -i -e "s/^rtorrent:\([^:]*\):[0-9]*/rtorrent:\1:${PGID}/" /etc/group
-  sed -i -e "s/^rtorrent:\([^:]*\):\([0-9]*\):[0-9]*/rtorrent:\1:\2:${PGID}/" /etc/passwd
-fi
-if [ -n "${PUID}" ] && [ "${PUID}" != "`id -u rtorrent`" ]; then
-  sed -i -e "s/^rtorrent:\([^:]*\):[0-9]*:\([0-9]*\)/rtorrent:\1:${PUID}:\2/" /etc/passwd
-fi
 
 # PHP
 echo "Setting PHP-FPM configuration..."
