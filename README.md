@@ -19,11 +19,11 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 ## Features
 
+* Run as non-root user
 * Latest [rTorrent](https://github.com/rakshasa/rtorrent) / [libTorrent](https://github.com/rakshasa/libtorrent) release compiled from source
 * Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
 * Name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) for asynchronous DNS requests (including name resolves)
 * Enhanced [rTorrent config](assets/tpls/.rtorrent.rc) and bootstraping with a [local config](assets/tpls/etc/rtorrent/.rtlocal.rc)
-* Ability to remap user and group (UID/GID)
 * WAN IP address automatically resolved for reporting to the tracker
 * XMLRPC through nginx over SCGI socket (basic auth optional)
 * WebDAV on completed downloads (basic auth optional)
