@@ -230,7 +230,7 @@ EXPOSE 6881/udp 8000 8080 9000 50000
 WORKDIR /data
 VOLUME [ "/data", "/passwd" ]
 
-CMD [ "/init" ]
+ENTRYPOINT [ "/init" ]
 
 HEALTHCHECK --interval=30s --timeout=20s --start-period=10s \
   CMD /usr/local/bin/healthcheck
