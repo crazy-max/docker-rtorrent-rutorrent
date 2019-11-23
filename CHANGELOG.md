@@ -1,6 +1,10 @@
 # Changelog
 
-## 3.9-0.9.8-0.13.8-RC8 (2019/11/21)
+## 3.9-0.9.8-0.13.8-RC9 (2019/11/23)
+
+* `.rtorrent.rc` not taken into account
+
+## 3.9-0.9.8-0.13.8-RC8 (2019/11/22)
 
 * Switch to [s6-overlay](https://github.com/just-containers/s6-overlay/) as a process supervisor
 * Add `PUID`/`PGID` vars (#12)
