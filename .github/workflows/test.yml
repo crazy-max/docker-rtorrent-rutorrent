@@ -7,14 +7,12 @@ on:
       - '.github/workflows/test.yml'
       - 'assets/**'
       - 'Dockerfile'
-      - 'entrypoint.sh'
   push:
     branches: 'master'
     paths:
       - '.github/workflows/test.yml'
       - 'assets/**'
       - 'Dockerfile'
-      - 'entrypoint.sh'
 
 jobs:
   test:
@@ -31,7 +29,7 @@ jobs:
           echo ::set-output name=build_tag::test
           echo ::set-output name=container_name::rtorrent-rutorrent
           echo ::set-output name=running_timeout::120
-          echo ::set-output name=running_log_check::nginx entered RUNNING state
+          echo ::set-output name=running_log_check::ready to handle connections
       -
         name: Docker Build
         run: |

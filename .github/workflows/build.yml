@@ -8,7 +8,6 @@ on:
       - '.github/workflows/build.yml'
       - 'assets/**'
       - 'Dockerfile'
-      - 'entrypoint.sh'
 
 jobs:
   build:
