@@ -64,3 +64,13 @@ services:
         soft: 32000
         hard: 40000
     restart: always
+
+  rtorrent-logs:
+    image: bash
+    container_name: rtorrent_logs
+    command: bash -c 'tail -f /log/*.log'
+    depends_on:
+      - rtorrent-rutorrent
+    volumes:
+      - "./data/rtorrent/log:/log"
+    restart: always

@@ -28,11 +28,3 @@ s6-setuidgid ${PUID}:${PGID}
 rtorrent -D -o import=/etc/rtorrent/.rtlocal.rc -i ${WAN_IP}
 EOL
 chmod +x /etc/services.d/rtorrent/run
-
-mkdir -p /etc/services.d/rtorrent-logs
-cat > /etc/services.d/rtorrent-logs/run <<EOL
-#!/usr/bin/execlineb -P
-with-contenv
-tail -f /data/rtorrent/log/rtorrent.log
-EOL
-chmod +x /etc/services.d/rtorrent-logs/run
