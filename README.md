@@ -99,7 +99,7 @@ Docker compose is the recommended way to run this image. Copy the content of fol
 
 ```bash
 $ mkdir data passwd
-$ chown 1000:1000 data passwd
+$ chown ${PUID}:${PGID} data passwd
 $ docker-compose up -d
 $ docker-compose logs -f
 ```
