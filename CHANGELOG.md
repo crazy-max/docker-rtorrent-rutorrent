@@ -1,9 +1,12 @@
 # Changelog
 
+## 3.9-0.9.8-0.13.8-RC10 (2019/11/23)
+
+* Dedicated container for rtorrent logs
+
 ## 3.9-0.9.8-0.13.8-RC9 (2019/11/23)
 
 * `.rtorrent.rc` not taken into account
-* Dedicated container for rtorrent logs
 
 ## 3.9-0.9.8-0.13.8-RC8 (2019/11/22)
 
