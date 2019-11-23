@@ -1,9 +1,5 @@
 #!/usr/bin/with-contenv sh
 
-runas_user() {
-  su-exec rtorrent:rtorrent "$@"
-}
-
 WAN_IP=${WAN_IP:-$(dig +short myip.opendns.com @resolver1.opendns.com)}
 printf "%s" "$WAN_IP" > /var/run/s6/container_environment/WAN_IP
 
@@ -74,7 +70,7 @@ sed -e "s!@WEBDAV_AUTHBASIC_STRING@!$WEBDAV_AUTHBASIC_STRING!g" \
 
 # Init
 echo "Initializing files and folders..."
-runas_user mkdir -p /data/rtorrent/downloads/complete \
+mkdir -p /data/rtorrent/downloads/complete \
   /data/rtorrent/downloads/temp \
   /data/rtorrent/log \
   /data/rtorrent/.session \
@@ -85,11 +81,11 @@ runas_user mkdir -p /data/rtorrent/downloads/complete \
   /data/rutorrent/share/users \
   /data/rutorrent/share/torrents \
   /data/rutorrent/themes
-runas_user touch /passwd/rpc.htpasswd \
+touch /passwd/rpc.htpasswd \
   /passwd/rutorrent.htpasswd \
   /passwd/webdav.htpasswd \
   /data/rtorrent/log/rtorrent.log \
-  ${RU_LOG_FILE}
+  "${RU_LOG_FILE}"
 rm -f /data/rtorrent/.session/rtorrent.lock
 
 # Check htpasswd files
@@ -111,27 +107,28 @@ fi
 
 # rTorrent local config
 echo "Checking rTorrent local configuration..."
-runas_user sed -e "s!@RT_LOG_LEVEL@!$RT_LOG_LEVEL!g" \
+sed -e "s!@RT_LOG_LEVEL@!$RT_LOG_LEVEL!g" \
   /tpls/etc/rtorrent/.rtlocal.rc > /etc/rtorrent/.rtlocal.rc
 if [ "${RT_LOG_EXECUTE}" = "true" ]; then
   echo "  Enabling rTorrent execute log..."
-  runas_user sed -i "s!#log\.execute.*!log\.execute = (cat,(cfg.logs),\"execute.log\")!g" /etc/rtorrent/.rtlocal.rc
+  sed -i "s!#log\.execute.*!log\.execute = (cat,(cfg.logs),\"execute.log\")!g" /etc/rtorrent/.rtlocal.rc
 fi
 if [ "${RT_LOG_XMLRPC}" = "true" ]; then
   echo "  Enabling rTorrent xmlrpc log..."
-  runas_user sed -i "s!#log\.xmlrpc.*!log\.xmlrpc = (cat,(cfg.logs),\"xmlrpc.log\")!g" /etc/rtorrent/.rtlocal.rc
+  sed -i "s!#log\.xmlrpc.*!log\.xmlrpc = (cat,(cfg.logs),\"xmlrpc.log\")!g" /etc/rtorrent/.rtlocal.rc
 fi
 
 # rTorrent config
 echo "Checking rTorrent configuration..."
 if [ ! -f /data/rtorrent/.rtorrent.rc ]; then
   echo "  Creating default configuration..."
-  runas_user cp /tpls/.rtorrent.rc /data/rtorrent/.rtorrent.rc
+  cp /tpls/.rtorrent.rc /data/rtorrent/.rtorrent.rc
 fi
+chown rtorrent. /data/rtorrent/.rtorrent.rc
 
 # ruTorrent config
 echo "Bootstrapping ruTorrent configuration..."
-runas_user cat > /var/www/rutorrent/conf/config.php <<EOL
+cat > /var/www/rutorrent/conf/config.php <<EOL
 <?php
 
 // For snoopy client
@@ -197,6 +194,7 @@ runas_user cat > /var/www/rutorrent/conf/config.php <<EOL
 
 \$locale = '${RU_LOCALE}';
 EOL
+chown nobody.nogroup "/var/www/rutorrent/conf/config.php"
 
 # Symlinking ruTorrent config
 ln -sf /data/rutorrent/conf/users /var/www/rutorrent/conf/users
@@ -204,14 +202,14 @@ if [ ! -f /data/rutorrent/conf/access.ini ]; then
   echo "Symlinking ruTorrent access.ini file..."
   mv /var/www/rutorrent/conf/access.ini /data/rutorrent/conf/access.ini
   ln -sf /data/rutorrent/conf/access.ini /var/www/rutorrent/conf/access.ini
-  chown rtorrent. /data/rutorrent/conf/access.ini
 fi
+chown rtorrent. /data/rutorrent/conf/access.ini
 if [ ! -f /data/rutorrent/conf/plugins.ini ]; then
   echo "Symlinking ruTorrent plugins.ini file..."
   mv /var/www/rutorrent/conf/plugins.ini /data/rutorrent/conf/plugins.ini
   ln -sf /data/rutorrent/conf/plugins.ini /var/www/rutorrent/conf/plugins.ini
-  chown rtorrent. /data/rutorrent/conf/plugins.ini
 fi
+chown rtorrent. /data/rutorrent/conf/plugins.ini
 
 # Remove ruTorrent core plugins
 if [ -n "$RU_REMOVE_CORE_PLUGINS" ]; then
@@ -232,6 +230,7 @@ cat > /var/www/rutorrent/plugins/create/conf.php <<EOL
 \$pathToCreatetorrent = '/usr/local/bin/mktorrent';
 \$recentTrackersMaxCount = 15;
 EOL
+chown nobody.nogroup "/var/www/rutorrent/plugins/create/conf.php"
 
 # Check ruTorrent plugins
 echo "Checking ruTorrent custom plugins..."
@@ -280,4 +279,24 @@ done
 
 # Perms
 echo "Fixing perms..."
-chmod 644 /data/rtorrent/.rtorrent.rc /passwd/*.htpasswd /etc/rtorrent/.rtlocal.rc
+chown rtorrent. \
+  /data/rtorrent/downloads \
+  /data/rtorrent/downloads/complete \
+  /data/rtorrent/downloads/temp \
+  /data/rutorrent/share/users \
+  /data/rutorrent/share/torrents \
+  "${RU_LOG_FILE}"
+chown -R rtorrent. \
+  /data/rtorrent/log \
+  /data/rtorrent/.session \
+  /data/rtorrent/watch \
+  /data/rutorrent/conf \
+  /data/rutorrent/plugins \
+  /data/rutorrent/plugins-conf \
+  /data/rutorrent/share \
+  /data/rutorrent/themes \
+  /etc/rtorrent
+chmod 644 \
+  /data/rtorrent/.rtorrent.rc \
+  /passwd/*.htpasswd \
+  /etc/rtorrent/.rtlocal.rc
