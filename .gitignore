@@ -1,7 +1,3 @@
-# Jetbrains
+/.dev
 /.idea
 /*.iml
-
-# Custom
-/.dev
-/assets/passwd/*.htpasswd

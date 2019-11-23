@@ -1,4 +1,4 @@
-FROM nginx:stable-alpine
+FROM nginx:mainline-alpine
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -136,7 +136,7 @@ RUN apk --update --no-cache add \
     python2 \
     shadow \
     sox \
-    supervisor \
+    su-exec \
     tar \
     tzdata \
     unrar \
@@ -162,6 +162,9 @@ RUN apk --update --no-cache add \
     py2-pip \
     python2-dev \
     zlib-dev \
+  # s6-oberlay
+  && wget -q "https://github.com/just-containers/s6-overlay/releases/latest/download/s6-overlay-amd64.tar.gz" -qO "/tmp/s6-overlay-amd64.tar.gz" \
+  && tar xzf /tmp/s6-overlay-amd64.tar.gz -C / \
   # nginx webdav
   && mkdir -p /usr/src \
   && cd /usr/src \
@@ -191,6 +194,7 @@ RUN apk --update --no-cache add \
   && pecl install geoip-${GEOIP_EXT_VERSION}.tgz \
   && rm -f geoip-${GEOIP_EXT_VERSION}.tgz \
   && apk del build-dependencies \
+  && chown -R nobody.nogroup /var/www \
   && rm -rf /etc/nginx/conf.d/* \
     /usr/src/nginx* \
     /tmp/* \
@@ -202,53 +206,31 @@ RUN apk --update --no-cache add \
     /var/www/rutorrent/share
 
 ENV PYTHONPATH="$PYTHONPATH:/var/www/rutorrent" \
-  TZ="UTC"
+  S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
+  TZ="UTC" \
+  PUID="1000" \
+  PGID="1000"
 
-COPY entrypoint.sh /entrypoint.sh
 COPY assets /
 
-RUN chmod a+x /entrypoint.sh /usr/local/bin/* \
-  && addgroup -g 1000 rtorrent \
-  && adduser -D -H -u 1000 -G rtorrent -s /bin/sh rtorrent \
-  && mkdir -p \
-    /data \
+RUN chmod a+x /usr/local/bin/* \
+  && addgroup -g ${PGID} rtorrent \
+  && adduser -D -H -u ${PUID} -G rtorrent -s /bin/sh rtorrent \
+  && mkdir -p /data \
     /passwd \
     /etc/rtorrent \
     /var/cache/nginx \
     /var/lib/nginx \
-    /var/log/supervisord \
     /var/run/nginx \
     /var/run/php-fpm \
     /var/run/rtorrent \
-    /var/run/supervisord \
-    /var/tmp/nginx \
-  && chown -R rtorrent. \
-    /data \
-    /etc/nginx \
-    /etc/php7 \
-    /etc/rtorrent \
-    /passwd \
-    /tpls \
-    /var/cache/nginx \
-    /var/lib/nginx \
-    /var/log/nginx \
-    /var/log/php7 \
-    /var/log/supervisord \
-    /var/run/nginx \
-    /var/run/php-fpm \
-    /var/run/rtorrent \
-    /var/run/supervisord \
-    /var/tmp/nginx \
-    /var/www
-
-USER rtorrent
+    /var/tmp/nginx
 
 EXPOSE 6881/udp 8000 8080 9000 50000
 WORKDIR /data
 VOLUME [ "/data", "/passwd" ]
 
-ENTRYPOINT [ "/entrypoint.sh" ]
-CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
+CMD [ "/init" ]
 
 HEALTHCHECK --interval=30s --timeout=20s --start-period=10s \
   CMD /usr/local/bin/healthcheck

@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.9-0.9.8-0.13.8-RC8 (2019/11/21)
+
+* Switch to [s6-overlay](https://github.com/just-containers/s6-overlay/) as a process supervisor
+* Add `PUID`/`PGID` vars (#12)
+* Do not set defaults if `RU_REMOVE_CORE_PLUGINS` is empty
+* Nginx mainline base image
+
 ## 3.9-0.9.8-0.13.8-RC7 (2019/10/26)
 
 * Base image update
