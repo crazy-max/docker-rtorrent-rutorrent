@@ -23,7 +23,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 * Latest [rTorrent](https://github.com/rakshasa/rtorrent) / [libTorrent](https://github.com/rakshasa/libtorrent) release compiled from source
 * Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
 * Name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) for asynchronous DNS requests (including name resolves)
-* Enhanced [rTorrent config](assets/tpls/.rtorrent.rc) and bootstraping with a [local config](assets/tpls/etc/rtorrent/.rtlocal.rc)
+* Enhanced [rTorrent config](rootfs/tpls/.rtorrent.rc) and bootstraping with a [local config](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
 * WAN IP address automatically resolved for reporting to the tracker
 * XMLRPC through nginx over SCGI socket (basic auth optional)
 * WebDAV on completed downloads (basic auth optional)
@@ -154,7 +154,7 @@ Htpasswd files used:
 
 ### Boostrap config `.rtlocal.rc`
 
-When rTorrent is started the bootstrap config [/etc/rtorrent/.rtlocal.rc](assets/tpls/etc/rtorrent/.rtlocal.rc) is imported.<br />
+When rTorrent is started the bootstrap config [/etc/rtorrent/.rtlocal.rc](rootfs/tpls/etc/rtorrent/.rtlocal.rc) is imported.<br />
 This configuration cannot be changed unless you rebuild the image or overwrite these elements in your `.rtorrent.rc`.<br />
 Here are the particular properties of this file:
 

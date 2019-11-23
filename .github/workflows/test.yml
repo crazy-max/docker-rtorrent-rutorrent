@@ -5,13 +5,13 @@ on:
     branches: 'master'
     paths:
       - '.github/workflows/test.yml'
-      - 'assets/**'
+      - 'rootfs/**'
       - 'Dockerfile'
   push:
     branches: 'master'
     paths:
       - '.github/workflows/test.yml'
-      - 'assets/**'
+      - 'rootfs/**'
       - 'Dockerfile'
 
 jobs:

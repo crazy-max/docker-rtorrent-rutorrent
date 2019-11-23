@@ -12,7 +12,7 @@ insert_final_newline = true
 [*.json]
 insert_final_newline = false
 
-[assets/**]
+[rootfs/**]
 insert_final_newline = false
 
 [*.md]

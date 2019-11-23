@@ -211,7 +211,7 @@ ENV PYTHONPATH="$PYTHONPATH:/var/www/rutorrent" \
   PUID="1000" \
   PGID="1000"
 
-COPY assets /
+COPY rootfs /
 
 RUN chmod a+x /usr/local/bin/* \
   && addgroup -g ${PGID} rtorrent \
