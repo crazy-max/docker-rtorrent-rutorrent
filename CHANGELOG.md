@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.9-0.9.8-0.13.8-RC11 (2019/12/07)
+
+* Fix timezone
+
 ## 3.9-0.9.8-0.13.8-RC10 (2019/11/23)
 
 * Dedicated container for rtorrent logs

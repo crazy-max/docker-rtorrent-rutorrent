@@ -3,6 +3,7 @@
 WAN_IP=${WAN_IP:-$(dig +short myip.opendns.com @resolver1.opendns.com)}
 printf "%s" "$WAN_IP" > /var/run/s6/container_environment/WAN_IP
 
+TZ=${TZ:-UTC}
 MEMORY_LIMIT=${MEMORY_LIMIT:-256M}
 UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-16M}
 OPCACHE_MEM_SIZE=${OPCACHE_MEM_SIZE:-128}
@@ -34,11 +35,20 @@ RU_OVERWRITE_UPLOADED_TORRENTS=${RU_OVERWRITE_UPLOADED_TORRENTS:-false}
 RU_FORBID_USER_SETTINGS=${RU_FORBID_USER_SETTINGS:-false}
 RU_LOCALE=${RU_LOCALE:-UTF8}
 
+# Timezone
+echo "Setting timezone to ${TZ}..."
+ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime
+echo ${TZ} > /etc/timezone
+
 # PHP
 echo "Setting PHP-FPM configuration..."
 sed -e "s/@MEMORY_LIMIT@/$MEMORY_LIMIT/g" \
   -e "s/@UPLOAD_MAX_SIZE@/$UPLOAD_MAX_SIZE/g" \
   /tpls/etc/php7/php-fpm.d/www.conf > /etc/php7/php-fpm.d/www.conf
+
+echo "Setting PHP INI configuration..."
+sed -i "s|memory_limit.*|memory_limit = ${MEMORY_LIMIT}|g" /etc/php7/php.ini
+sed -i "s|;date\.timezone.*|date\.timezone = ${TZ}|g" /etc/php7/php.ini
 
 # OpCache
 echo "Setting OpCache configuration..."
