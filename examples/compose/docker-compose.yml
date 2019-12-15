@@ -8,9 +8,6 @@ services:
       - target: 6881
         published: 6881
         protocol: udp
-      - target: 8000
-        published: 8000
-        protocol: tcp
       - target: 8080
         published: 8080
         protocol: tcp
