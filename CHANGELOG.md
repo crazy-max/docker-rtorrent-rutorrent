@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.9-0.9.8-0.13.8-RC12 (2020/01/02)
+
+* Use [geoip-updater](https://github.com/crazy-max/geoip-updater) Docker image to download MaxMind's GeoIP2 databases
+
 ## 3.9-0.9.8-0.13.8-RC11 (2019/12/07)
 
 * Fix timezone

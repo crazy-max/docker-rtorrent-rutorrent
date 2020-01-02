@@ -80,7 +80,8 @@ sed -e "s!@WEBDAV_AUTHBASIC_STRING@!$WEBDAV_AUTHBASIC_STRING!g" \
 
 # Init
 echo "Initializing files and folders..."
-mkdir -p /data/rtorrent/downloads/complete \
+mkdir -p /data/geoip \
+  /data/rtorrent/downloads/complete \
   /data/rtorrent/downloads/temp \
   /data/rtorrent/log \
   /data/rtorrent/.session \
@@ -287,6 +288,14 @@ for theme in ${themes}; do
   chown -R nobody.nogroup "/var/www/rutorrent/plugins/theme/themes/${theme}"
 done
 
+# GeoIP2 databases
+if [ ! "$(ls -A /data/geoip)" ]; then
+  cp -f /var/mmdb/*.mmdb /data/geoip/
+fi
+ln -sf /data/geoip/GeoLite2-ASN.mmdb /var/www/rutorrent/plugins/geoip2/database/GeoLite2-ASN.mmdb
+ln -sf /data/geoip/GeoLite2-City.mmdb /var/www/rutorrent/plugins/geoip2/database/GeoLite2-City.mmdb
+ln -sf /data/geoip/GeoLite2-Country.mmdb /var/www/rutorrent/plugins/geoip2/database/GeoLite2-Country.mmdb
+
 # Perms
 echo "Fixing perms..."
 chown rtorrent. \
@@ -297,6 +306,7 @@ chown rtorrent. \
   /data/rutorrent/share/torrents \
   "${RU_LOG_FILE}"
 chown -R rtorrent. \
+  /data/geoip \
   /data/rtorrent/log \
   /data/rtorrent/.session \
   /data/rtorrent/watch \

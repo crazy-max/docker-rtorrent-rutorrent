@@ -182,14 +182,12 @@ RUN apk --update --no-cache add \
   && cd rutorrent \
   && git checkout ${RUTORRENT_REVISION} \
   && pip2 install cfscrape cloudscraper \
-  # geoip2
   && git clone https://github.com/Micdu70/geoip2-rutorrent /var/www/rutorrent/plugins/geoip2 \
-  && cd /var/www/rutorrent/plugins/geoip2/database \
-  && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz \
-  && wget -q http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz \
-  && tar -xvzf GeoLite2-City.tar.gz --strip-components=1 \
-  && tar -xvzf GeoLite2-Country.tar.gz --strip-components=1 \
-  && rm -f *.gz \
+  # geolite2
+  && mkdir /var/mmdb \
+  && wget -q https://github.com/crazy-max/docker-matomo/raw/mmdb/GeoLite2-City.mmdb -qO /var/mmdb/GeoLite2-City.mmdb \
+  && wget -q https://github.com/crazy-max/docker-matomo/raw/mmdb/GeoLite2-Country.mmdb -qO /var/mmdb/GeoLite2-Country.mmdb \
+  # PHP geoip2 extension
   && wget -q https://pecl.php.net/get/geoip-${GEOIP_EXT_VERSION}.tgz \
   && pecl install geoip-${GEOIP_EXT_VERSION}.tgz \
   && rm -f geoip-${GEOIP_EXT_VERSION}.tgz \
