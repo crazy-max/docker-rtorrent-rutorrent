@@ -221,8 +221,7 @@ RUN chmod a+x /usr/local/bin/* \
     /var/lib/nginx \
     /var/run/nginx \
     /var/run/php-fpm \
-    /var/run/rtorrent \
-    /var/tmp/nginx
+    /var/run/rtorrent
 
 EXPOSE 6881/udp 8000 8080 9000 50000
 WORKDIR /data

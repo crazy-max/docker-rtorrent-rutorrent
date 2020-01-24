@@ -13,5 +13,4 @@ chown -R rtorrent. \
   /var/log/php7 \
   /var/run/nginx \
   /var/run/php-fpm \
-  /var/run/rtorrent \
-  /var/tmp/nginx
+  /var/run/rtorrent
