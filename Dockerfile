@@ -213,15 +213,7 @@ COPY rootfs /
 
 RUN chmod a+x /usr/local/bin/* \
   && addgroup -g ${PGID} rtorrent \
-  && adduser -D -H -u ${PUID} -G rtorrent -s /bin/sh rtorrent \
-  && mkdir -p /data \
-    /passwd \
-    /etc/rtorrent \
-    /var/cache/nginx \
-    /var/lib/nginx \
-    /var/run/nginx \
-    /var/run/php-fpm \
-    /var/run/rtorrent
+  && adduser -D -H -u ${PUID} -G rtorrent -s /bin/sh rtorrent
 
 EXPOSE 6881/udp 8000 8080 9000 50000
 WORKDIR /data

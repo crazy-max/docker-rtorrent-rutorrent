@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.9-0.9.8-0.13.8-RC14 (2020/03/27)
+
+* Fix folder creation
+
 ## 3.9-0.9.8-0.13.8-RC13 (2020/01/24)
 
 * Move Nginx temp folders to `/tmp`
