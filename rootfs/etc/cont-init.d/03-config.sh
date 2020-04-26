@@ -81,8 +81,6 @@ sed -e "s!@WEBDAV_AUTHBASIC_STRING@!$WEBDAV_AUTHBASIC_STRING!g" \
 # Init
 echo "Initializing files and folders..."
 mkdir -p /data/geoip \
-  /data/rtorrent/downloads/complete \
-  /data/rtorrent/downloads/temp \
   /data/rtorrent/log \
   /data/rtorrent/.session \
   /data/rtorrent/watch \
@@ -91,7 +89,9 @@ mkdir -p /data/geoip \
   /data/rutorrent/plugins-conf \
   /data/rutorrent/share/users \
   /data/rutorrent/share/torrents \
-  /data/rutorrent/themes
+  /data/rutorrent/themes \
+  /downloads/complete \
+  /downloads/temp
 touch /passwd/rpc.htpasswd \
   /passwd/rutorrent.htpasswd \
   /passwd/webdav.htpasswd \
@@ -170,7 +170,7 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 \$overwriteUploadedTorrents = ${RU_OVERWRITE_UPLOADED_TORRENTS};
 
 // Upper available directory. Absolute path with trail slash.
-\$topDirectory = '/data';
+\$topDirectory = '/';
 \$forbidUserSettings = ${RU_FORBID_USER_SETTINGS};
 
 // For web->rtorrent link through unix domain socket
@@ -299,11 +299,11 @@ ln -sf /data/geoip/GeoLite2-Country.mmdb /var/www/rutorrent/plugins/geoip2/datab
 # Perms
 echo "Fixing perms..."
 chown rtorrent. \
-  /data/rtorrent/downloads \
-  /data/rtorrent/downloads/complete \
-  /data/rtorrent/downloads/temp \
   /data/rutorrent/share/users \
   /data/rutorrent/share/torrents \
+  /downloads \
+  /downloads/complete \
+  /downloads/temp \
   "${RU_LOG_FILE}"
 chown -R rtorrent. \
   /data/geoip \

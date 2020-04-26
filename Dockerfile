@@ -120,6 +120,7 @@ RUN apk --update --no-cache add \
     ncurses \
     pcre \
     php7 \
+    php7-bcmath \
     php7-cli \
     php7-ctype \
     php7-curl \
@@ -216,8 +217,7 @@ RUN chmod a+x /usr/local/bin/* \
   && adduser -D -H -u ${PUID} -G rtorrent -s /bin/sh rtorrent
 
 EXPOSE 6881/udp 8000 8080 9000 50000
-WORKDIR /data
-VOLUME [ "/data", "/passwd" ]
+VOLUME [ "/data", "/downloads", "/passwd" ]
 
 ENTRYPOINT [ "/init" ]
 

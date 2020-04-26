@@ -79,7 +79,8 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 ## Volumes
 
-* `/data`: rTorrent / ruTorrent config, downloads, session files, log, ...
+* `/data`: rTorrent / ruTorrent config, session files, log, ...
+* `/downloads`: Downloaded files
 * `/passwd`: Contains htpasswd files for basic auth
 
 > :warning: Note that the volumes should be owned by the user/group with the specified `PUID` and `PGID`. If you don't give the volumes correct permissions, the container may not start.
@@ -121,6 +122,7 @@ $ docker run -d --name rtorrent_rutorrent \
   -p 9000:9000 \
   -p 50000:50000 \
   -v $(pwd)/data:/data \
+  -v $(pwd)/downloads:/downloads \
   -v $(pwd)/passwd:/passwd \
   crazymax/rtorrent-rutorrent:latest
 ```
@@ -135,7 +137,7 @@ See below to populate this file with a user / password.
 
 ### WebDAV
 
-WebDAV allows you to retrieve your completed torrent files in `/data/rtorrent/downloads/completed` on port `9000`.<br />
+WebDAV allows you to retrieve your completed torrent files in `/downloads/completed` on port `9000`.<br />
 Like XMLRPC, these requests can be secured with basic authentication through the `/passwd/webdav.htpasswd` file in which you will need to add a username with his password.<br />
 See below to populate this file with a user / password.
 
@@ -162,9 +164,9 @@ Here are the particular properties of this file:
 * `system.daemon.set = true`: Launcher rTorrent as a daemon
 * A config layout for the rTorrent's instance you can use in your `.rtorrent.rc`:
   * `cfg.basedir`: Home directory of rtorrent (`/data/rtorrent/`)
-  * `cfg.download`: Download directory (`/data/rtorrent/downloads/`)
-  * `cfg.download_complete`: Completed downloads (`/data/rtorrent/downloads/completed/`)
-  * `cfg.download_temp`:  Downloads in progress (`/data/rtorrent/downloads/temp/`)
+  * `cfg.download`: Download directory (`/downloads/`)
+  * `cfg.download_complete`: Completed downloads (`/downloads/completed/`)
+  * `cfg.download_temp`:  Downloads in progress (`/downloads/temp/`)
   * `cfg.logs`: Logs directory (`/data/rtorrent/log/`)
   * `cfg.session`: Session directory (`/data/rtorrent/.session/`)
   * `cfg.watch`: Watch directory for torrents (`/data/rtorrent/watch/`)

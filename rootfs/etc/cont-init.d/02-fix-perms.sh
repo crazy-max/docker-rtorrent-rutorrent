@@ -2,6 +2,7 @@
 
 echo "Fixing perms..."
 mkdir -p /data \
+  /downloads \
   /passwd \
   /etc/rtorrent \
   /var/cache/nginx \
@@ -10,7 +11,8 @@ mkdir -p /data \
   /var/run/php-fpm \
   /var/run/rtorrent
 chown rtorrent. \
-  /data
+  /data \
+  /downloads
 chown -R rtorrent. \
   /etc/rtorrent \
   /passwd \

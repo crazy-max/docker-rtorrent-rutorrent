@@ -142,7 +142,7 @@
 ## 0.9.7-0.13.7-RC2 (2018/06/17)
 
 * Move runtime data in `/var/rtorrent/run`
-* Enable WebDAV protocol on `downloads/complete` with basic auth
+* Enable WebDAV protocol on `/downloads/complete` with basic auth
 
 ## 0.9.7-0.13.7-RC1 (2018/06/16)
 

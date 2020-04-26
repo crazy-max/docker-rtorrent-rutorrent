@@ -52,6 +52,7 @@ services:
       - "./rtorrent-rutorrent.env"
     volumes:
       - "./data:/data"
+      - "./downloads:/downloads"
       - "./passwd:/passwd"
     labels:
       - "traefik.enable=true"

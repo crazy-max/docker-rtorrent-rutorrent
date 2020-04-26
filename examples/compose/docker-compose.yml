@@ -28,6 +28,7 @@ services:
       - "./rtorrent-rutorrent.env"
     volumes:
       - "./data:/data"
+      - "./downloads:/downloads"
       - "./passwd:/passwd"
     ulimits:
       nproc: 65535
