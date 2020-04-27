@@ -3,6 +3,7 @@
 ## 3.9-0.9.8-0.13.8-RC15 (2020/04/27)
 
 * Move downloads to a dedicated volume (#20)
+* Switch to Open Container Specification labels as label-schema.org ones are deprecated
 
 > :warning: **UPGRADE NOTES**
 > Downloads folder has moved from `/data/rtorrent/downloads` to `/downloads`
