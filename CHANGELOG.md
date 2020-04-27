@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.9-0.9.8-0.13.8-RC15 (2020/04/27)
+
+* Move downloads to a dedicated volume (#20)
+
+> :warning: **UPGRADE NOTES**
+> Downloads folder has moved from `/data/rtorrent/downloads` to `/downloads`
+
 ## 3.9-0.9.8-0.13.8-RC14 (2020/03/27)
 
 * Fix folder creation
@@ -46,9 +53,9 @@
 ## 3.9-0.9.8-0.13.8-RC4 (2019/10/16)
 
 * Switch to GitHub Actions
-* :warning: Stop publishing Docker image on Quay
+* Stop publishing Docker image on Quay
 * Move boostrap (default) config for rTorrent to `/etc/rtorrent/.rtlocal.rc`
-* :warning: Run as non-root user
+* Run as non-root user
 * Prevent exposing nginx version
 * Set timezone through tzdata
 
