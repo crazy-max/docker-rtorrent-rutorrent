@@ -8,7 +8,7 @@
 > :warning: **UPGRADE NOTES**
 > Downloads folder has moved from `/data/rtorrent/downloads` to `/downloads`<br />
 > If you have active torrents, it is recommended to create a symlink from your rtorrent folder on your host:<br />
-> `cd /data/rtorrent/ && ln -sf ../../downloads ./` 
+> `cd ./data/rtorrent/ && ln -sf ../../downloads ./` 
 
 ## 3.9-0.9.8-0.13.8-RC14 (2020/03/27)
 
