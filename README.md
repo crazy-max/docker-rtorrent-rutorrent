@@ -123,8 +123,8 @@ ___
 Docker compose is the recommended way to run this image. Copy the content of folder [examples/compose](examples/compose) in `/var/rtorrent-rutorrent/` on your host for example. Edit the compose file with your preferences and run the following command:
 
 ```bash
-$ mkdir data passwd
-$ chown ${PUID}:${PGID} data passwd
+$ mkdir data downloads passwd
+$ chown ${PUID}:${PGID} data downloads passwd
 $ docker-compose up -d
 $ docker-compose logs -f
 ```
@@ -134,8 +134,8 @@ $ docker-compose logs -f
 You can also use the following minimal command:
 
 ```bash
-$ mkdir data passwd
-$ chown 1000:1000 data passwd
+$ mkdir data downloads passwd
+$ chown ${PUID}:${PGID} data downloads passwd
 $ docker run -d --name rtorrent_rutorrent \
   --ulimit nproc=65535 \
   --ulimit nofile=32000:40000 \
