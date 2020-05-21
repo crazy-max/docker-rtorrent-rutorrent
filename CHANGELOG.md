@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.9-0.9.8-0.13.8-RC16 (2020/05/21)
+
+* Add `MAX_FILE_UPLOADS` environment variable (#22)
+
 ## 3.9-0.9.8-0.13.8-RC15 (2020/04/27)
 
 * Move downloads to a dedicated volume (#20)

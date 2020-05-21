@@ -7,6 +7,7 @@ TZ=${TZ:-UTC}
 MEMORY_LIMIT=${MEMORY_LIMIT:-256M}
 UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-16M}
 OPCACHE_MEM_SIZE=${OPCACHE_MEM_SIZE:-128}
+MAX_FILE_UPLOADS=${MAX_FILE_UPLOADS:-50}
 REAL_IP_FROM=${REAL_IP_FROM:-0.0.0.0/32}
 REAL_IP_HEADER=${REAL_IP_HEADER:-X-Forwarded-For}
 LOG_IP_VAR=${LOG_IP_VAR:-remote_addr}
@@ -49,6 +50,7 @@ sed -e "s/@MEMORY_LIMIT@/$MEMORY_LIMIT/g" \
 echo "Setting PHP INI configuration..."
 sed -i "s|memory_limit.*|memory_limit = ${MEMORY_LIMIT}|g" /etc/php7/php.ini
 sed -i "s|;date\.timezone.*|date\.timezone = ${TZ}|g" /etc/php7/php.ini
+sed -i "s|max_file_uploads.*|max_file_uploads = ${MAX_FILE_UPLOADS}|g" /etc/php7/php.ini
 
 # OpCache
 echo "Setting OpCache configuration..."
