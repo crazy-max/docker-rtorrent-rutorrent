@@ -1,26 +1,22 @@
 name: test
 
 on:
-  pull_request:
-    branches: 'master'
-    paths:
-      - '.github/workflows/test.yml'
-      - 'rootfs/**'
-      - 'Dockerfile'
   push:
-    branches: 'master'
-    paths:
-      - '.github/workflows/test.yml'
-      - 'rootfs/**'
-      - 'Dockerfile'
+    branches:
+      - '**'
+      - '!dependabot/**'
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    branches:
+      - '**'
+    paths-ignore:
+      - '**.md'
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v2
       -
         name: Prepare
         id: prepare
@@ -30,12 +26,16 @@ jobs:
           echo ::set-output name=running_timeout::120
           echo ::set-output name=running_log_check::ready to handle connections
       -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
         name: Docker Build
         run: |
-          docker build --tag ${{ steps.prepare.outputs.build_tag }} --file ${{ matrix.docker_file }} Dockerfile .
+          docker build --tag ${{ steps.prepare.outputs.build_tag }} --file Dockerfile .
       -
         name: Start container
         run: |
+          docker rm -f ${{ steps.prepare.outputs.container_name }} > /dev/null 2>&1 || true
           docker run -d --name ${{ steps.prepare.outputs.container_name }} ${{ steps.prepare.outputs.build_tag }}
       -
         name: Test run
@@ -49,7 +49,6 @@ jobs:
             fi
             if [[ $SECONDS -gt ${TIMEOUT} ]]; then
               >&2 echo "❌ Failed to run ${{ steps.prepare.outputs.container_name }} container"
-              docker rm -f ${{ steps.prepare.outputs.container_name }} > /dev/null 2>&1 || true
               exit 1
             fi
           done < <(docker logs -f ${{ steps.prepare.outputs.container_name }} 2>&1)
@@ -57,7 +56,11 @@ jobs:
           CONTAINER_STATUS=$(docker container inspect --format "{{.State.Status}}" ${{ steps.prepare.outputs.container_name }})
           if [[ ${CONTAINER_STATUS} != "running" ]]; then
             >&2 echo "❌ Container ${{ steps.prepare.outputs.container_name }} returned status '$CONTAINER_STATUS'"
-            docker rm -f ${{ steps.prepare.outputs.container_name }} > /dev/null 2>&1 || true
             exit 1
           fi
+      -
+        name: Container logs
+        if: always()
+        run: |
+          docker logs ${{ steps.prepare.outputs.container_name }}
           docker rm -f ${{ steps.prepare.outputs.container_name }} > /dev/null 2>&1 || true

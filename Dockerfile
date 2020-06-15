@@ -163,7 +163,7 @@ RUN apk --update --no-cache add \
     py2-pip \
     python2-dev \
     zlib-dev \
-  # s6-oberlay
+  # s6-overlay
   && wget -q "https://github.com/just-containers/s6-overlay/releases/latest/download/s6-overlay-amd64.tar.gz" -qO "/tmp/s6-overlay-amd64.tar.gz" \
   && tar xzf /tmp/s6-overlay-amd64.tar.gz -C / \
   # nginx webdav
