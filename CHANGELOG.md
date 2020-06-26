@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.10-0.9.8-0.13.8-RC1 (2020/06/26)
+
+* ruTorrent 3.10 rev [Novik/ruTorrent@3446d5a](https://github.com/Novik/ruTorrent/commit/3446d5ae5fb44e5e1517d5bd600ebe3064fea82c)
+* XMLRPC 01.58.00
+* Libsig 3.0.3
+* cURL 7.71.0
+
 ## 3.9-0.9.8-0.13.8-RC16 (2020/05/21)
 
 * Add `MAX_FILE_UPLOADS` environment variable (#22)
@@ -87,7 +94,7 @@
 
 ## 3.9-0.9.8-0.13.8-RC1 (2019/07/22)
 
-* ruTorrent 3.9 revision [Novik/ruTorrent@ec8d8f1](https://github.com/Novik/ruTorrent/commit/ec8d8f1887af57793a671258072b59193a5d8d6c)
+* ruTorrent 3.9 rev [Novik/ruTorrent@ec8d8f1](https://github.com/Novik/ruTorrent/commit/ec8d8f1887af57793a671258072b59193a5d8d6c)
 * rTorrent 0.9.8 and libTorrent 0.13.8
 * XMLRPC 01.55.00
 * cURL 7.65.3
