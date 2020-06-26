@@ -12,6 +12,8 @@ mkdir -p /data \
   /var/run/rtorrent
 chown rtorrent. \
   /data \
+  /data/rtorrent \
+  /data/rutorrent \
   /downloads
 chown -R rtorrent. \
   /etc/rtorrent \

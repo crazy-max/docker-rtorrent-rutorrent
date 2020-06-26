@@ -17,10 +17,10 @@ LABEL maintainer="CrazyMax" \
 
 ENV RTORRENT_VERSION=0.9.8 \
   LIBTORRENT_VERSION=0.13.8 \
-  XMLRPC_VERSION=01.55.00 \
-  LIBSIG_VERSION=2.10.1 \
+  XMLRPC_VERSION=01.58.00 \
+  LIBSIG_VERSION=3.0.3 \
   CARES_VERSION=1.14.0 \
-  CURL_VERSION=7.65.3 \
+  CURL_VERSION=7.71.0 \
   MKTORRENT_VERSION=1.1 \
   NGINX_DAV_VERSION=3.0.0
 
@@ -28,13 +28,16 @@ RUN apk --update --no-cache add -t build-dependencies \
     autoconf \
     automake \
     binutils \
+    brotli-dev \
     build-base \
+    c-ares-dev \
     cppunit-dev \
     git \
     libtool \
-    libressl-dev \
     linux-headers \
     ncurses-dev \
+    nghttp2-dev \
+    openssl-dev \
     subversion \
     tar \
     wget \
@@ -49,7 +52,7 @@ RUN apk --update --no-cache add -t build-dependencies \
   && make install \
   # libsig
   && cd /tmp \
-  && wget http://ftp.gnome.org/pub/GNOME/sources/libsigc++/2.10/libsigc++-${LIBSIG_VERSION}.tar.xz \
+  && wget http://ftp.gnome.org/pub/GNOME/sources/libsigc++/3.0/libsigc++-${LIBSIG_VERSION}.tar.xz \
   && unxz libsigc++-${LIBSIG_VERSION}.tar.xz \
   && tar -xf libsigc++-${LIBSIG_VERSION}.tar \
   && cd libsigc++-${LIBSIG_VERSION} \
@@ -69,7 +72,13 @@ RUN apk --update --no-cache add -t build-dependencies \
   && wget https://curl.haxx.se/download/curl-${CURL_VERSION}.tar.gz \
   && tar zxf curl-${CURL_VERSION}.tar.gz \
   && cd curl-${CURL_VERSION} \
-  && ./configure --enable-ares --enable-tls-srp --enable-gnu-tls --with-ssl --with-zlib \
+  && ./configure \
+    --enable-ares \
+    --enable-tls-srp \
+    --enable-gnu-tls \
+    --with-brotli \
+    --with-ssl \
+    --with-zlib \
   && make \
   && make install \
   # libtorrent
@@ -99,14 +108,15 @@ RUN apk --update --no-cache add -t build-dependencies \
   && apk del build-dependencies \
   && rm -rf /tmp/* /var/cache/apk/*
 
-ENV RUTORRENT_VERSION="3.9" \
-  RUTORRENT_REVISION="ec8d8f1" \
+ENV RUTORRENT_VERSION="3.10" \
+  RUTORRENT_REVISION="3446d5a" \
   GEOIP_EXT_VERSION="1.1.1"
 
 RUN apk --update --no-cache add \
     apache2-utils \
     bind-tools \
     binutils \
+    brotli \
     ca-certificates \
     coreutils \
     dhclient \
@@ -114,10 +124,10 @@ RUN apk --update --no-cache add \
     geoip \
     grep \
     gzip \
-    libressl \
     libstdc++ \
     mediainfo \
     ncurses \
+    openssl \
     pcre \
     php7 \
     php7-bcmath \
@@ -147,6 +157,7 @@ RUN apk --update --no-cache add \
     zip \
     zlib \
   && apk --update --no-cache add -t build-dependencies \
+    brotli-dev \
     build-base \
     libxslt-dev \
     libxml2-dev \
