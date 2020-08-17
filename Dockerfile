@@ -144,7 +144,7 @@ RUN apk --update --no-cache add \
     php7-xml \
     php7-zip \
     php7-zlib \
-    python2 \
+    python3 \
     shadow \
     sox \
     su-exec \
@@ -171,8 +171,8 @@ RUN apk --update --no-cache add \
     pcre-dev \
     php7-dev \
     php7-pear \
-    py2-pip \
-    python2-dev \
+    py3-pip \
+    python3-dev \
     zlib-dev \
   # s6-overlay
   && wget -q "https://github.com/just-containers/s6-overlay/releases/latest/download/s6-overlay-amd64.tar.gz" -qO "/tmp/s6-overlay-amd64.tar.gz" \
@@ -193,7 +193,7 @@ RUN apk --update --no-cache add \
   && git clone https://github.com/Novik/ruTorrent.git rutorrent \
   && cd rutorrent \
   && git checkout ${RUTORRENT_REVISION} \
-  && pip2 install cfscrape cloudscraper \
+  && pip install cfscrape cloudscraper \
   && git clone https://github.com/Micdu70/geoip2-rutorrent /var/www/rutorrent/plugins/geoip2 \
   # geolite2
   && mkdir /var/mmdb \
