@@ -193,7 +193,8 @@ RUN apk --update --no-cache add \
   && git clone https://github.com/Novik/ruTorrent.git rutorrent \
   && cd rutorrent \
   && git checkout ${RUTORRENT_REVISION} \
-  && pip install cfscrape cloudscraper \
+  && pip3 install --upgrade pip \
+  && pip3 install cfscrape cloudscraper \
   && git clone https://github.com/Micdu70/geoip2-rutorrent /var/www/rutorrent/plugins/geoip2 \
   # geolite2
   && mkdir /var/mmdb \
