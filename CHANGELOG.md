@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.10-0.9.8-0.13.8-RC2 (2020/09/23)
+
+* Fix Cloudflare plugin
+
 ## 3.10-0.9.8-0.13.8-RC1 (2020/06/26)
 
 * ruTorrent 3.10 rev [Novik/ruTorrent@3446d5a](https://github.com/Novik/ruTorrent/commit/3446d5ae5fb44e5e1517d5bd600ebe3064fea82c)
