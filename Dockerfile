@@ -145,6 +145,7 @@ RUN apk --update --no-cache add \
     php7-zip \
     php7-zlib \
     python3 \
+    py3-pip \
     shadow \
     sox \
     su-exec \
@@ -171,7 +172,6 @@ RUN apk --update --no-cache add \
     pcre-dev \
     php7-dev \
     php7-pear \
-    py3-pip \
     python3-dev \
     zlib-dev \
   # s6-overlay
