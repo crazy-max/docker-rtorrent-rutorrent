@@ -181,11 +181,12 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 \$XMLRPCMountPoint = "/RPC2"; // DO NOT DELETE THIS LINE!!! DO NOT COMMENT THIS LINE!!!
 
 \$pathToExternals = array(
-    "php"   => '',
-    "curl"  => '',
-    "gzip"  => '',
-    "id"    => '',
-    "stat"  => '',
+    "php"    => '',
+    "curl"   => '',
+    "gzip"   => '',
+    "id"     => '',
+    "stat"   => '',
+    "python" => '$(which python3)',
 );
 
 // List of local interfaces
