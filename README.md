@@ -19,6 +19,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 ___
 
 * [Features](#features)
+* [Image](#image)
 * [Environment variables](#environment-variables)
   * [General](#general)
   * [rTorrent](#rtorrent)
@@ -56,6 +57,13 @@ ___
 * [Traefik](https://github.com/containous/traefik-library-image) Docker image as reverse proxy and creation/renewal of Let's Encrypt certificates (see [this template](examples/traefik))
 * [geoip-updater](https://github.com/crazy-max/geoip-updater) Docker image to download MaxMind's GeoIP2 databases on a time-based schedule for geolocation
 
+## Image
+
+| Registry                                                                                         | Image                           |
+|--------------------------------------------------------------------------------------------------|---------------------------------|
+| [Docker Hub](https://hub.docker.com/r/crazymax/rtorrent-rutorrent/)                                            | `crazymax/rtorrent-rutorrent`                 |
+| [GitHub Container Registry](https://github.com/users/crazy-max/packages/container/package/rtorrent-rutorrent)  | `ghcr.io/crazy-max/rtorrent-rutorrent`        |
+
 ## Environment variables
 
 ### General
@@ -66,6 +74,7 @@ ___
 * `WAN_IP`: Public IP address reported to the tracker (default auto resolved with `dig +short myip.opendns.com @resolver1.opendns.com`)
 * `MEMORY_LIMIT`: PHP memory limit (default: `256M`)
 * `UPLOAD_MAX_SIZE`: Upload max size (default: `16M`)
+* `CLEAR_ENV`: Clear environment in FPM workers (default `yes`)
 * `OPCACHE_MEM_SIZE`: PHP OpCache memory consumption (default: `128`)
 * `MAX_FILE_UPLOADS`: The maximum number of files allowed to be uploaded simultaneously (default: `50`)
 * `REAL_IP_FROM`: Trusted addresses that are known to send correct replacement addresses (default `0.0.0.0/32`)
