@@ -185,8 +185,8 @@ RUN apk --update --no-cache add \
   && git clone https://github.com/Micdu70/geoip2-rutorrent /var/www/rutorrent/plugins/geoip2 \
   # geolite2
   && mkdir /var/mmdb \
-  && wget -q https://github.com/crazy-max/docker-matomo/raw/mmdb/GeoLite2-City.mmdb -qO /var/mmdb/GeoLite2-City.mmdb \
-  && wget -q https://github.com/crazy-max/docker-matomo/raw/mmdb/GeoLite2-Country.mmdb -qO /var/mmdb/GeoLite2-Country.mmdb \
+  && wget -q https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb -qO /var/mmdb/GeoLite2-City.mmdb \
+  && wget -q https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-Country.mmdb -qO /var/mmdb/GeoLite2-Country.mmdb \
   # PHP geoip2 extension
   && wget -q https://pecl.php.net/get/geoip-${GEOIP_EXT_VERSION}.tgz \
   && pecl install geoip-${GEOIP_EXT_VERSION}.tgz \
