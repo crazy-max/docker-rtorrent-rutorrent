@@ -15,6 +15,15 @@ ARG S6_OVERLAY_VERSION="2.1.0.2"
 FROM nginx:mainline-alpine
 LABEL maintainer="CrazyMax"
 
+ARG RTORRENT_VERSION
+ARG LIBTORRENT_VERSION
+ARG XMLRPC_VERSION
+ARG LIBSIG_VERSION
+ARG CARES_VERSION
+ARG CURL_VERSION
+ARG MKTORRENT_VERSION
+ARG NGINX_DAV_VERSION
+
 RUN apk --update --no-cache add -t build-dependencies \
     autoconf \
     automake \
@@ -98,6 +107,11 @@ RUN apk --update --no-cache add -t build-dependencies \
   && make install \
   && apk del build-dependencies \
   && rm -rf /tmp/* /var/cache/apk/*
+
+ARG RUTORRENT_VERSION
+ARG RUTORRENT_REVISION
+ARG GEOIP_EXT_VERSION
+ARG S6_OVERLAY_VERSION
 
 RUN apk --update --no-cache add \
     apache2-utils \
