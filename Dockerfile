@@ -96,8 +96,9 @@ RUN apk --update --no-cache add -t build-dependencies \
   && rm -rf /tmp/* /var/cache/apk/*
 
 ENV RUTORRENT_VERSION="3.10" \
-  RUTORRENT_REVISION="3446d5a" \
-  GEOIP_EXT_VERSION="1.1.1"
+  RUTORRENT_REVISION="954479ffd00eb58ad14f9a667b3b9b1e108e80a2" \
+  GEOIP_EXT_VERSION="1.1.1" \
+  S6_OVERLAY_VERSION="2.1.0.2"
 
 RUN apk --update --no-cache add \
     apache2-utils \
@@ -162,7 +163,7 @@ RUN apk --update --no-cache add \
     python3-dev \
     zlib-dev \
   # s6-overlay
-  && wget -q "https://github.com/just-containers/s6-overlay/releases/latest/download/s6-overlay-amd64.tar.gz" -qO "/tmp/s6-overlay-amd64.tar.gz" \
+  && wget -q "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-amd64.tar.gz" -qO "/tmp/s6-overlay-amd64.tar.gz" \
   && tar xzf /tmp/s6-overlay-amd64.tar.gz -C / \
   # nginx webdav
   && mkdir -p /usr/src \
