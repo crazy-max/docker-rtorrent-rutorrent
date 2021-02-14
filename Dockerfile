@@ -1,15 +1,19 @@
+ARG RTORRENT_VERSION=0.9.8
+ARG LIBTORRENT_VERSION=0.13.8
+ARG XMLRPC_VERSION=01.58.00
+ARG LIBSIG_VERSION=3.0.3
+ARG CARES_VERSION=1.14.0
+ARG CURL_VERSION=7.71.0
+ARG MKTORRENT_VERSION=1.1
+ARG NGINX_DAV_VERSION=3.0.0
+
+ARG RUTORRENT_VERSION="3.10"
+ARG RUTORRENT_REVISION="954479ffd00eb58ad14f9a667b3b9b1e108e80a2"
+ARG GEOIP_EXT_VERSION="1.1.1"
+ARG S6_OVERLAY_VERSION="2.1.0.2"
+
 FROM nginx:mainline-alpine
-
 LABEL maintainer="CrazyMax"
-
-ENV RTORRENT_VERSION=0.9.8 \
-  LIBTORRENT_VERSION=0.13.8 \
-  XMLRPC_VERSION=01.58.00 \
-  LIBSIG_VERSION=3.0.3 \
-  CARES_VERSION=1.14.0 \
-  CURL_VERSION=7.71.0 \
-  MKTORRENT_VERSION=1.1 \
-  NGINX_DAV_VERSION=3.0.0
 
 RUN apk --update --no-cache add -t build-dependencies \
     autoconf \
@@ -94,11 +98,6 @@ RUN apk --update --no-cache add -t build-dependencies \
   && make install \
   && apk del build-dependencies \
   && rm -rf /tmp/* /var/cache/apk/*
-
-ENV RUTORRENT_VERSION="3.10" \
-  RUTORRENT_REVISION="954479ffd00eb58ad14f9a667b3b9b1e108e80a2" \
-  GEOIP_EXT_VERSION="1.1.1" \
-  S6_OVERLAY_VERSION="2.1.0.2"
 
 RUN apk --update --no-cache add \
     apache2-utils \
