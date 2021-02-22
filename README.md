@@ -52,7 +52,7 @@ ___
 * XMLRPC through nginx over SCGI socket (basic auth optional)
 * WebDAV on completed downloads (basic auth optional)
 * Ability to add a custom ruTorrent plugin / theme
-* Allow to persist specific configuration for ruTorrent plugins
+* Allow persisting specific configuration for ruTorrent plugins
 * ruTorrent [GeoIP2 plugin](https://github.com/Micdu70/geoip2-rutorrent)
 * [mktorrent](https://github.com/Rudde/mktorrent) installed for ruTorrent create plugin
 * [Traefik](https://github.com/containous/traefik-library-image) Docker image as reverse proxy and creation/renewal of Let's Encrypt certificates (see [this template](examples/traefik))
@@ -129,7 +129,8 @@ docker buildx bake image
 * `/downloads`: Downloaded files
 * `/passwd`: Contains htpasswd files for basic auth
 
-> :warning: Note that the volumes should be owned by the user/group with the specified `PUID` and `PGID`. If you don't give the volumes correct permissions, the container may not start.
+> :warning: Note that the volumes should be owned by the user/group with the specified `PUID` and `PGID`. If you don't
+> give the volumes correct permissions, the container may not start.
 
 ## Ports
 
@@ -143,23 +144,25 @@ docker buildx bake image
 
 ### Docker Compose
 
-Docker compose is the recommended way to run this image. Copy the content of folder [examples/compose](examples/compose) in `/var/rtorrent-rutorrent/` on your host for example. Edit the compose file with your preferences and run the following command:
+Docker compose is the recommended way to run this image. Copy the content of folder [examples/compose](examples/compose)
+in `/var/rtorrent-rutorrent/` on your host for example. Edit the compose file with your preferences and run the
+following command:
 
-```bash
-$ mkdir data downloads passwd
-$ chown ${PUID}:${PGID} data downloads passwd
-$ docker-compose up -d
-$ docker-compose logs -f
+```shell
+mkdir data downloads passwd
+chown ${PUID}:${PGID} data downloads passwd
+docker-compose up -d
+docker-compose logs -f
 ```
 
 ### Command line
 
 You can also use the following minimal command:
 
-```bash
-$ mkdir data downloads passwd
-$ chown ${PUID}:${PGID} data downloads passwd
-$ docker run -d --name rtorrent_rutorrent \
+```shell
+mkdir data downloads passwd
+chown ${PUID}:${PGID} data downloads passwd
+docker run -d --name rtorrent_rutorrent \
   --ulimit nproc=65535 \
   --ulimit nofile=32000:40000 \
   -p 6881:6881/udp \
@@ -177,19 +180,21 @@ $ docker run -d --name rtorrent_rutorrent \
 
 ### XMLRPC through nginx
 
-rTorrent 0.9.7+ has a built-in daemon mode disabling the user interface, so you can only control it via XMLRPC.<br />
-Nginx will route XMLRPC requests to rtorrent through port `8000`. These requests can be secured with basic authentication through the `/passwd/rpc.htpasswd` file in which you will need to add a username with his password.<br />
-See below to populate this file with a user / password.
+rTorrent 0.9.7+ has a built-in daemon mode disabling the user interface, so you can only control it via XMLRPC. Nginx
+will route XMLRPC requests to rtorrent through port `8000`. These requests can be secured with basic authentication
+through the `/passwd/rpc.htpasswd` file in which you will need to add a username with his password. See below to
+populate this file with a user / password.
 
 ### WebDAV
 
-WebDAV allows you to retrieve your completed torrent files in `/downloads/completed` on port `9000`.<br />
-Like XMLRPC, these requests can be secured with basic authentication through the `/passwd/webdav.htpasswd` file in which you will need to add a username with his password.<br />
-See below to populate this file with a user / password.
+WebDAV allows you to retrieve your completed torrent files in `/downloads/completed` on port `9000`. Like XMLRPC, these
+requests can be secured with basic authentication through the `/passwd/webdav.htpasswd` file in which you will need to
+add a username with his password. See below to populate this file with a user / password.
 
 ### Populate .htpasswd files
 
-For ruTorrent basic auth, XMLRPC through nginx and WebDAV on completed downloads, you can populate `.htpasswd` files with the following command:
+For ruTorrent basic auth, XMLRPC through nginx and WebDAV on completed downloads, you can populate `.htpasswd`
+files with the following command:
 
 ```
 docker run --rm -it httpd:2.4-alpine htpasswd -Bbn <username> <password> >> $(pwd)/passwd/webdav.htpasswd
@@ -203,9 +208,9 @@ Htpasswd files used:
 
 ### Boostrap config `.rtlocal.rc`
 
-When rTorrent is started the bootstrap config [/etc/rtorrent/.rtlocal.rc](rootfs/tpls/etc/rtorrent/.rtlocal.rc) is imported.<br />
-This configuration cannot be changed unless you rebuild the image or overwrite these elements in your `.rtorrent.rc`.<br />
-Here are the particular properties of this file:
+When rTorrent is started the bootstrap config [/etc/rtorrent/.rtlocal.rc](rootfs/tpls/etc/rtorrent/.rtlocal.rc) is
+imported. This configuration cannot be changed unless you rebuild the image or overwrite these elements in your
+`.rtorrent.rc`. Here are the particular properties of this file:
 
 * `system.daemon.set = true`: Launcher rTorrent as a daemon
 * A config layout for the rTorrent's instance you can use in your `.rtorrent.rc`:
@@ -232,16 +237,19 @@ Here are the particular properties of this file:
 
 ### Override or add a ruTorrent plugin/theme
 
-You can add a plugin for ruTorrent in `/data/rutorrent/plugins/`. If you add a plugin that already exists in ruTorrent, it will be removed from ruTorrent core plugins and yours will be used.<br />
-And you can also add a theme in `/data/rutorrent/themes/`. The same principle as for plugins will be used if you want to override one.
+You can add a plugin for ruTorrent in `/data/rutorrent/plugins/`. If you add a plugin that already exists in ruTorrent,
+it will be removed from ruTorrent core plugins and yours will be used. And you can also add a theme in
+`/data/rutorrent/themes/`. The same principle as for plugins will be used if you want to override one.
 
 > ⚠️ Container has to be restarted to propagate changes
 
 ### Edit a ruTorrent plugin configuration
 
-As you probably know, plugin configuration is not outsourced in ruTorrent. Loading the configuration of a plugin is done via a `conf.php` file placed at the root of the plugin folder.<br />
-To solve this problem with Docker, a special folder has been created in `/data/rutorrent/plugins-conf` to allow you to configure plugins.<br />
-For example to configure the `diskspace` plugin, you will need to create the `/data/rutorrent/plugins-conf/diskspace.php` file with your configuration:
+As you probably know, plugin configuration is not outsourced in ruTorrent. Loading the configuration of a plugin is
+done via a `conf.php` file placed at the root of the plugin folder. To solve this issue with Docker, a special folder
+has been created in `/data/rutorrent/plugins-conf` to allow you to configure plugins. For example to configure the
+`diskspace` plugin, you will need to create the `/data/rutorrent/plugins-conf/diskspace.php` file with your
+configuration:
 
 ```php
 <?php
@@ -258,14 +266,17 @@ $partitionDirectory = null;	// if null, then we will check rtorrent download dir
 
 To upgrade, pull the newer image and launch the container:
 
-```bash
+```shell
 docker-compose pull
 docker-compose up -d
 ```
 
 ## How can I help?
 
-All kinds of contributions are welcome :raised_hands:! The most basic way to show your support is to star :star2: the project, or to raise issues :speech_balloon: You can also support this project by [**becoming a sponsor on GitHub**](https://github.com/sponsors/crazy-max) :clap: or by making a [Paypal donation](https://www.paypal.me/crazyws) to ensure this journey continues indefinitely! :rocket:
+All kinds of contributions are welcome :raised_hands:! The most basic way to show your support is to star :star2:
+the project, or to raise issues :speech_balloon: You can also support this project by
+[**becoming a sponsor on GitHub**](https://github.com/sponsors/crazy-max) :clap: or by making a
+[Paypal donation](https://www.paypal.me/crazyws) to ensure this journey continues indefinitely! :rocket:
 
 Thanks again for your support, it is much appreciated! :pray:
 

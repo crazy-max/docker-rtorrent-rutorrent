@@ -1,9 +1,11 @@
 #!/usr/bin/with-contenv sh
 
 echo "Fixing perms..."
-mkdir -p /data \
+mkdir -p /data/rtorrent \
+  /data/rutorrent \
   /downloads \
   /passwd \
+  /etc/nginx/conf.d \
   /etc/rtorrent \
   /var/cache/nginx \
   /var/lib/nginx \
@@ -21,7 +23,6 @@ chown -R rtorrent. \
   /tpls \
   /var/cache/nginx \
   /var/lib/nginx \
-  /var/log/nginx \
   /var/log/php7 \
   /var/run/nginx \
   /var/run/php-fpm \
