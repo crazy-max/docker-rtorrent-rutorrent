@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.10-0.9.8-0.13.8-r4 (2021/02/22)
+
+* Fix permissions issue
+* Review Dockerfile
+
 ## 3.10-0.9.8-0.13.8-r3 (2021/02/14)
 
 * ruTorrent 3.10 rev [Novik/ruTorrent@954479f](https://github.com/Novik/ruTorrent/commit/954479ffd00eb58ad14f9a667b3b9b1e108e80a2)
