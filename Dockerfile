@@ -15,7 +15,6 @@ ARG NGINX_UID=102
 ARG NGINX_GID=102
 
 FROM --platform=${BUILDPLATFORM:-linux/amd64} crazymax/alpine-s6:${ALPINE_S6_TAG} AS download
-
 RUN apk --update --no-cache add curl git subversion tar tree xz
 
 ARG XMLRPC_VERSION
@@ -73,9 +72,8 @@ WORKDIR /dist/nginx
 RUN curl -sSL "https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz" | tar xz --strip 1
 RUN git clone --branch v${NGINX_DAV_VERSION} "https://github.com/arut/nginx-dav-ext-module.git" nginx-dav-ext
 
-ARG TARGETPLATFORM
 ARG ALPINE_S6_TAG
-FROM --platform=${TARGETPLATFORM:-linux/amd64} crazymax/alpine-s6:${ALPINE_S6_TAG} AS builder
+FROM crazymax/alpine-s6:${ALPINE_S6_TAG} AS builder
 
 RUN apk --update --no-cache add \
     autoconf \
@@ -223,9 +221,8 @@ RUN mkdir -p ${DIST_PATH}/usr/lib/php7/modules
 RUN cp -f /usr/lib/php7/modules/geoip.so ${DIST_PATH}/usr/lib/php7/modules/
 RUN tree ${DIST_PATH}
 
-ARG TARGETPLATFORM
 ARG ALPINE_S6_TAG
-FROM --platform=${TARGETPLATFORM:-linux/amd64} crazymax/alpine-s6:${ALPINE_S6_TAG}
+FROM crazymax/alpine-s6:${ALPINE_S6_TAG}
 LABEL maintainer="CrazyMax"
 
 COPY --from=builder /dist /
