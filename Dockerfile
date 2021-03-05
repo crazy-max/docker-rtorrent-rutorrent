@@ -235,11 +235,13 @@ ARG NGINX_GID
 
 RUN apk --update --no-cache add \
     apache2-utils \
+    bash \
     bind-tools \
     binutils \
     brotli \
     ca-certificates \
     coreutils \
+    curl \
     dhclient \
     ffmpeg \
     geoip \
@@ -274,6 +276,7 @@ RUN apk --update --no-cache add \
     unrar \
     unzip \
     util-linux \
+    wget \
     zip \
     zlib \
   && ln -s /usr/lib/nginx/modules /etc/nginx/modules \
