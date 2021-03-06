@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.10-0.9.8-0.13.8-r6 (2021/03/06)
+
+* Fix auth for ruTorrent and add global `auth_basic` (#53)
+
 ## 3.10-0.9.8-0.13.8-r5 (2021/03/05)
 
 * Add `bash` (#52)
