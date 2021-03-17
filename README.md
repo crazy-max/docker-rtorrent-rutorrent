@@ -44,6 +44,7 @@ ___
 ## Features
 
 * Run as non-root user
+* Multi-platform image
 * Latest [rTorrent](https://github.com/rakshasa/rtorrent) / [libTorrent](https://github.com/rakshasa/libtorrent) release compiled from source
 * Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
 * Name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) for asynchronous DNS requests (including name resolves)
@@ -69,6 +70,9 @@ docker buildx bake
 
 # Build image
 docker buildx bake image
+
+# Build multi-platform image
+docker buildx bake image-all
 ```
 
 ## Image
@@ -77,6 +81,18 @@ docker buildx bake image
 |--------------------------------------------------------------------------------------------------|---------------------------------|
 | [Docker Hub](https://hub.docker.com/r/crazymax/rtorrent-rutorrent/)                                            | `crazymax/rtorrent-rutorrent`                 |
 | [GitHub Container Registry](https://github.com/users/crazy-max/packages/container/package/rtorrent-rutorrent)  | `ghcr.io/crazy-max/rtorrent-rutorrent`        |
+
+Following platforms for this image are available:
+
+```
+$ docker run --rm mplatform/mquery crazymax/rtorrent-rutorrent:latest
+Image: crazymax/rtorrent-rutorrent:latest
+ * Manifest List: Yes
+ * Supported platforms:
+   - linux/amd64
+   - linux/arm/v7
+   - linux/arm64
+```
 
 ## Environment variables
 
