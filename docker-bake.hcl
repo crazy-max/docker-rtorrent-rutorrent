@@ -20,3 +20,12 @@ target "image-local" {
   inherits = ["image"]
   output = ["type=docker"]
 }
+
+target "image-all" {
+  inherits = ["image"]
+  platforms = [
+    "linux/amd64",
+    "linux/arm/v7",
+    "linux/arm64"
+  ]
+}
