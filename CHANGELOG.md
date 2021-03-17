@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.10-0.9.8-0.13.8-r7 (2021/03/17)
+
+* Multi-platform image (#60)
+
 ## 3.10-0.9.8-0.13.8-r6 (2021/03/06)
 
 * Fix auth for ruTorrent and add global `auth_basic` (#53)
