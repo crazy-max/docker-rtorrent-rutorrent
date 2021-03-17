@@ -26,6 +26,14 @@ jobs:
         name: Checkout
         uses: actions/checkout@v2
       -
+        name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.docker-cache
+          key: ${{ runner.os }}-docker-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-docker-
+      -
         name: Docker meta
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v1
@@ -70,12 +78,21 @@ jobs:
             ${{ steps.docker_meta.outputs.bake-file }}
           targets: image-all
           push: ${{ github.event_name != 'pull_request' }}
+          set: |
+            *.cache-from=type=local,src=/tmp/.docker-cache
+            *.cache-to=type=local,dest=/tmp/.docker-cache-new
       -
         name: Check manifest
         if: github.event_name != 'pull_request'
         run: |
           docker buildx imagetools inspect ${{ env.DOCKERHUB_SLUG }}:${{ steps.docker_meta.outputs.version }}
           docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:${{ steps.docker_meta.outputs.version }}
+      -
+        # FIXME: https://github.com/docker/build-push-action/issues/252
+        name: Move cache
+        run: |
+          rm -rf /tmp/.docker-cache
+          mv /tmp/.docker-cache-new /tmp/.docker-cache
       -
         name: Inspect image
         if: github.event_name != 'pull_request'
