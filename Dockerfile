@@ -102,7 +102,6 @@ ENV DIST_PATH="/dist"
 COPY --from=download /dist /tmp
 
 WORKDIR /tmp/libsigc
-RUN ./configure --help
 RUN ./configure
 RUN make -j$(nproc)
 RUN make install -j$(nproc)
@@ -110,7 +109,6 @@ RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
 WORKDIR /tmp/c-ares
-RUN ./configure --help
 RUN ./configure
 RUN make -j$(nproc)
 RUN make install -j$(nproc)
@@ -118,7 +116,6 @@ RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
 WORKDIR /tmp/curl
-RUN ./configure --help
 RUN ./configure \
   --enable-ares \
   --enable-tls-srp \
@@ -132,7 +129,6 @@ RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
 WORKDIR /tmp/xmlrpc-c
-RUN ./configure --help
 RUN ./configure
 RUN make -j$(nproc)
 RUN make install -j$(nproc)
@@ -141,7 +137,6 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /tmp/libtorrent
 RUN ./autogen.sh
-RUN ./configure --help
 RUN ./configure \
   --with-posix-fallocate
 RUN make -j$(nproc)
@@ -151,7 +146,6 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /tmp/rtorrent
 RUN ./autogen.sh
-RUN ./configure --help
 RUN ./configure \
   --with-xmlrpc-c \
   --with-ncurses
