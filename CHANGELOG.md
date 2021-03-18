@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.10-0.9.8-0.13.8-r8 (2021/03/18)
+
+* Upstream Alpine update
+
 ## 3.10-0.9.8-0.13.8-r7 (2021/03/17)
 
 * Multi-platform image (#60)
