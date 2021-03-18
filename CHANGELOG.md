@@ -3,6 +3,7 @@
 ## 3.10-0.9.8-0.13.8-r8 (2021/03/18)
 
 * Upstream Alpine update
+* Add support for `linux/arm/v6`
 
 ## 3.10-0.9.8-0.13.8-r7 (2021/03/17)
 
