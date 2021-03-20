@@ -1,10 +1,10 @@
-ARG ALPINE_S6_TAG=3.12-2.1.0.2
+ARG ALPINE_S6_TAG=3.12-2.2.0.3
 ARG RTORRENT_VERSION=0.9.8
 ARG LIBTORRENT_VERSION=0.13.8
 ARG XMLRPC_VERSION=01.58.00
 ARG LIBSIG_VERSION=3.0.3
 ARG CARES_VERSION=1.14.0
-ARG CURL_VERSION=7.71.0
+ARG CURL_VERSION=7.68.0
 ARG MKTORRENT_VERSION=1.1
 ARG RUTORRENT_VERSION=3.10
 ARG RUTORRENT_REVISION=954479ffd00eb58ad14f9a667b3b9b1e108e80a2
@@ -224,9 +224,14 @@ COPY --from=download --chown=nobody:nogroup /dist/rutorrent /var/www/rutorrent
 COPY --from=download --chown=nobody:nogroup /dist/geoip2-rutorrent /var/www/rutorrent/plugins/geoip2
 COPY --from=download /dist/mmdb /var/mmdb
 
+ENV PYTHONPATH="$PYTHONPATH:/var/www/rutorrent" \
+  S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
+  TZ="UTC" \
+  PUID="1000" \
+  PGID="1000"
+
 ARG NGINX_UID
 ARG NGINX_GID
-
 RUN apk --update --no-cache add \
     apache2-utils \
     bash \
@@ -235,7 +240,6 @@ RUN apk --update --no-cache add \
     brotli \
     ca-certificates \
     coreutils \
-    curl \
     dhclient \
     ffmpeg \
     geoip \
@@ -270,7 +274,6 @@ RUN apk --update --no-cache add \
     unrar \
     unzip \
     util-linux \
-    wget \
     zip \
     zlib \
   && ln -s /usr/lib/nginx/modules /etc/nginx/modules \
@@ -278,18 +281,12 @@ RUN apk --update --no-cache add \
   && adduser -S -D -H -u ${NGINX_GID} -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx \
   && pip3 install --upgrade pip \
   && pip3 install cfscrape cloudscraper \
+  && addgroup -g ${PGID} rtorrent \
+  && adduser -D -H -u ${PUID} -G rtorrent -s /bin/sh rtorrent \
+  && curl --version \
   && rm -rf /tmp/* /var/cache/apk/*
 
-ENV PYTHONPATH="$PYTHONPATH:/var/www/rutorrent" \
-  S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
-  TZ="UTC" \
-  PUID="1000" \
-  PGID="1000"
-
 COPY rootfs /
-
-RUN addgroup -g ${PGID} rtorrent \
-  && adduser -D -H -u ${PUID} -G rtorrent -s /bin/sh rtorrent
 
 EXPOSE 6881/udp 8000 8080 9000 50000
 VOLUME [ "/data", "/downloads", "/passwd" ]
