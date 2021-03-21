@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.10-0.9.8-0.13.8-r9 (2021/03/21)
+
+* [alpine-s6](https://github.com/crazy-max/docker-alpine-s6/) 3.12-2.2.0.3 (#61)
+* cURL 7.68.0
+
 ## 3.10-0.9.8-0.13.8-r8 (2021/03/18)
 
 * Upstream Alpine update
