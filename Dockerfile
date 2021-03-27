@@ -242,6 +242,7 @@ RUN apk --update --no-cache add \
     coreutils \
     dhclient \
     ffmpeg \
+    findutils \
     geoip \
     grep \
     gzip \
