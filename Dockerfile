@@ -289,7 +289,6 @@ RUN apk --update --no-cache add \
 
 COPY rootfs /
 
-EXPOSE 9000
 VOLUME [ "/data", "/downloads", "/passwd" ]
 
 ENTRYPOINT [ "/init" ]
