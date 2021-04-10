@@ -20,6 +20,8 @@ WEBDAV_AUTHBASIC_STRING=${WEBDAV_AUTHBASIC_STRING:-WebDAV restricted access}
 RT_LOG_LEVEL=${RT_LOG_LEVEL:-info}
 RT_LOG_EXECUTE=${RT_LOG_EXECUTE:-false}
 RT_LOG_XMLRPC=${RT_LOG_XMLRPC:-false}
+RT_PORT_DHT=${RT_PORT_DHT:-6881}
+RT_PORT_LISTENING=${RT_PORT_LISTENING:-50000}
 
 RU_HTTP_USER_AGENT=${RU_HTTP_USER_AGENT:-Mozilla/5.0 (Windows NT 6.0; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0}
 RU_HTTP_TIME_OUT=${RU_HTTP_TIME_OUT:-30}
@@ -132,6 +134,9 @@ if [ "${RT_LOG_XMLRPC}" = "true" ]; then
   echo "  Enabling rTorrent xmlrpc log..."
   sed -i "s!#log\.xmlrpc.*!log\.xmlrpc = (cat,(cfg.logs),\"xmlrpc.log\")!g" /etc/rtorrent/.rtlocal.rc
 fi
+echo "  Configuring rTorrent ports..."
+sed -i "s!@RT_PORT_DHT@!$RT_PORT_DHT!g" /etc/rtorrent/.rtlocal.rc
+sed -i "s!@RT_PORT_LISTENING@!$RT_PORT_LISTENING!g" /etc/rtorrent/.rtlocal.rc
 
 # rTorrent config
 echo "Checking rTorrent configuration..."

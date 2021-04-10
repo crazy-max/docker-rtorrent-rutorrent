@@ -120,6 +120,8 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `RT_LOG_LEVEL`: rTorrent log level (default: `info`)
 * `RT_LOG_EXECUTE`: Log executed commands to `/data/rtorrent/log/execute.log` (default: `false`)
 * `RT_LOG_XMLRPC`: Log XMLRPC queries to `/data/rtorrent/log/xmlrpc.log` (default: `false`)
+* `RT_PORT_DHT`: DHT UDP port (`dht.port.set`, default: `6881`)
+* `RT_PORT_LISTENING`: Incoming connections (`network.port_range.set`, default: `50000`)
 
 ### ruTorrent
 
@@ -151,11 +153,11 @@ Image: crazymax/rtorrent-rutorrent:latest
 
 ## Ports
 
-* `6881`: DHT UDP port (`dht.port.set`)
+* `6881` (or `RT_PORT_DHT`): DHT UDP port (`dht.port.set`)
 * `8000`: XMLRPC port through nginx over SCGI socket
 * `8080`: ruTorrent HTTP port
 * `9000`: WebDAV port on completed downloads
-* `50000`: Incoming connections (`network.port_range.set`)
+* `50000` (or `RT_PORT_LISTENING`): Incoming connections (`network.port_range.set`)
 
 ## Usage
 
