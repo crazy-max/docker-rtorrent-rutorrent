@@ -74,21 +74,21 @@ sed -e "s#@REAL_IP_FROM@#$REAL_IP_FROM#g" \
 # Nginx XMLRPC over SCGI
 echo "Setting Nginx XMLRPC over SCGI configuration..."
 sed -e "s!@XMLRPC_AUTHBASIC_STRING@!$XMLRPC_AUTHBASIC_STRING!g" \
+  -e "s!@XMLRPC_PORT@!$XMLRPC_PORT!g" \
   /tpls/etc/nginx/conf.d/rpc.conf > /etc/nginx/conf.d/rpc.conf
-sed -i "s!@XMLRPC_PORT@!$XMLRPC_PORT!g" /etc/nginx/conf.d/rpc.conf
 
 # Nginx ruTorrent
 echo "Setting Nginx ruTorrent configuration..."
 sed -e "s!@UPLOAD_MAX_SIZE@!$UPLOAD_MAX_SIZE!g" \
   -e "s!@RUTORRENT_AUTHBASIC_STRING@!$RUTORRENT_AUTHBASIC_STRING!g" \
+  -e "s!@RUTORRENT_PORT@!$RUTORRENT_PORT!g" \
   /tpls/etc/nginx/conf.d/rutorrent.conf > /etc/nginx/conf.d/rutorrent.conf
-sed -i "s!@RUTORRENT_PORT@!$RUTORRENT_PORT!g" /etc/nginx/conf.d/rutorrent.conf
 
 # Nginx WebDAV
 echo "Setting Nginx WebDAV configuration..."
 sed -e "s!@WEBDAV_AUTHBASIC_STRING@!$WEBDAV_AUTHBASIC_STRING!g" \
+  -e "s!@WEBDAV_PORT@!$WEBDAV_PORT!g" \
   /tpls/etc/nginx/conf.d/webdav.conf > /etc/nginx/conf.d/webdav.conf
-sed -i "s!@WEBDAV_PORT@!$WEBDAV_PORT!g" /etc/nginx/conf.d/webdav.conf
 
 # Init
 echo "Initializing files and folders..."
@@ -131,6 +131,8 @@ fi
 # rTorrent local config
 echo "Checking rTorrent local configuration..."
 sed -e "s!@RT_LOG_LEVEL@!$RT_LOG_LEVEL!g" \
+  -e "s!@RT_PORT_DHT@!$RT_PORT_DHT!g" \
+  -e "s!@RT_PORT_LISTENING@!$RT_PORT_LISTENING!g" \
   /tpls/etc/rtorrent/.rtlocal.rc > /etc/rtorrent/.rtlocal.rc
 if [ "${RT_LOG_EXECUTE}" = "true" ]; then
   echo "  Enabling rTorrent execute log..."
@@ -140,9 +142,6 @@ if [ "${RT_LOG_XMLRPC}" = "true" ]; then
   echo "  Enabling rTorrent xmlrpc log..."
   sed -i "s!#log\.xmlrpc.*!log\.xmlrpc = (cat,(cfg.logs),\"xmlrpc.log\")!g" /etc/rtorrent/.rtlocal.rc
 fi
-echo "  Configuring rTorrent ports..."
-sed -i "s!@RT_PORT_DHT@!$RT_PORT_DHT!g" /etc/rtorrent/.rtlocal.rc
-sed -i "s!@RT_PORT_LISTENING@!$RT_PORT_LISTENING!g" /etc/rtorrent/.rtlocal.rc
 
 # rTorrent config
 echo "Checking rTorrent configuration..."
