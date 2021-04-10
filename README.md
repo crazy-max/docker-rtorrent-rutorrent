@@ -114,6 +114,7 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `XMLRPC_AUTHBASIC_STRING`: Message displayed during validation of XMLRPC Basic Auth (default: `rTorrent XMLRPC restricted access`)
 * `XMLRPC_PORT`: XMLRPC port through nginx over SCGI socket (default: `8000`)
 * `RUTORRENT_AUTHBASIC_STRING`: Message displayed during validation of ruTorrent Basic Auth (default: `ruTorrent restricted access`)
+* `RUTORRENT_PORT`: ruTorrent HTTP port (default: `8080`)
 * `WEBDAV_AUTHBASIC_STRING`: Message displayed during validation of WebDAV Basic Auth (default: `WebDAV restricted access`)
 
 ### rTorrent
@@ -156,7 +157,7 @@ Image: crazymax/rtorrent-rutorrent:latest
 
 * `6881` (or `RT_PORT_DHT`): DHT UDP port (`dht.port.set`)
 * `8000` (or `XMLRPC_PORT`): XMLRPC port through nginx over SCGI socket
-* `8080`: ruTorrent HTTP port
+* `8080` (or `RUTORRENT_PORT`): ruTorrent HTTP port
 * `9000`: WebDAV port on completed downloads
 * `50000` (or `RT_PORT_LISTENING`): Incoming connections (`network.port_range.set`)
 

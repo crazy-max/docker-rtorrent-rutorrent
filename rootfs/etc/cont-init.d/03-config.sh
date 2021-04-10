@@ -16,6 +16,7 @@ LOG_IP_VAR=${LOG_IP_VAR:-remote_addr}
 XMLRPC_AUTHBASIC_STRING=${XMLRPC_AUTHBASIC_STRING:-rTorrent XMLRPC restricted access}
 XMLRPC_PORT=${XMLRPC_PORT:-8000}
 RUTORRENT_AUTHBASIC_STRING=${RUTORRENT_AUTHBASIC_STRING:-ruTorrent restricted access}
+RUTORRENT_PORT=${RUTORRENT_PORT:-8080}
 WEBDAV_AUTHBASIC_STRING=${WEBDAV_AUTHBASIC_STRING:-WebDAV restricted access}
 
 RT_LOG_LEVEL=${RT_LOG_LEVEL:-info}
@@ -80,6 +81,7 @@ echo "Setting Nginx ruTorrent configuration..."
 sed -e "s!@UPLOAD_MAX_SIZE@!$UPLOAD_MAX_SIZE!g" \
   -e "s!@RUTORRENT_AUTHBASIC_STRING@!$RUTORRENT_AUTHBASIC_STRING!g" \
   /tpls/etc/nginx/conf.d/rutorrent.conf > /etc/nginx/conf.d/rutorrent.conf
+sed -i "s!@RUTORRENT_PORT@!$RUTORRENT_PORT!g" /etc/nginx/conf.d/rutorrent.conf
 
 # Nginx WebDAV
 echo "Setting Nginx WebDAV configuration..."
