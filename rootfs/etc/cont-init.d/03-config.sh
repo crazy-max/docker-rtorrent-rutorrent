@@ -14,6 +14,7 @@ REAL_IP_HEADER=${REAL_IP_HEADER:-X-Forwarded-For}
 LOG_IP_VAR=${LOG_IP_VAR:-remote_addr}
 
 XMLRPC_AUTHBASIC_STRING=${XMLRPC_AUTHBASIC_STRING:-rTorrent XMLRPC restricted access}
+XMLRPC_PORT=${XMLRPC_PORT:-8000}
 RUTORRENT_AUTHBASIC_STRING=${RUTORRENT_AUTHBASIC_STRING:-ruTorrent restricted access}
 WEBDAV_AUTHBASIC_STRING=${WEBDAV_AUTHBASIC_STRING:-WebDAV restricted access}
 
@@ -72,6 +73,7 @@ sed -e "s#@REAL_IP_FROM@#$REAL_IP_FROM#g" \
 echo "Setting Nginx XMLRPC over SCGI configuration..."
 sed -e "s!@XMLRPC_AUTHBASIC_STRING@!$XMLRPC_AUTHBASIC_STRING!g" \
   /tpls/etc/nginx/conf.d/rpc.conf > /etc/nginx/conf.d/rpc.conf
+sed -i "s!@XMLRPC_PORT@!$XMLRPC_PORT!g" /etc/nginx/conf.d/rpc.conf
 
 # Nginx ruTorrent
 echo "Setting Nginx ruTorrent configuration..."

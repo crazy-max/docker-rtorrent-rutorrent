@@ -112,6 +112,7 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `REAL_IP_HEADER`: Request header field whose value will be used to replace the client address (default `X-Forwarded-For`)
 * `LOG_IP_VAR`: Use another variable to retrieve the remote IP address for access [log_format](http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) on Nginx. (default `remote_addr`)
 * `XMLRPC_AUTHBASIC_STRING`: Message displayed during validation of XMLRPC Basic Auth (default: `rTorrent XMLRPC restricted access`)
+* `XMLRPC_PORT`: XMLRPC port through nginx over SCGI socket (default: `8000`)
 * `RUTORRENT_AUTHBASIC_STRING`: Message displayed during validation of ruTorrent Basic Auth (default: `ruTorrent restricted access`)
 * `WEBDAV_AUTHBASIC_STRING`: Message displayed during validation of WebDAV Basic Auth (default: `WebDAV restricted access`)
 
@@ -154,7 +155,7 @@ Image: crazymax/rtorrent-rutorrent:latest
 ## Ports
 
 * `6881` (or `RT_PORT_DHT`): DHT UDP port (`dht.port.set`)
-* `8000`: XMLRPC port through nginx over SCGI socket
+* `8000` (or `XMLRPC_PORT`): XMLRPC port through nginx over SCGI socket
 * `8080`: ruTorrent HTTP port
 * `9000`: WebDAV port on completed downloads
 * `50000` (or `RT_PORT_LISTENING`): Incoming connections (`network.port_range.set`)
