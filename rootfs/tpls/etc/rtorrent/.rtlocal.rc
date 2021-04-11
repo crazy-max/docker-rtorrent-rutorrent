@@ -28,11 +28,11 @@ network.scgi.open_local = (cat, (cfg.rundir), "scgi.socket")
 schedule2 = scgi_permission, 0, 0, (cat,"execute.nothrow=chmod,\"g+w,o=\",",(cfg.rundir),"scgi.socket")
 
 # Listening port for incoming peer traffic
-network.port_range.set = @RT_PORT_LISTENING@-@RT_PORT_LISTENING@
+network.port_range.set = @RT_INC_PORT@-@RT_INC_PORT@
 network.port_random.set = no
 
 # UDP port to use for DHT
-dht.port.set = @RT_PORT_DHT@
+dht.port.set = @RT_DHT_PORT@
 
 # Logging
 ## levels = critical error warn notice info debug

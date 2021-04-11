@@ -45,14 +45,15 @@ services:
   rtorrent-rutorrent:
     image: crazymax/rtorrent-rutorrent:latest
     ports:
-      - target: 6881
-        published: 6881
+      - target: ${RT_DHT_PORT}
+        published: ${RT_DHT_PORT}
         protocol: udp
-      - target: 50000
-        published: 50000
+      - target: ${RT_INC_PORT}
+        published: ${RT_INC_PORT}
         protocol: tcp
     env_file:
-      - "./rtorrent-rutorrent.env"
+      - "rtorrent-rutorrent.env"
+      - ".env"
     volumes:
       - "./data:/data"
       - "./downloads:/downloads"
@@ -64,13 +65,13 @@ services:
       - "traefik.http.routers.rutorrent.tls=true"
       - "traefik.http.routers.rutorrent.tls.certresolver=letsencrypt"
       - "traefik.http.routers.rutorrent.tls.domains[0].main=rutorrent.example.com"
-      - "traefik.http.services.rutorrent.loadbalancer.server.port=8000"
+      - "traefik.http.services.rutorrent.loadbalancer.server.port=${RUTORRENT_PORT}"
       - "traefik.http.routers.webdav.entrypoints=https"
       - "traefik.http.routers.webdav.rule=Host(`webdav.example.com`)"
       - "traefik.http.routers.webdav.tls=true"
       - "traefik.http.routers.webdav.tls.certresolver=letsencrypt"
       - "traefik.http.routers.webdav.tls.domains[0].main=webdav.example.com"
-      - "traefik.http.services.webdav.loadbalancer.server.port=9000"
+      - "traefik.http.services.webdav.loadbalancer.server.port=${WEBDAV_PORT}"
     ulimits:
       nproc: 65535
       nofile:

@@ -23,8 +23,8 @@ WEBDAV_PORT=${WEBDAV_PORT:-9000}
 RT_LOG_LEVEL=${RT_LOG_LEVEL:-info}
 RT_LOG_EXECUTE=${RT_LOG_EXECUTE:-false}
 RT_LOG_XMLRPC=${RT_LOG_XMLRPC:-false}
-RT_PORT_DHT=${RT_PORT_DHT:-6881}
-RT_PORT_LISTENING=${RT_PORT_LISTENING:-50000}
+RT_DHT_PORT=${RT_DHT_PORT:-6881}
+RT_INC_PORT=${RT_INC_PORT:-50000}
 
 RU_HTTP_USER_AGENT=${RU_HTTP_USER_AGENT:-Mozilla/5.0 (Windows NT 6.0; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0}
 RU_HTTP_TIME_OUT=${RU_HTTP_TIME_OUT:-30}
@@ -131,8 +131,8 @@ fi
 # rTorrent local config
 echo "Checking rTorrent local configuration..."
 sed -e "s!@RT_LOG_LEVEL@!$RT_LOG_LEVEL!g" \
-  -e "s!@RT_PORT_DHT@!$RT_PORT_DHT!g" \
-  -e "s!@RT_PORT_LISTENING@!$RT_PORT_LISTENING!g" \
+  -e "s!@RT_DHT_PORT@!$RT_DHT_PORT!g" \
+  -e "s!@RT_INC_PORT@!$RT_INC_PORT!g" \
   /tpls/etc/rtorrent/.rtlocal.rc > /etc/rtorrent/.rtlocal.rc
 if [ "${RT_LOG_EXECUTE}" = "true" ]; then
   echo "  Enabling rTorrent execute log..."

@@ -12,20 +12,21 @@ services:
   rtorrent-rutorrent:
     image: crazymax/rtorrent-rutorrent:latest
     ports:
-      - target: 6881
-        published: 6881
+      - target: ${RT_DHT_PORT}
+        published: ${RT_DHT_PORT}
         protocol: udp
-      - target: 8080
-        published: 8080
+      - target: ${RUTORRENT_PORT}
+        published: ${RUTORRENT_PORT}
         protocol: tcp
-      - target: 9000
-        published: 9000
+      - target: ${WEBDAV_PORT}
+        published: ${WEBDAV_PORT}
         protocol: tcp
-      - target: 50000
-        published: 50000
+      - target: ${RT_INC_PORT}
+        published: ${RT_INC_PORT}
         protocol: tcp
     env_file:
-      - "./rtorrent-rutorrent.env"
+      - "rtorrent-rutorrent.env"
+      - ".env"
     volumes:
       - "./data:/data"
       - "./downloads:/downloads"

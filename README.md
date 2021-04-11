@@ -99,51 +99,51 @@ Image: crazymax/rtorrent-rutorrent:latest
 
 ### General
 
-* `TZ`: The timezone assigned to the container (default: `UTC`)
+* `TZ`: The timezone assigned to the container (default `UTC`)
 * `PUID`: rTorrent user id (default `1000`)
 * `PGID`: rTorrent group id (default `1000`)
 * `WAN_IP`: Public IP address reported to the tracker (default auto resolved with `dig +short myip.opendns.com @resolver1.opendns.com`)
-* `MEMORY_LIMIT`: PHP memory limit (default: `256M`)
-* `UPLOAD_MAX_SIZE`: Upload max size (default: `16M`)
+* `MEMORY_LIMIT`: PHP memory limit (default `256M`)
+* `UPLOAD_MAX_SIZE`: Upload max size (default `16M`)
 * `CLEAR_ENV`: Clear environment in FPM workers (default `yes`)
-* `OPCACHE_MEM_SIZE`: PHP OpCache memory consumption (default: `128`)
-* `MAX_FILE_UPLOADS`: The maximum number of files allowed to be uploaded simultaneously (default: `50`)
+* `OPCACHE_MEM_SIZE`: PHP OpCache memory consumption (default `128`)
+* `MAX_FILE_UPLOADS`: The maximum number of files allowed to be uploaded simultaneously (default `50`)
 * `REAL_IP_FROM`: Trusted addresses that are known to send correct replacement addresses (default `0.0.0.0/32`)
 * `REAL_IP_HEADER`: Request header field whose value will be used to replace the client address (default `X-Forwarded-For`)
 * `LOG_IP_VAR`: Use another variable to retrieve the remote IP address for access [log_format](http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) on Nginx. (default `remote_addr`)
-* `XMLRPC_AUTHBASIC_STRING`: Message displayed during validation of XMLRPC Basic Auth (default: `rTorrent XMLRPC restricted access`)
-* `XMLRPC_PORT`: XMLRPC port through nginx over SCGI socket (default: `8000`)
-* `RUTORRENT_AUTHBASIC_STRING`: Message displayed during validation of ruTorrent Basic Auth (default: `ruTorrent restricted access`)
-* `RUTORRENT_PORT`: ruTorrent HTTP port (default: `8080`)
-* `WEBDAV_AUTHBASIC_STRING`: Message displayed during validation of WebDAV Basic Auth (default: `WebDAV restricted access`)
-* `WEBDAV_PORT`: WebDAV port on completed downloads (default: `9000`)
+* `XMLRPC_AUTHBASIC_STRING`: Message displayed during validation of XMLRPC Basic Auth (default `rTorrent XMLRPC restricted access`)
+* `XMLRPC_PORT`: XMLRPC port through nginx over SCGI socket (default `8000`)
+* `RUTORRENT_AUTHBASIC_STRING`: Message displayed during validation of ruTorrent Basic Auth (default `ruTorrent restricted access`)
+* `RUTORRENT_PORT`: ruTorrent HTTP port (default `8080`)
+* `WEBDAV_AUTHBASIC_STRING`: Message displayed during validation of WebDAV Basic Auth (default `WebDAV restricted access`)
+* `WEBDAV_PORT`: WebDAV port on completed downloads (default `9000`)
 
 ### rTorrent
 
-* `RT_LOG_LEVEL`: rTorrent log level (default: `info`)
-* `RT_LOG_EXECUTE`: Log executed commands to `/data/rtorrent/log/execute.log` (default: `false`)
-* `RT_LOG_XMLRPC`: Log XMLRPC queries to `/data/rtorrent/log/xmlrpc.log` (default: `false`)
-* `RT_PORT_DHT`: DHT UDP port (`dht.port.set`, default: `6881`)
-* `RT_PORT_LISTENING`: Incoming connections (`network.port_range.set`, default: `50000`)
+* `RT_LOG_LEVEL`: rTorrent log level (default `info`)
+* `RT_LOG_EXECUTE`: Log executed commands to `/data/rtorrent/log/execute.log` (default `false`)
+* `RT_LOG_XMLRPC`: Log XMLRPC queries to `/data/rtorrent/log/xmlrpc.log` (default `false`)
+* `RT_DHT_PORT`: DHT UDP port (`dht.port.set`, default `6881`)
+* `RT_INC_PORT`: Incoming connections (`network.port_range.set`, default `50000`)
 
 ### ruTorrent
 
-* `RU_REMOVE_CORE_PLUGINS`: Remove ruTorrent core plugins ; comma separated (default: `erasedata,httprpc`)
-* `RU_HTTP_USER_AGENT`: ruTorrent HTTP user agent (default: `Mozilla/5.0 (Windows NT 6.0; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0`)
-* `RU_HTTP_TIME_OUT`: ruTorrent HTTP timeout in seconds (default: `30`)
-* `RU_HTTP_USE_GZIP`: Use HTTP Gzip compression (default: `true`)
-* `RU_RPC_TIME_OUT`: ruTorrent RPC timeout in seconds (default: `5`)
-* `RU_LOG_RPC_CALLS`: Log ruTorrent RPC calls (default: `false`)
-* `RU_LOG_RPC_FAULTS`: Log ruTorrent RPC faults (default: `true`)
-* `RU_PHP_USE_GZIP`: Use PHP Gzip compression (default: `false`)
-* `RU_PHP_GZIP_LEVEL`: PHP Gzip compression level (default: `2`)
-* `RU_SCHEDULE_RAND`: Rand for schedulers start, +0..X seconds (default: `10`)
-* `RU_LOG_FILE`: ruTorrent log file path for errors messages (default: `/data/rutorrent/rutorrent.log`)
-* `RU_DO_DIAGNOSTIC`: ruTorrent diagnostics like permission checking (default: `true`)
-* `RU_SAVE_UPLOADED_TORRENTS`: Save torrents files added wia ruTorrent in `/data/rutorrent/share/torrents` (default: `true`)
-* `RU_OVERWRITE_UPLOADED_TORRENTS`: Existing .torrent files will be overwritten (default: `false`)
-* `RU_FORBID_USER_SETTINGS`: If true, allows for single user style configuration, even with webauth (default: `false`)
-* `RU_LOCALE`: Set default locale for ruTorrent (default: `UTF8`)
+* `RU_REMOVE_CORE_PLUGINS`: Remove ruTorrent core plugins ; comma separated (default `erasedata,httprpc`)
+* `RU_HTTP_USER_AGENT`: ruTorrent HTTP user agent (default `Mozilla/5.0 (Windows NT 6.0; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0`)
+* `RU_HTTP_TIME_OUT`: ruTorrent HTTP timeout in seconds (default `30`)
+* `RU_HTTP_USE_GZIP`: Use HTTP Gzip compression (default `true`)
+* `RU_RPC_TIME_OUT`: ruTorrent RPC timeout in seconds (default `5`)
+* `RU_LOG_RPC_CALLS`: Log ruTorrent RPC calls (default `false`)
+* `RU_LOG_RPC_FAULTS`: Log ruTorrent RPC faults (default `true`)
+* `RU_PHP_USE_GZIP`: Use PHP Gzip compression (default `false`)
+* `RU_PHP_GZIP_LEVEL`: PHP Gzip compression level (default `2`)
+* `RU_SCHEDULE_RAND`: Rand for schedulers start, +0..X seconds (default `10`)
+* `RU_LOG_FILE`: ruTorrent log file path for errors messages (default `/data/rutorrent/rutorrent.log`)
+* `RU_DO_DIAGNOSTIC`: ruTorrent diagnostics like permission checking (default `true`)
+* `RU_SAVE_UPLOADED_TORRENTS`: Save torrents files added wia ruTorrent in `/data/rutorrent/share/torrents` (default `true`)
+* `RU_OVERWRITE_UPLOADED_TORRENTS`: Existing .torrent files will be overwritten (default `false`)
+* `RU_FORBID_USER_SETTINGS`: If true, allows for single user style configuration, even with webauth (default `false`)
+* `RU_LOCALE`: Set default locale for ruTorrent (default `UTF8`)
 
 ## Volumes
 
@@ -156,11 +156,11 @@ Image: crazymax/rtorrent-rutorrent:latest
 
 ## Ports
 
-* `6881` (or `RT_PORT_DHT`): DHT UDP port (`dht.port.set`)
+* `6881` (or `RT_DHT_PORT`): DHT UDP port (`dht.port.set`)
 * `8000` (or `XMLRPC_PORT`): XMLRPC port through nginx over SCGI socket
 * `8080` (or `RUTORRENT_PORT`): ruTorrent HTTP port
 * `9000` (or `WEBDAV_PORT`): WebDAV port on completed downloads
-* `50000` (or `RT_PORT_LISTENING`): Incoming connections (`network.port_range.set`)
+* `50000` (or `RT_INC_PORT`): Incoming connections (`network.port_range.set`)
 
 ## Usage
 
