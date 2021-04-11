@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.10-0.9.8-0.13.8-r12 (2021/04/11)
+
+* Initialize ruTorrent plugins (#74)
+
 ## 3.10-0.9.8-0.13.8-r11 (2021/04/11)
 
 * Allow ports customization (#73)
