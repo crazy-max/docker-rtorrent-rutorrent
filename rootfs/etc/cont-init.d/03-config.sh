@@ -14,12 +14,17 @@ REAL_IP_HEADER=${REAL_IP_HEADER:-X-Forwarded-For}
 LOG_IP_VAR=${LOG_IP_VAR:-remote_addr}
 
 XMLRPC_AUTHBASIC_STRING=${XMLRPC_AUTHBASIC_STRING:-rTorrent XMLRPC restricted access}
+XMLRPC_PORT=${XMLRPC_PORT:-8000}
 RUTORRENT_AUTHBASIC_STRING=${RUTORRENT_AUTHBASIC_STRING:-ruTorrent restricted access}
+RUTORRENT_PORT=${RUTORRENT_PORT:-8080}
 WEBDAV_AUTHBASIC_STRING=${WEBDAV_AUTHBASIC_STRING:-WebDAV restricted access}
+WEBDAV_PORT=${WEBDAV_PORT:-9000}
 
 RT_LOG_LEVEL=${RT_LOG_LEVEL:-info}
 RT_LOG_EXECUTE=${RT_LOG_EXECUTE:-false}
 RT_LOG_XMLRPC=${RT_LOG_XMLRPC:-false}
+RT_PORT_DHT=${RT_PORT_DHT:-6881}
+RT_PORT_LISTENING=${RT_PORT_LISTENING:-50000}
 
 RU_HTTP_USER_AGENT=${RU_HTTP_USER_AGENT:-Mozilla/5.0 (Windows NT 6.0; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0}
 RU_HTTP_TIME_OUT=${RU_HTTP_TIME_OUT:-30}
@@ -69,17 +74,20 @@ sed -e "s#@REAL_IP_FROM@#$REAL_IP_FROM#g" \
 # Nginx XMLRPC over SCGI
 echo "Setting Nginx XMLRPC over SCGI configuration..."
 sed -e "s!@XMLRPC_AUTHBASIC_STRING@!$XMLRPC_AUTHBASIC_STRING!g" \
+  -e "s!@XMLRPC_PORT@!$XMLRPC_PORT!g" \
   /tpls/etc/nginx/conf.d/rpc.conf > /etc/nginx/conf.d/rpc.conf
 
 # Nginx ruTorrent
 echo "Setting Nginx ruTorrent configuration..."
 sed -e "s!@UPLOAD_MAX_SIZE@!$UPLOAD_MAX_SIZE!g" \
   -e "s!@RUTORRENT_AUTHBASIC_STRING@!$RUTORRENT_AUTHBASIC_STRING!g" \
+  -e "s!@RUTORRENT_PORT@!$RUTORRENT_PORT!g" \
   /tpls/etc/nginx/conf.d/rutorrent.conf > /etc/nginx/conf.d/rutorrent.conf
 
 # Nginx WebDAV
 echo "Setting Nginx WebDAV configuration..."
 sed -e "s!@WEBDAV_AUTHBASIC_STRING@!$WEBDAV_AUTHBASIC_STRING!g" \
+  -e "s!@WEBDAV_PORT@!$WEBDAV_PORT!g" \
   /tpls/etc/nginx/conf.d/webdav.conf > /etc/nginx/conf.d/webdav.conf
 
 # Init
@@ -123,6 +131,8 @@ fi
 # rTorrent local config
 echo "Checking rTorrent local configuration..."
 sed -e "s!@RT_LOG_LEVEL@!$RT_LOG_LEVEL!g" \
+  -e "s!@RT_PORT_DHT@!$RT_PORT_DHT!g" \
+  -e "s!@RT_PORT_LISTENING@!$RT_PORT_LISTENING!g" \
   /tpls/etc/rtorrent/.rtlocal.rc > /etc/rtorrent/.rtlocal.rc
 if [ "${RT_LOG_EXECUTE}" = "true" ]; then
   echo "  Enabling rTorrent execute log..."

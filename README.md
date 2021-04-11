@@ -112,14 +112,19 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `REAL_IP_HEADER`: Request header field whose value will be used to replace the client address (default `X-Forwarded-For`)
 * `LOG_IP_VAR`: Use another variable to retrieve the remote IP address for access [log_format](http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) on Nginx. (default `remote_addr`)
 * `XMLRPC_AUTHBASIC_STRING`: Message displayed during validation of XMLRPC Basic Auth (default: `rTorrent XMLRPC restricted access`)
+* `XMLRPC_PORT`: XMLRPC port through nginx over SCGI socket (default: `8000`)
 * `RUTORRENT_AUTHBASIC_STRING`: Message displayed during validation of ruTorrent Basic Auth (default: `ruTorrent restricted access`)
+* `RUTORRENT_PORT`: ruTorrent HTTP port (default: `8080`)
 * `WEBDAV_AUTHBASIC_STRING`: Message displayed during validation of WebDAV Basic Auth (default: `WebDAV restricted access`)
+* `WEBDAV_PORT`: WebDAV port on completed downloads (default: `9000`)
 
 ### rTorrent
 
 * `RT_LOG_LEVEL`: rTorrent log level (default: `info`)
 * `RT_LOG_EXECUTE`: Log executed commands to `/data/rtorrent/log/execute.log` (default: `false`)
 * `RT_LOG_XMLRPC`: Log XMLRPC queries to `/data/rtorrent/log/xmlrpc.log` (default: `false`)
+* `RT_PORT_DHT`: DHT UDP port (`dht.port.set`, default: `6881`)
+* `RT_PORT_LISTENING`: Incoming connections (`network.port_range.set`, default: `50000`)
 
 ### ruTorrent
 
@@ -151,11 +156,11 @@ Image: crazymax/rtorrent-rutorrent:latest
 
 ## Ports
 
-* `6881`: DHT UDP port (`dht.port.set`)
-* `8000`: XMLRPC port through nginx over SCGI socket
-* `8080`: ruTorrent HTTP port
-* `9000`: WebDAV port on completed downloads
-* `50000`: Incoming connections (`network.port_range.set`)
+* `6881` (or `RT_PORT_DHT`): DHT UDP port (`dht.port.set`)
+* `8000` (or `XMLRPC_PORT`): XMLRPC port through nginx over SCGI socket
+* `8080` (or `RUTORRENT_PORT`): ruTorrent HTTP port
+* `9000` (or `WEBDAV_PORT`): WebDAV port on completed downloads
+* `50000` (or `RT_PORT_LISTENING`): Incoming connections (`network.port_range.set`)
 
 ## Usage
 
