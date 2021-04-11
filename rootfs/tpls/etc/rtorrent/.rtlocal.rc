@@ -42,3 +42,6 @@ log.add_output = "@RT_LOG_LEVEL@","log"
 log.add_output = "rpc_events","log"
 #log.execute = (cat,(cfg.logs),"execute.log")
 #log.xmlrpc = (cat,(cfg.logs),"xmlrpc.log")
+
+# Initialize plugins
+execute2 = {sh,-c,/usr/bin/php7 /var/www/rutorrent/php/initplugins.php rtorrent &}
