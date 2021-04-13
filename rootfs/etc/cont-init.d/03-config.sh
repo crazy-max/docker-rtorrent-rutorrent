@@ -14,17 +14,12 @@ REAL_IP_HEADER=${REAL_IP_HEADER:-X-Forwarded-For}
 LOG_IP_VAR=${LOG_IP_VAR:-remote_addr}
 
 XMLRPC_AUTHBASIC_STRING=${XMLRPC_AUTHBASIC_STRING:-rTorrent XMLRPC restricted access}
-XMLRPC_PORT=${XMLRPC_PORT:-8000}
 RUTORRENT_AUTHBASIC_STRING=${RUTORRENT_AUTHBASIC_STRING:-ruTorrent restricted access}
-RUTORRENT_PORT=${RUTORRENT_PORT:-8080}
 WEBDAV_AUTHBASIC_STRING=${WEBDAV_AUTHBASIC_STRING:-WebDAV restricted access}
-WEBDAV_PORT=${WEBDAV_PORT:-9000}
 
 RT_LOG_LEVEL=${RT_LOG_LEVEL:-info}
 RT_LOG_EXECUTE=${RT_LOG_EXECUTE:-false}
 RT_LOG_XMLRPC=${RT_LOG_XMLRPC:-false}
-RT_DHT_PORT=${RT_DHT_PORT:-6881}
-RT_INC_PORT=${RT_INC_PORT:-50000}
 
 RU_HTTP_USER_AGENT=${RU_HTTP_USER_AGENT:-Mozilla/5.0 (Windows NT 6.0; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0}
 RU_HTTP_TIME_OUT=${RU_HTTP_TIME_OUT:-30}
@@ -41,6 +36,15 @@ RU_SAVE_UPLOADED_TORRENTS=${RU_SAVE_UPLOADED_TORRENTS:-true}
 RU_OVERWRITE_UPLOADED_TORRENTS=${RU_OVERWRITE_UPLOADED_TORRENTS:-false}
 RU_FORBID_USER_SETTINGS=${RU_FORBID_USER_SETTINGS:-false}
 RU_LOCALE=${RU_LOCALE:-UTF8}
+
+RT_DHT_PORT=${RT_DHT_PORT:-6881}
+RT_INC_PORT=${RT_INC_PORT:-50000}
+XMLRPC_PORT=${XMLRPC_PORT:-8000}
+XMLRPC_HEALTH_PORT=$((XMLRPC_PORT + 1))
+RUTORRENT_PORT=${RUTORRENT_PORT:-8080}
+RUTORRENT_HEALTH_PORT=$((RUTORRENT_PORT + 1))
+WEBDAV_PORT=${WEBDAV_PORT:-9000}
+WEBDAV_HEALTH_PORT=$((WEBDAV_PORT + 1))
 
 # Timezone
 echo "Setting timezone to ${TZ}..."
@@ -75,6 +79,7 @@ sed -e "s#@REAL_IP_FROM@#$REAL_IP_FROM#g" \
 echo "Setting Nginx XMLRPC over SCGI configuration..."
 sed -e "s!@XMLRPC_AUTHBASIC_STRING@!$XMLRPC_AUTHBASIC_STRING!g" \
   -e "s!@XMLRPC_PORT@!$XMLRPC_PORT!g" \
+  -e "s!@XMLRPC_HEALTH_PORT@!$XMLRPC_HEALTH_PORT!g" \
   /tpls/etc/nginx/conf.d/rpc.conf > /etc/nginx/conf.d/rpc.conf
 
 # Nginx ruTorrent
@@ -82,13 +87,31 @@ echo "Setting Nginx ruTorrent configuration..."
 sed -e "s!@UPLOAD_MAX_SIZE@!$UPLOAD_MAX_SIZE!g" \
   -e "s!@RUTORRENT_AUTHBASIC_STRING@!$RUTORRENT_AUTHBASIC_STRING!g" \
   -e "s!@RUTORRENT_PORT@!$RUTORRENT_PORT!g" \
+  -e "s!@RUTORRENT_HEALTH_PORT@!$RUTORRENT_HEALTH_PORT!g" \
   /tpls/etc/nginx/conf.d/rutorrent.conf > /etc/nginx/conf.d/rutorrent.conf
 
 # Nginx WebDAV
 echo "Setting Nginx WebDAV configuration..."
 sed -e "s!@WEBDAV_AUTHBASIC_STRING@!$WEBDAV_AUTHBASIC_STRING!g" \
   -e "s!@WEBDAV_PORT@!$WEBDAV_PORT!g" \
+  -e "s!@WEBDAV_HEALTH_PORT@!$WEBDAV_HEALTH_PORT!g" \
   /tpls/etc/nginx/conf.d/webdav.conf > /etc/nginx/conf.d/webdav.conf
+
+# Healthcheck
+echo "Update healthcheck script..."
+cat > /usr/local/bin/healthcheck <<EOL
+#!/bin/sh
+set -e
+
+# rTorrent
+curl --fail -d "<?xml version='1.0'?><methodCall><methodName>system.api_version</methodName></methodCall>" http://127.0.0.1:${XMLRPC_HEALTH_PORT}
+
+# ruTorrent / PHP
+curl --fail http://127.0.0.1:${RUTORRENT_HEALTH_PORT}/ping
+
+# WebDAV
+curl --fail http://127.0.0.1:${WEBDAV_HEALTH_PORT}
+EOL
 
 # Init
 echo "Initializing files and folders..."
