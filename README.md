@@ -162,6 +162,9 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `9000` (or `WEBDAV_PORT`): WebDAV port on completed downloads
 * `50000` (or `RT_INC_PORT`): Incoming connections (`network.port_range.set`)
 
+> ⚠️ Port p+1 defined for `XMLRPC_PORT`, `RUTORRENT_PORT` and `WEBDAV_PORT` will also be reserved for
+> healthcheck. (e.g. if you define `RUTORRENT_PORT=8080`, port `8081` will be reserved)
+
 ## Usage
 
 ### Docker Compose
