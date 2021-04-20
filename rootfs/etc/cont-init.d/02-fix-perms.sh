@@ -12,7 +12,7 @@ mkdir -p /data/rtorrent \
   /var/run/nginx \
   /var/run/php-fpm \
   /var/run/rtorrent
-chown rtorrent. \
+chown -R rtorrent. \
   /data \
   /data/rtorrent \
   /data/rutorrent \
