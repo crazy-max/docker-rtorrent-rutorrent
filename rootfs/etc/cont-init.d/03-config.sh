@@ -1,6 +1,7 @@
 #!/usr/bin/with-contenv sh
 
 WAN_IP=${WAN_IP:-$(dig +short myip.opendns.com @resolver1.opendns.com)}
+WAN_IP=${WAN_IP:-$(curl ifconfig.me)}
 printf "%s" "$WAN_IP" > /var/run/s6/container_environment/WAN_IP
 
 TZ=${TZ:-UTC}
