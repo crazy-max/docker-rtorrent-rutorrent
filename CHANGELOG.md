@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.10-0.9.8-0.13.8-r14 (2021/05/31)
+
+* `ifconfig.me` as fallback for automatic WAN_IP determination (#96)
+
 ## 3.10-0.9.8-0.13.8-r13 (2021/04/13)
 
 * Dynamically manage healthcheck ports (#76)
