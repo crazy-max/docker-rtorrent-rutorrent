@@ -37,6 +37,7 @@ RU_SAVE_UPLOADED_TORRENTS=${RU_SAVE_UPLOADED_TORRENTS:-true}
 RU_OVERWRITE_UPLOADED_TORRENTS=${RU_OVERWRITE_UPLOADED_TORRENTS:-false}
 RU_FORBID_USER_SETTINGS=${RU_FORBID_USER_SETTINGS:-false}
 RU_LOCALE=${RU_LOCALE:-UTF8}
+RU_DOWNLOAD_FOLDER=${RU_DOWNLOAD_FOLDER:-/downloads}
 
 RT_DHT_PORT=${RT_DHT_PORT:-6881}
 RT_INC_PORT=${RT_INC_PORT:-50000}
@@ -126,8 +127,9 @@ mkdir -p /data/geoip \
   /data/rutorrent/share/users \
   /data/rutorrent/share/torrents \
   /data/rutorrent/themes \
-  /downloads/complete \
-  /downloads/temp
+  ${RU_DOWNLOAD_FOLDER}/complete \
+  ${RU_DOWNLOAD_FOLDER}/temp
+
 touch /passwd/rpc.htpasswd \
   /passwd/rutorrent.htpasswd \
   /passwd/webdav.htpasswd \
@@ -158,6 +160,13 @@ sed -e "s!@RT_LOG_LEVEL@!$RT_LOG_LEVEL!g" \
   -e "s!@RT_DHT_PORT@!$RT_DHT_PORT!g" \
   -e "s!@RT_INC_PORT@!$RT_INC_PORT!g" \
   /tpls/etc/rtorrent/.rtlocal.rc > /etc/rtorrent/.rtlocal.rc
+
+# Custom Download Folder
+if [[ "${RU_DOWNLOAD_FOLDER}" != "/downloads" ]]; then
+   echo "Enabling Custom Download Folder for rTorrent..."
+   sed -i "s#/downloads#${RU_DOWNLOAD_FOLDER}#g" /etc/rtorrent/.rtlocal.rc
+fi
+
 if [ "${RT_LOG_EXECUTE}" = "true" ]; then
   echo "  Enabling rTorrent execute log..."
   sed -i "s!#log\.execute.*!log\.execute = (cat,(cfg.logs),\"execute.log\")!g" /etc/rtorrent/.rtlocal.rc
@@ -208,7 +217,7 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 \$overwriteUploadedTorrents = ${RU_OVERWRITE_UPLOADED_TORRENTS};
 
 // Upper available directory. Absolute path with trail slash.
-\$topDirectory = '/';
+\$topDirectory = '${RU_DOWNLOAD_FOLDER}';
 \$forbidUserSettings = ${RU_FORBID_USER_SETTINGS};
 
 // For web->rtorrent link through unix domain socket
@@ -331,18 +340,19 @@ done
 if [ ! "$(ls -A /data/geoip)" ]; then
   cp -f /var/mmdb/*.mmdb /data/geoip/
 fi
-ln -sf /data/geoip/GeoLite2-ASN.mmdb /var/www/rutorrent/plugins/geoip2/database/GeoLite2-ASN.mmdb
-ln -sf /data/geoip/GeoLite2-City.mmdb /var/www/rutorrent/plugins/geoip2/database/GeoLite2-City.mmdb
-ln -sf /data/geoip/GeoLite2-Country.mmdb /var/www/rutorrent/plugins/geoip2/database/GeoLite2-Country.mmdb
-
+if [ -d "/var/www/rutorrent/plugins/geoip2/" ]; then
+   ln -sf /data/geoip/GeoLite2-ASN.mmdb /var/www/rutorrent/plugins/geoip2/database/GeoLite2-ASN.mmdb
+   ln -sf /data/geoip/GeoLite2-City.mmdb /var/www/rutorrent/plugins/geoip2/database/GeoLite2-City.mmdb
+   ln -sf /data/geoip/GeoLite2-Country.mmdb /var/www/rutorrent/plugins/geoip2/database/GeoLite2-Country.mmdb
+fi
 # Perms
 echo "Fixing perms..."
 chown rtorrent. \
   /data/rutorrent/share/users \
   /data/rutorrent/share/torrents \
   /downloads \
-  /downloads/complete \
-  /downloads/temp \
+  ${RU_DOWNLOAD_FOLDER}/complete \
+  ${RU_DOWNLOAD_FOLDER}/temp \
   "${RU_LOG_FILE}"
 chown -R rtorrent. \
   /data/geoip \
