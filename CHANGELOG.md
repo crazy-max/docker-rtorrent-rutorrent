@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.10-0.9.8-0.13.8-r15 (2021/06/14)
+
+* Add `posix` PHP extension (#102)
+
 ## 3.10-0.9.8-0.13.8-r14 (2021/05/31)
 
 * `ifconfig.me` as fallback for automatic WAN_IP determination (#96)
