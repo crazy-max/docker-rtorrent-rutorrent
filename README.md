@@ -34,7 +34,7 @@ ___
   * [XMLRPC through nginx](#xmlrpc-through-nginx)
   * [WebDAV](#webdav)
   * [Populate .htpasswd files](#populate-htpasswd-files)
-  * [Boostrap config `.rtlocal.rc`](#populate-htpasswd-files)
+  * [Boostrap config `.rtlocal.rc`](#boostrap-config-rtlocalrc)
   * [Override or add a ruTorrent plugin/theme](#override-or-add-a-rutorrent-plugintheme)
   * [Edit a ruTorrent plugin configuration](#edit-a-rutorrent-plugin-configuration)
 * [Upgrade](#upgrade)
