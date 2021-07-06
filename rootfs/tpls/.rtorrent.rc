@@ -13,9 +13,6 @@ throttle.max_uploads.set = 15
 throttle.global_down.max_rate.set_kb = 0
 throttle.global_up.max_rate.set_kb = 0
 
-# XMLRPC size limit
-network.xmlrpc.size_limit.set = 4M
-
 # Enable DHT support for trackerless torrents or when all trackers are down
 # May be set to "disable" (completely disable DHT), "off" (do not start DHT),
 # "auto" (start and stop DHT as needed), or "on" (start DHT immediately)

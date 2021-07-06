@@ -113,6 +113,7 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `LOG_IP_VAR`: Use another variable to retrieve the remote IP address for access [log_format](http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) on Nginx. (default `remote_addr`)
 * `XMLRPC_AUTHBASIC_STRING`: Message displayed during validation of XMLRPC Basic Auth (default `rTorrent XMLRPC restricted access`)
 * `XMLRPC_PORT`: XMLRPC port through nginx over SCGI socket (default `8000`)
+* `XMLRPC_SIZE_LIMIT`: Maximum body size of XMLRPC calls (default `1M`)
 * `RUTORRENT_AUTHBASIC_STRING`: Message displayed during validation of ruTorrent Basic Auth (default `ruTorrent restricted access`)
 * `RUTORRENT_PORT`: ruTorrent HTTP port (default `8080`)
 * `WEBDAV_AUTHBASIC_STRING`: Message displayed during validation of WebDAV Basic Auth (default `WebDAV restricted access`)
