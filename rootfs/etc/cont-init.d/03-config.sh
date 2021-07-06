@@ -13,6 +13,7 @@ MAX_FILE_UPLOADS=${MAX_FILE_UPLOADS:-50}
 REAL_IP_FROM=${REAL_IP_FROM:-0.0.0.0/32}
 REAL_IP_HEADER=${REAL_IP_HEADER:-X-Forwarded-For}
 LOG_IP_VAR=${LOG_IP_VAR:-remote_addr}
+XMLRPC_SIZE_LIMIT=${XMLRPC_SIZE_LIMIT:-1M}
 
 XMLRPC_AUTHBASIC_STRING=${XMLRPC_AUTHBASIC_STRING:-rTorrent XMLRPC restricted access}
 RUTORRENT_AUTHBASIC_STRING=${RUTORRENT_AUTHBASIC_STRING:-ruTorrent restricted access}
@@ -81,6 +82,7 @@ echo "Setting Nginx XMLRPC over SCGI configuration..."
 sed -e "s!@XMLRPC_AUTHBASIC_STRING@!$XMLRPC_AUTHBASIC_STRING!g" \
   -e "s!@XMLRPC_PORT@!$XMLRPC_PORT!g" \
   -e "s!@XMLRPC_HEALTH_PORT@!$XMLRPC_HEALTH_PORT!g" \
+  -e "s!@XMLRPC_SIZE_LIMIT@!$XMLRPC_SIZE_LIMIT!g" \
   /tpls/etc/nginx/conf.d/rpc.conf > /etc/nginx/conf.d/rpc.conf
 
 # Nginx ruTorrent
@@ -157,6 +159,7 @@ echo "Checking rTorrent local configuration..."
 sed -e "s!@RT_LOG_LEVEL@!$RT_LOG_LEVEL!g" \
   -e "s!@RT_DHT_PORT@!$RT_DHT_PORT!g" \
   -e "s!@RT_INC_PORT@!$RT_INC_PORT!g" \
+  -e "s!@XMLRPC_SIZE_LIMIT@!$XMLRPC_SIZE_LIMIT!g" \
   /tpls/etc/rtorrent/.rtlocal.rc > /etc/rtorrent/.rtlocal.rc
 if [ "${RT_LOG_EXECUTE}" = "true" ]; then
   echo "  Enabling rTorrent execute log..."

@@ -34,6 +34,9 @@ network.port_random.set = no
 # UDP port to use for DHT
 dht.port.set = @RT_DHT_PORT@
 
+# XMLRPC size limit
+network.xmlrpc.size_limit.set = @XMLRPC_SIZE_LIMIT@
+
 # Logging
 ## levels = critical error warn notice info debug
 ## groups = connection_* dht_* peer_* rpc_* storage_* thread_* tracker_* torrent_*
