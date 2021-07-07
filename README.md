@@ -34,7 +34,7 @@ ___
   * [XMLRPC through nginx](#xmlrpc-through-nginx)
   * [WebDAV](#webdav)
   * [Populate .htpasswd files](#populate-htpasswd-files)
-  * [Boostrap config `.rtlocal.rc`](#populate-htpasswd-files)
+  * [Boostrap config `.rtlocal.rc`](#boostrap-config-rtlocalrc)
   * [Override or add a ruTorrent plugin/theme](#override-or-add-a-rutorrent-plugintheme)
   * [Edit a ruTorrent plugin configuration](#edit-a-rutorrent-plugin-configuration)
 * [Upgrade](#upgrade)
@@ -213,7 +213,7 @@ populate this file with a user / password.
 
 ### WebDAV
 
-WebDAV allows you to retrieve your completed torrent files in `/downloads/completed` on port `9000`. Like XMLRPC, these
+WebDAV allows you to retrieve your completed torrent files in `/downloads/complete` on port `9000`. Like XMLRPC, these
 requests can be secured with basic authentication through the `/passwd/webdav.htpasswd` file in which you will need to
 add a username with his password. See below to populate this file with a user / password.
 
@@ -242,7 +242,7 @@ imported. This configuration cannot be changed unless you rebuild the image or o
 * A config layout for the rTorrent's instance you can use in your `.rtorrent.rc`:
   * `cfg.basedir`: Home directory of rtorrent (`/data/rtorrent/`)
   * `cfg.download`: Download directory (`/downloads/`)
-  * `cfg.download_complete`: Completed downloads (`/downloads/completed/`)
+  * `cfg.download_complete`: Completed downloads (`/downloads/complete/`)
   * `cfg.download_temp`:  Downloads in progress (`/downloads/temp/`)
   * `cfg.logs`: Logs directory (`/data/rtorrent/log/`)
   * `cfg.session`: Session directory (`/data/rtorrent/.session/`)
