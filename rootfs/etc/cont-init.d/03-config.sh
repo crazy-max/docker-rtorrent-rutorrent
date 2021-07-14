@@ -10,6 +10,7 @@ UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-16M}
 CLEAR_ENV=${CLEAR_ENV:-yes}
 OPCACHE_MEM_SIZE=${OPCACHE_MEM_SIZE:-128}
 MAX_FILE_UPLOADS=${MAX_FILE_UPLOADS:-50}
+AUTH_DELAY=${AUTH_DELAY:-0s}
 REAL_IP_FROM=${REAL_IP_FROM:-0.0.0.0/32}
 REAL_IP_HEADER=${REAL_IP_HEADER:-X-Forwarded-For}
 LOG_IP_VAR=${LOG_IP_VAR:-remote_addr}
@@ -75,6 +76,7 @@ echo "Setting Nginx configuration..."
 sed -e "s#@REAL_IP_FROM@#$REAL_IP_FROM#g" \
   -e "s#@REAL_IP_HEADER@#$REAL_IP_HEADER#g" \
   -e "s#@LOG_IP_VAR@#$LOG_IP_VAR#g" \
+  -e "s#@AUTH_DELAY@#$AUTH_DELAY#g" \
   /tpls/etc/nginx/nginx.conf > /etc/nginx/nginx.conf
 
 # Nginx XMLRPC over SCGI
