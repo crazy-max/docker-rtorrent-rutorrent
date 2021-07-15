@@ -217,7 +217,6 @@ RUN tree ${DIST_PATH}
 
 ARG ALPINE_S6_TAG
 FROM crazymax/alpine-s6:${ALPINE_S6_TAG}
-LABEL maintainer="CrazyMax"
 
 COPY --from=builder /dist /
 COPY --from=download --chown=nobody:nogroup /dist/rutorrent /var/www/rutorrent
