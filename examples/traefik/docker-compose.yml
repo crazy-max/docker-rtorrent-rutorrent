@@ -71,12 +71,14 @@ services:
       - "traefik.http.routers.rutorrent.tls=true"
       - "traefik.http.routers.rutorrent.tls.certresolver=letsencrypt"
       - "traefik.http.routers.rutorrent.tls.domains[0].main=rutorrent.example.com"
+      - "traefik.http.routers.rutorrent.service=rutorrent"
       - "traefik.http.services.rutorrent.loadbalancer.server.port=${RUTORRENT_PORT}"
       - "traefik.http.routers.webdav.entrypoints=https"
       - "traefik.http.routers.webdav.rule=Host(`webdav.example.com`)"
       - "traefik.http.routers.webdav.tls=true"
       - "traefik.http.routers.webdav.tls.certresolver=letsencrypt"
       - "traefik.http.routers.webdav.tls.domains[0].main=webdav.example.com"
+      - "traefik.http.routers.webdav.service=webdav"
       - "traefik.http.services.webdav.loadbalancer.server.port=${WEBDAV_PORT}"
     ulimits:
       nproc: 65535
