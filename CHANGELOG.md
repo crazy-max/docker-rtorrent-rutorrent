@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.10-0.9.8-0.13.8-r16 (2021/08/01)
+
+* Fix Traefik example (#113)
+* Add `AUTH_DELAY` env var (#109)  
+* Add `XMLRPC_SIZE_LIMIT` env var (#107)
+
 ## 3.10-0.9.8-0.13.8-r15 (2021/06/14)
 
 * Add `posix` PHP extension (#102)
