@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.10-0.9.8-0.13.8-r17 (2021/08/19)
+
+* Update dependencies (#117)
+* Alpine Linux 3.14 (#116)
+
 ## 3.10-0.9.8-0.13.8-r16 (2021/08/01)
 
 * Fix Traefik example (#113)
