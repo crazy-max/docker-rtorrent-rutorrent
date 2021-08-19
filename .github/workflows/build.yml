@@ -81,7 +81,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           set: |
             *.cache-from=type=local,src=/tmp/.docker-cache
-            *.cache-to=type=local,dest=/tmp/.docker-cache-new
+            *.cache-to=type=local,dest=/tmp/.docker-cache-new,mode=max
       -
         name: Check manifest
         if: github.event_name != 'pull_request'
