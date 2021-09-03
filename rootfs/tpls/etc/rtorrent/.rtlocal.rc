@@ -3,9 +3,9 @@ system.daemon.set = true
 
 # Instance layout
 method.insert = cfg.basedir, private|const|string, (cat,"/data/rtorrent/")
-method.insert = cfg.download, private|const|string, (cat,"/downloads/")
-method.insert = cfg.download_complete, private|const|string, (cat,(cfg.download),"complete/")
-method.insert = cfg.download_temp, private|const|string, (cat,(cfg.download),"temp/")
+method.insert = cfg.download, private|const|string, (cat,"@DOWNLOAD_ROOT@")
+method.insert = cfg.download_complete, private|const|string, (cat,(cfg.download),"@DOWNLOAD_COMPLETE@")
+method.insert = cfg.download_temp, private|const|string, (cat,(cfg.download),"@DOWNLOAD_INCOMPLETE@")
 method.insert = cfg.logs, private|const|string, (cat,(cfg.basedir),"log/")
 method.insert = cfg.session, private|const|string, (cat,(cfg.basedir),".session/")
 method.insert = cfg.watch, private|const|string, (cat,(cfg.basedir),"watch/")
