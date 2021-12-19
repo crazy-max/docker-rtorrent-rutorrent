@@ -294,7 +294,7 @@ $partitionDirectory = null;	// if null, then we will check rtorrent download dir
 
 After issuing a shutdown command, Docker waits 10 seconds for the container to exit before it is killed.  If you are a seeding many torrents, rTorrent may be unable to gracefully close within that time period.  As a result, rTorrent is closed forcefully and the lockfile isn't removed.  This stale lockfile will prevent rTorrent from restarting until the lockfile is removed manually.
 
-The timeout period can be extended by either adding the parameter ```-t XX``` to the docker command or ```stop_grace_period: XXs``` in docker-compose.yml, where XX is the number of seconds to wait for a graceful shutdown.
+The timeout period can be extended by either adding the parameter `-t XX` to the docker command or `stop_grace_period: XXs` in docker-compose.yml, where `XX` is the number of seconds to wait for a graceful shutdown.
 
 
 ## Upgrade
