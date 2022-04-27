@@ -2,7 +2,7 @@ version: "3.2"
 
 services:
   traefik:
-    image: traefik:2.3
+    image: traefik:2.5
     command:
       - "--global.checknewversion=false"
       - "--global.sendanonymoususage=false"
