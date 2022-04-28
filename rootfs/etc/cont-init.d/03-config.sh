@@ -14,6 +14,7 @@ AUTH_DELAY=${AUTH_DELAY:-0s}
 REAL_IP_FROM=${REAL_IP_FROM:-0.0.0.0/32}
 REAL_IP_HEADER=${REAL_IP_HEADER:-X-Forwarded-For}
 LOG_IP_VAR=${LOG_IP_VAR:-remote_addr}
+LOG_ACCESS=${LOG_ACCESS:-true}
 XMLRPC_SIZE_LIMIT=${XMLRPC_SIZE_LIMIT:-1M}
 
 XMLRPC_AUTHBASIC_STRING=${XMLRPC_AUTHBASIC_STRING:-rTorrent XMLRPC restricted access}
@@ -23,8 +24,6 @@ WEBDAV_AUTHBASIC_STRING=${WEBDAV_AUTHBASIC_STRING:-WebDAV restricted access}
 RT_LOG_LEVEL=${RT_LOG_LEVEL:-info}
 RT_LOG_EXECUTE=${RT_LOG_EXECUTE:-false}
 RT_LOG_XMLRPC=${RT_LOG_XMLRPC:-false}
-
-NGINX_ACCESS_LOG_ENABLED=${NGINX_ACCESS_LOG_ENABLED:-true}
 
 RU_HTTP_USER_AGENT=${RU_HTTP_USER_AGENT:-Mozilla/5.0 (Windows NT 6.0; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0}
 RU_HTTP_TIME_OUT=${RU_HTTP_TIME_OUT:-30}
@@ -89,7 +88,7 @@ sed -e "s#@REAL_IP_FROM@#$REAL_IP_FROM#g" \
   -e "s#@LOG_IP_VAR@#$LOG_IP_VAR#g" \
   -e "s#@AUTH_DELAY@#$AUTH_DELAY#g" \
   /tpls/etc/nginx/nginx.conf > /etc/nginx/nginx.conf
-if [ "${NGINX_ACCESS_LOG_ENABLED}" != "true" ]; then
+if [ "${LOG_ACCESS}" != "true" ]; then
   echo "  Disabling Nginx access log..."
   sed -i "s!access_log /proc/self/fd/1 main!access_log off!g" /etc/nginx/nginx.conf
 fi
