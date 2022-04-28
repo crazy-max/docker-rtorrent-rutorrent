@@ -38,6 +38,7 @@ ___
   * [Override or add a ruTorrent plugin/theme](#override-or-add-a-rutorrent-plugintheme)
   * [Edit a ruTorrent plugin configuration](#edit-a-rutorrent-plugin-configuration)
   * [Increase Docker timeout to allow rTorrent to shutdown gracefully](#increase-docker-timeout-to-allow-rtorrent-to-shutdown-gracefully)
+  * [WAN IP address](#wan-ip-address)
 * [Upgrade](#upgrade)
 * [Contributing](#contributing)
 * [License](#license)
@@ -103,7 +104,8 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `TZ`: The timezone assigned to the container (default `UTC`)
 * `PUID`: rTorrent user id (default `1000`)
 * `PGID`: rTorrent group id (default `1000`)
-* `WAN_IP`: Public IP address reported to the tracker (default auto resolved with `dig +short myip.opendns.com @resolver1.opendns.com`)
+* `WAN_IP`: [Public IP address](#wan-ip-address) reported to the tracker.
+* `WAN_IP_CMD`: Command to resolve the [Public IP address](#wan-ip-address) if `WAN_IP` empty. (`false` to disable ; default `dig +short myip.opendns.com @resolver1.opendns.com`)
 * `MEMORY_LIMIT`: PHP memory limit (default `256M`)
 * `UPLOAD_MAX_SIZE`: Upload max size (default `16M`)
 * `CLEAR_ENV`: Clear environment in FPM workers (default `yes`)
@@ -172,8 +174,9 @@ Image: crazymax/rtorrent-rutorrent:latest
 
 ### Docker Compose
 
-Docker compose is the recommended way to run this image. Copy the content of folder [examples/compose](examples/compose)
-in `/var/rtorrent-rutorrent/` on your host for example. Edit the compose file with your preferences and run the
+Docker compose is the recommended way to run this image. Copy the content of
+folder [examples/compose](examples/compose) in `/var/rtorrent-rutorrent/` on
+your host for example. Edit the compose file with your preferences and run the
 following command:
 
 ```shell
@@ -208,21 +211,23 @@ docker run -d --name rtorrent_rutorrent \
 
 ### XMLRPC through nginx
 
-rTorrent 0.9.7+ has a built-in daemon mode disabling the user interface, so you can only control it via XMLRPC. Nginx
-will route XMLRPC requests to rtorrent through port `8000`. These requests can be secured with basic authentication
-through the `/passwd/rpc.htpasswd` file in which you will need to add a username with his password. See below to
-populate this file with a user / password.
+rTorrent 0.9.7+ has a built-in daemon mode disabling the user interface, so you
+can only control it via XMLRPC. Nginx will route XMLRPC requests to rtorrent
+through port `8000`. These requests can be secured with basic authentication
+through the `/passwd/rpc.htpasswd` file in which you will need to add a username
+with his password. See below to populate this file with a user / password.
 
 ### WebDAV
 
-WebDAV allows you to retrieve your completed torrent files in `/downloads/complete` on port `9000`. Like XMLRPC, these
-requests can be secured with basic authentication through the `/passwd/webdav.htpasswd` file in which you will need to
-add a username with his password. See below to populate this file with a user / password.
+WebDAV allows you to retrieve your completed torrent files in `/downloads/complete`
+on port `9000`. Like XMLRPC, these requests can be secured with basic authentication
+through the `/passwd/webdav.htpasswd` file in which you will need to add a
+username with his password. See below to populate this file with a user / password.
 
 ### Populate .htpasswd files
 
-For ruTorrent basic auth, XMLRPC through nginx and WebDAV on completed downloads, you can populate `.htpasswd`
-files with the following command:
+For ruTorrent basic auth, XMLRPC through nginx and WebDAV on completed downloads,
+you can populate `.htpasswd` files with the following command:
 
 ```
 docker run --rm -it httpd:2.4-alpine htpasswd -Bbn <username> <password> >> $(pwd)/passwd/webdav.htpasswd
@@ -236,9 +241,10 @@ Htpasswd files used:
 
 ### Boostrap config `.rtlocal.rc`
 
-When rTorrent is started the bootstrap config [/etc/rtorrent/.rtlocal.rc](rootfs/tpls/etc/rtorrent/.rtlocal.rc) is
-imported. This configuration cannot be changed unless you rebuild the image or overwrite these elements in your
-`.rtorrent.rc`. Here are the particular properties of this file:
+When rTorrent is started the bootstrap config [/etc/rtorrent/.rtlocal.rc](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
+is imported. This configuration cannot be changed unless you rebuild the image
+or overwrite these elements in your `.rtorrent.rc`. Here are the particular
+properties of this file:
 
 * `system.daemon.set = true`: Launcher rTorrent as a daemon
 * A config layout for the rTorrent's instance you can use in your `.rtorrent.rc`:
@@ -265,19 +271,21 @@ imported. This configuration cannot be changed unless you rebuild the image or o
 
 ### Override or add a ruTorrent plugin/theme
 
-You can add a plugin for ruTorrent in `/data/rutorrent/plugins/`. If you add a plugin that already exists in ruTorrent,
-it will be removed from ruTorrent core plugins and yours will be used. And you can also add a theme in
-`/data/rutorrent/themes/`. The same principle as for plugins will be used if you want to override one.
+You can add a plugin for ruTorrent in `/data/rutorrent/plugins/`. If you add a
+plugin that already exists in ruTorrent, it will be removed from ruTorrent core
+plugins and yours will be used. And you can also add a theme in `/data/rutorrent/themes/`.
+The same principle as for plugins will be used if you want to override one.
 
 > ⚠️ Container has to be restarted to propagate changes
 
 ### Edit a ruTorrent plugin configuration
 
-As you probably know, plugin configuration is not outsourced in ruTorrent. Loading the configuration of a plugin is
-done via a `conf.php` file placed at the root of the plugin folder. To solve this issue with Docker, a special folder
-has been created in `/data/rutorrent/plugins-conf` to allow you to configure plugins. For example to configure the
-`diskspace` plugin, you will need to create the `/data/rutorrent/plugins-conf/diskspace.php` file with your
-configuration:
+As you probably know, plugin configuration is not outsourced in ruTorrent.
+Loading the configuration of a plugin is done via a `conf.php` file placed at
+the root of the plugin folder. To solve this issue with Docker, a special folder
+has been created in `/data/rutorrent/plugins-conf` to allow you to configure
+plugins. For example to configure the `diskspace` plugin, you will need to create
+the `/data/rutorrent/plugins-conf/diskspace.php` file with your configuration:
 
 ```php
 <?php
@@ -292,10 +300,32 @@ $partitionDirectory = null;	// if null, then we will check rtorrent download dir
 
 ### Increase Docker timeout to allow rTorrent to shutdown gracefully
 
-After issuing a shutdown command, Docker waits 10 seconds for the container to exit before it is killed.  If you are a seeding many torrents, rTorrent may be unable to gracefully close within that time period.  As a result, rTorrent is closed forcefully and the lockfile isn't removed.  This stale lockfile will prevent rTorrent from restarting until the lockfile is removed manually.
+After issuing a shutdown command, Docker waits 10 seconds for the container to
+exit before it is killed.  If you are a seeding many torrents, rTorrent may be
+unable to gracefully close within that time period.  As a result, rTorrent is
+closed forcefully and the lockfile isn't removed. This stale lockfile will
+prevent rTorrent from restarting until the lockfile is removed manually.
 
-The timeout period can be extended by either adding the parameter `-t XX` to the docker command or `stop_grace_period: XXs` in docker-compose.yml, where `XX` is the number of seconds to wait for a graceful shutdown.
+The timeout period can be extended by either adding the parameter `-t XX` to
+the docker command or `stop_grace_period: XXs` in docker-compose.yml, where
+`XX` is the number of seconds to wait for a graceful shutdown.
 
+### WAN IP address
+
+`WAN_IP` is the public IP address sent to the tracker. If you don't set `WAN_IP`,
+then the container will automatically resolve your public IP address using the
+command provided in `WAN_IP_CMD`.
+
+This is useful to enforce the public IP address when you are behind a VPN where
+an erroneous IP is sometimes reported. Here are some commands you can use if
+the default one does not work:
+
+* `dig +short myip.opendns.com @resolver1.opendns.com` (default)
+* `curl -s ifconfig.me`
+* `curl -s ident.me`
+
+If `WAN_IP` is empty, and you set `WAN_IP_CMD` to `false` it will be ignored and
+automatically determined by the tracker (recommended). 
 
 ## Upgrade
 

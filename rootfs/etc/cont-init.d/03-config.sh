@@ -1,9 +1,8 @@
 #!/usr/bin/with-contenv sh
 # shellcheck shell=sh
 
-WAN_IP=${WAN_IP:-$(dig +short myip.opendns.com @resolver1.opendns.com)}
-WAN_IP=${WAN_IP:-$(curl ifconfig.me)}
-printf "%s" "$WAN_IP" > /var/run/s6/container_environment/WAN_IP
+#WAN_IP=${WAN_IP:-10.0.0.1}
+WAN_IP_CMD=${WAN_IP_CMD:-"dig +short myip.opendns.com @resolver1.opendns.com"}
 
 TZ=${TZ:-UTC}
 MEMORY_LIMIT=${MEMORY_LIMIT:-256M}
@@ -49,6 +48,15 @@ RUTORRENT_PORT=${RUTORRENT_PORT:-8080}
 RUTORRENT_HEALTH_PORT=$((RUTORRENT_PORT + 1))
 WEBDAV_PORT=${WEBDAV_PORT:-9000}
 WEBDAV_HEALTH_PORT=$((WEBDAV_PORT + 1))
+
+# WAN IP
+if [ -z "$WAN_IP" ] && [ "$WAN_IP_CMD" != "false" ]; then
+  WAN_IP=$(eval "$WAN_IP_CMD")
+fi
+if [ -n "$WAN_IP" ]; then
+  echo "Public IP address enforced to ${WAN_IP}"
+fi
+printf "%s" "$WAN_IP" > /var/run/s6/container_environment/WAN_IP
 
 # Timezone
 echo "Setting timezone to ${TZ}..."
