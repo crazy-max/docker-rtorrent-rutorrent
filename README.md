@@ -104,8 +104,8 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `TZ`: The timezone assigned to the container (default `UTC`)
 * `PUID`: rTorrent user id (default `1000`)
 * `PGID`: rTorrent group id (default `1000`)
-* `WAN_IP`: [Public IP address](#wan-ip-address) reported to the tracker.
-* `WAN_IP_CMD`: Command to resolve the [Public IP address](#wan-ip-address) if `WAN_IP` empty. (`false` to disable ; default `dig +short myip.opendns.com @resolver1.opendns.com`)
+* `WAN_IP`: [Public IP address](#wan-ip-address) reported to the tracker (auto if empty)
+* `WAN_IP_CMD`: Command to resolve the [Public IP address](#wan-ip-address)
 * `MEMORY_LIMIT`: PHP memory limit (default `256M`)
 * `UPLOAD_MAX_SIZE`: Upload max size (default `16M`)
 * `CLEAR_ENV`: Clear environment in FPM workers (default `yes`)
@@ -312,20 +312,18 @@ the docker command or `stop_grace_period: XXs` in docker-compose.yml, where
 
 ### WAN IP address
 
-`WAN_IP` is the public IP address sent to the tracker. If you don't set `WAN_IP`,
-then the container will automatically resolve your public IP address using the
-command provided in `WAN_IP_CMD`.
+`WAN_IP` is the public IP address sent to the tracker. In the majority of cases
+you don't need to set it as it will be automatically determined by the tracker.  
 
-This is useful to enforce the public IP address when you are behind a VPN where
-an erroneous IP is sometimes reported. Here are some commands you can use if
-the default one does not work:
+But it can be sometimes required to enforce the public IP address when you
+are behind a VPN where an erroneous IP is sometimes reported.
+
+You can also use the `WAN_IP_CMD` environment variable to specify a command to
+resolve your public IP address. Here are some commands you can use:
 
 * `dig +short myip.opendns.com @resolver1.opendns.com` (default)
 * `curl -s ifconfig.me`
-* `curl -s ident.me`
-
-If `WAN_IP` is empty, and you set `WAN_IP_CMD` to `false` it will be ignored and
-automatically determined by the tracker (recommended). 
+* `curl -s ident.me` 
 
 ## Upgrade
 

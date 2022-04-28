@@ -2,7 +2,7 @@
 # shellcheck shell=sh
 
 #WAN_IP=${WAN_IP:-10.0.0.1}
-WAN_IP_CMD=${WAN_IP_CMD:-"dig +short myip.opendns.com @resolver1.opendns.com"}
+#WAN_IP_CMD=${WAN_IP_CMD:-"dig +short myip.opendns.com @resolver1.opendns.com"}
 
 TZ=${TZ:-UTC}
 MEMORY_LIMIT=${MEMORY_LIMIT:-256M}
@@ -50,7 +50,7 @@ WEBDAV_PORT=${WEBDAV_PORT:-9000}
 WEBDAV_HEALTH_PORT=$((WEBDAV_PORT + 1))
 
 # WAN IP
-if [ -z "$WAN_IP" ] && [ "$WAN_IP_CMD" != "false" ]; then
+if [ -z "$WAN_IP" ] && [ -n "$WAN_IP_CMD" ]; then
   WAN_IP=$(eval "$WAN_IP_CMD")
 fi
 if [ -n "$WAN_IP" ]; then
