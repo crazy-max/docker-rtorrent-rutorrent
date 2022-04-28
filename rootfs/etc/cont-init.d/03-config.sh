@@ -14,6 +14,7 @@ AUTH_DELAY=${AUTH_DELAY:-0s}
 REAL_IP_FROM=${REAL_IP_FROM:-0.0.0.0/32}
 REAL_IP_HEADER=${REAL_IP_HEADER:-X-Forwarded-For}
 LOG_IP_VAR=${LOG_IP_VAR:-remote_addr}
+LOG_ACCESS=${LOG_ACCESS:-true}
 XMLRPC_SIZE_LIMIT=${XMLRPC_SIZE_LIMIT:-1M}
 
 XMLRPC_AUTHBASIC_STRING=${XMLRPC_AUTHBASIC_STRING:-rTorrent XMLRPC restricted access}
@@ -87,6 +88,10 @@ sed -e "s#@REAL_IP_FROM@#$REAL_IP_FROM#g" \
   -e "s#@LOG_IP_VAR@#$LOG_IP_VAR#g" \
   -e "s#@AUTH_DELAY@#$AUTH_DELAY#g" \
   /tpls/etc/nginx/nginx.conf > /etc/nginx/nginx.conf
+if [ "${LOG_ACCESS}" != "true" ]; then
+  echo "  Disabling Nginx access log..."
+  sed -i "s!access_log /proc/self/fd/1 main!access_log off!g" /etc/nginx/nginx.conf
+fi
 
 # Nginx XMLRPC over SCGI
 echo "Setting Nginx XMLRPC over SCGI configuration..."
