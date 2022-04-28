@@ -290,32 +290,36 @@ if [ -n "$RU_REMOVE_CORE_PLUGINS" ]; then
   done
 fi
 
-# Override ruTorrent plugins config
-echo "Overriding ruTorrent plugins config (create)..."
-cat > /var/www/rutorrent/plugins/create/conf.php <<EOL
+echo "Setting custom config for create plugin..."
+if [ -d "/var/www/rutorrent/plugins/create" ]; then
+
+  cat > /var/www/rutorrent/plugins/create/conf.php <<EOL
 <?php
 
 \$useExternal = 'mktorrent';
 \$pathToCreatetorrent = '/usr/local/bin/mktorrent';
 \$recentTrackersMaxCount = 15;
 EOL
-chown nobody.nogroup "/var/www/rutorrent/plugins/create/conf.php"
+  chown nobody.nogroup "/var/www/rutorrent/plugins/create/conf.php"
+else
+  echo "  WARNING: create plugin does not exist"
+fi
 
-# Check ruTorrent plugins
 echo "Checking ruTorrent custom plugins..."
 plugins=$(ls -l /data/rutorrent/plugins | egrep '^d' | awk '{print $9}')
 for plugin in ${plugins}; do
   if [ "${plugin}" == "theme" ]; then
-    echo "  WARNING: Plugin theme cannot be overriden"
+    echo "  WARNING: theme plugin cannot be overriden"
     continue
   fi
-  echo "  Copying custom plugin ${plugin}..."
-  rm -rf "/var/www/rutorrent/plugins/${plugin}"
+  echo "  Copying custom ${plugin} plugin..."
+  if [ -d "/var/www/rutorrent/plugins/${plugin}" ]; then
+    rm -rf "/var/www/rutorrent/plugins/${plugin}"
+  fi
   cp -Rf "/data/rutorrent/plugins/${plugin}" "/var/www/rutorrent/plugins/${plugin}"
   chown -R nobody.nogroup "/var/www/rutorrent/plugins/${plugin}"
 done
 
-# Check ruTorrent plugins config
 echo "Checking ruTorrent plugins configuration..."
 for pluginConfFile in /data/rutorrent/plugins-conf/*.php; do
   if [ ! -f "$pluginConfFile" ]; then
@@ -324,11 +328,11 @@ for pluginConfFile in /data/rutorrent/plugins-conf/*.php; do
   pluginConf=$(basename "$pluginConfFile")
   pluginName=$(echo "$pluginConf" | cut -f 1 -d '.')
   if [ ! -d "/var/www/rutorrent/plugins/${pluginName}" ]; then
-    echo "  WARNING: Plugin $pluginName does not exist"
+    echo "  WARNING: $pluginName plugin does not exist"
     continue
   fi
   if [ -d "/data/rutorrent/plugins/${pluginName}" ]; then
-    echo "  WARNING: Plugin $pluginName already present in /data/rutorrent/plugins/"
+    echo "  WARNING: $pluginName plugin already exist in /data/rutorrent/plugins/"
     continue
   fi
   echo "  Copying ${pluginName} plugin config..."
@@ -336,25 +340,29 @@ for pluginConfFile in /data/rutorrent/plugins-conf/*.php; do
   chown nobody.nogroup "/var/www/rutorrent/plugins/${pluginName}/conf.php"
 done
 
-# Check ruTorrent themes
 echo "Checking ruTorrent custom themes..."
 themes=$(ls -l /data/rutorrent/themes | egrep '^d' | awk '{print $9}')
 for theme in ${themes}; do
-  echo "  Copying custom theme ${theme}..."
-  rm -rf "/var/www/rutorrent/plugins/theme/themes/${theme}"
+  echo "  Copying custom ${theme} theme..."
+  if [ -d "/var/www/rutorrent/plugins/theme/themes/${theme}" ]; then
+    rm -rf "/var/www/rutorrent/plugins/theme/themes/${theme}"
+  fi
   cp -Rf "/data/rutorrent/themes/${theme}" "/var/www/rutorrent/plugins/theme/themes/${theme}"
   chown -R nobody.nogroup "/var/www/rutorrent/plugins/theme/themes/${theme}"
 done
 
-# GeoIP2 databases
-if [ ! "$(ls -A /data/geoip)" ]; then
-  cp -f /var/mmdb/*.mmdb /data/geoip/
+echo "Setting GeoIP2 databases for geoip2 plugin..."
+if [ -d "/var/www/rutorrent/plugins/geoip2" ]; then
+  if [ ! "$(ls -A /data/geoip)" ]; then
+    cp -f /var/mmdb/*.mmdb /data/geoip/
+  fi
+  ln -sf /data/geoip/GeoLite2-ASN.mmdb /var/www/rutorrent/plugins/geoip2/database/GeoLite2-ASN.mmdb
+  ln -sf /data/geoip/GeoLite2-City.mmdb /var/www/rutorrent/plugins/geoip2/database/GeoLite2-City.mmdb
+  ln -sf /data/geoip/GeoLite2-Country.mmdb /var/www/rutorrent/plugins/geoip2/database/GeoLite2-Country.mmdb
+else
+  echo "  WARNING: geoip2 plugin does not exist"
 fi
-ln -sf /data/geoip/GeoLite2-ASN.mmdb /var/www/rutorrent/plugins/geoip2/database/GeoLite2-ASN.mmdb
-ln -sf /data/geoip/GeoLite2-City.mmdb /var/www/rutorrent/plugins/geoip2/database/GeoLite2-City.mmdb
-ln -sf /data/geoip/GeoLite2-Country.mmdb /var/www/rutorrent/plugins/geoip2/database/GeoLite2-Country.mmdb
 
-# Perms
 echo "Fixing perms..."
 chown rtorrent. \
   /data/rutorrent/share/users \
