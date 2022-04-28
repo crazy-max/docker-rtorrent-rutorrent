@@ -1,4 +1,4 @@
-ARG ALPINE_S6_TAG=3.14-2.2.0.3
+ARG ALPINE_S6_TAG=3.15-2.2.0.3
 ARG RTORRENT_VERSION=0.9.8
 ARG LIBTORRENT_VERSION=0.13.8
 ARG XMLRPC_VERSION=01.58.00
@@ -272,7 +272,6 @@ RUN apk --update --no-cache add \
     sox \
     tar \
     tzdata \
-    unrar \
     unzip \
     util-linux \
     zip \
