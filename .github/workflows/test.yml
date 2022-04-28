@@ -38,6 +38,8 @@ jobs:
         uses: docker/bake-action@v1
         with:
           targets: image-local
+          set: |
+            *.cache-from=type=gha
         env:
           DEFAULT_TAG: ${{ steps.prep.outputs.build_tag }}
       -
