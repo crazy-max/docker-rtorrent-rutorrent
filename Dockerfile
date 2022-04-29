@@ -18,6 +18,7 @@ ARG GEOIP2_PHPEXT_VERSION=1.1.1
 
 # 3.10
 ARG RUTORRENT_VERSION=954479ffd00eb58ad14f9a667b3b9b1e108e80a2
+ARG GEOIP2_RUTORRENT_VERSION=9f7b59e29bc472eec8c3943d7646bf9462577b16
 
 FROM --platform=$BUILDPLATFORM alpine AS src
 RUN apk --update --no-cache add curl git subversion tar tree xz
@@ -83,8 +84,10 @@ rm -rf .git* conf/users plugins/geoip share
 EOT
 
 FROM src AS src-geoip2-rutorrent
+ARG GEOIP2_RUTORRENT_VERSION
 RUN <<EOT
 git clone https://github.com/Micdu70/geoip2-rutorrent .
+git reset --hard $GEOIP2_RUTORRENT_VERSION
 rm -rf .git*
 EOT
 
