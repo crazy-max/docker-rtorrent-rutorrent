@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.10-0.9.8-0.13.8-r19 (2022/04/29)
+
+* Fix GeoIP2 ruTorrent plugin version (#159)
+* Optimize Dockerfile (#157)
+
 ## 3.10-0.9.8-0.13.8-r18 (2022/04/28)
 
 * Opt-in `WAN_IP` and add `WAN_IP_CMD` env var (#150 #153)
