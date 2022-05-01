@@ -51,7 +51,6 @@ ___
 * Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
 * Name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) for asynchronous DNS requests (including name resolves)
 * Enhanced [rTorrent config](rootfs/tpls/.rtorrent.rc) and bootstraping with a [local config](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
-* WAN IP address automatically resolved for reporting to the tracker
 * XMLRPC through nginx over SCGI socket (basic auth optional)
 * WebDAV on completed downloads (basic auth optional)
 * Ability to add a custom ruTorrent plugin / theme
@@ -79,10 +78,10 @@ docker buildx bake image-all
 
 ## Image
 
-| Registry                                                                                         | Image                           |
-|--------------------------------------------------------------------------------------------------|---------------------------------|
-| [Docker Hub](https://hub.docker.com/r/crazymax/rtorrent-rutorrent/)                                            | `crazymax/rtorrent-rutorrent`                 |
-| [GitHub Container Registry](https://github.com/users/crazy-max/packages/container/package/rtorrent-rutorrent)  | `ghcr.io/crazy-max/rtorrent-rutorrent`        |
+| Registry                                                                                                      | Image                                   |
+|---------------------------------------------------------------------------------------------------------------|-----------------------------------------|
+| [Docker Hub](https://hub.docker.com/r/crazymax/rtorrent-rutorrent/)                                           | `crazymax/rtorrent-rutorrent`           |
+| [GitHub Container Registry](https://github.com/users/crazy-max/packages/container/package/rtorrent-rutorrent) | `ghcr.io/crazy-max/rtorrent-rutorrent`  |
 
 Following platforms for this image are available:
 
@@ -168,7 +167,7 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `9000` (or `WEBDAV_PORT`): WebDAV port on completed downloads
 * `50000` (or `RT_INC_PORT`): Incoming connections (`network.port_range.set`)
 
-> ⚠️ Port p+1 defined for `XMLRPC_PORT`, `RUTORRENT_PORT` and `WEBDAV_PORT` will also be reserved for
+> :warning: Port p+1 defined for `XMLRPC_PORT`, `RUTORRENT_PORT` and `WEBDAV_PORT` will also be reserved for
 > healthcheck. (e.g. if you define `RUTORRENT_PORT=8080`, port `8081` will be reserved)
 
 ## Usage
@@ -277,7 +276,7 @@ plugin that already exists in ruTorrent, it will be removed from ruTorrent core
 plugins and yours will be used. And you can also add a theme in `/data/rutorrent/themes/`.
 The same principle as for plugins will be used if you want to override one.
 
-> ⚠️ Container has to be restarted to propagate changes
+> :warning: Container has to be restarted to propagate changes
 
 ### Edit a ruTorrent plugin configuration
 
@@ -297,7 +296,7 @@ $partitionDirectory = null;	// if null, then we will check rtorrent download dir
 				// otherwise, set this to the absolute path for checked partition. 
 ```
 
-> ⚠️ Container has to be restarted to propagate changes
+> :warning: Container has to be restarted to propagate changes
 
 ### Increase Docker timeout to allow rTorrent to shutdown gracefully
 
@@ -322,7 +321,7 @@ are behind a VPN where an erroneous IP is sometimes reported.
 You can also use the `WAN_IP_CMD` environment variable to specify a command to
 resolve your public IP address. Here are some commands you can use:
 
-* `dig +short myip.opendns.com @resolver1.opendns.com` (default)
+* `dig +short myip.opendns.com @resolver1.opendns.com`
 * `curl -s ifconfig.me`
 * `curl -s ident.me` 
 
