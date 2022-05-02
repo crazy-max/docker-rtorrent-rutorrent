@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.10-0.9.8-0.13.8-r20 (2022/05/02)
+
+* Fix unrar not available since alpine 3.15 (#161)
+
 ## 3.10-0.9.8-0.13.8-r19 (2022/04/29)
 
 * Fix GeoIP2 ruTorrent plugin version (#159)
