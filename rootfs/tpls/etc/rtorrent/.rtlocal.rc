@@ -7,7 +7,7 @@ method.insert = cfg.download, private|const|string, (cat,"/downloads/")
 method.insert = cfg.download_complete, private|const|string, (cat,(cfg.download),"complete/")
 method.insert = cfg.download_temp, private|const|string, (cat,(cfg.download),"temp/")
 method.insert = cfg.logs, private|const|string, (cat,(cfg.basedir),"log/")
-method.insert = cfg.session, private|const|string, (cat,(cfg.basedir),".session/")
+method.insert = cfg.session, private|const|string, (cat,(cfg.basedir),"@RT_SESSION_FOLDER@/")
 method.insert = cfg.watch, private|const|string, (cat,(cfg.basedir),"watch/")
 method.insert = cfg.rundir, private|const|string, (cat,"/var/run/rtorrent/")
 
@@ -28,7 +28,7 @@ network.scgi.open_local = (cat, (cfg.rundir), "scgi.socket")
 schedule2 = scgi_permission, 0, 0, (cat,"execute.nothrow=chmod,\"g+w,o=\",",(cfg.rundir),"scgi.socket")
 
 # Listening port for incoming peer traffic
-network.port_range.set = @RT_INC_PORT@-@RT_INC_PORT@
+network.port_range.set = @RT_INC_PORT_START@-@RT_INC_PORT_END@
 network.port_random.set = no
 
 # UDP port to use for DHT
@@ -48,3 +48,5 @@ log.add_output = "rpc_events","log"
 
 # Initialize plugins
 execute2 = {sh,-c,/usr/bin/php7 /var/www/rutorrent/php/initplugins.php rtorrent &}
+
+@RT_EXT_CONFIG_FILE@
