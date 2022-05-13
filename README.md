@@ -128,6 +128,7 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `RT_LOG_LEVEL`: rTorrent log level (default `info`)
 * `RT_LOG_EXECUTE`: Log executed commands to `/data/rtorrent/log/execute.log` (default `false`)
 * `RT_LOG_XMLRPC`: Log XMLRPC queries to `/data/rtorrent/log/xmlrpc.log` (default `false`)
+* `RT_SESSION_FOLDER`: rTorrent session folder - saved to /data/ (`cfg.session`, default `.session`)
 * `RT_DHT_PORT`: DHT UDP port (`dht.port.set`, default `6881`)
 * `RT_INC_PORT`: Incoming connections (`network.port_range.set`, default `50000`)
 
