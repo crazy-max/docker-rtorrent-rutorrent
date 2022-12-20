@@ -161,7 +161,7 @@
 
 * Switch to GitHub Actions
 * Stop publishing Docker image on Quay
-* Move boostrap (default) config for rTorrent to `/etc/rtorrent/.rtlocal.rc`
+* Move bootstrap (default) config for rTorrent to `/etc/rtorrent/.rtlocal.rc`
 * Run as non-root user
 * Prevent exposing nginx version
 * Set timezone through tzdata
@@ -237,7 +237,7 @@
 
 * Add ruTorrent 3.8 web client
 * Add option to remove core plugins of ruTorrent (default `erasedata,httprpc`)
-* Add a boostrap (default) config for rTorrent in `/etc/.rtlocal.rc`
+* Add a bootstrap (default) config for rTorrent in `/etc/.rtlocal.rc`
 * Move `/var/rtorrent` to `/data/rtorrent`
 * Use Nginx WebDAV module instead of Apache
 * Compile Nginx from source for better performance
