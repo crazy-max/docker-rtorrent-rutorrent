@@ -1,26 +1,27 @@
 # syntax=docker/dockerfile:1
 
-ARG ALPINE_S6_TAG=3.15-2.2.0.3
-
 ARG LIBSIG_VERSION=3.0.3
 ARG CARES_VERSION=1.17.2
 ARG CURL_VERSION=7.78.0
-ARG XMLRPC_VERSION=01.58.00
+ARG XMLRPC_VERSION=v1.58.0
 ARG LIBTORRENT_VERSION=v0.13.8
 ARG RTORRENT_VERSION=v0.9.8
 ARG MKTORRENT_VERSION=v1.1
 
-ARG NGINX_VERSION=1.21.1
+ARG NGINX_VERSION=1.22.1
 ARG NGINX_DAV_VERSION=v3.0.0
 ARG NGINX_UID=102
 ARG NGINX_GID=102
-ARG GEOIP2_PHPEXT_VERSION=1.1.1
+ARG GEOIP2_PHPEXT_VERSION=1.3.1
 
 # 3.10
 ARG RUTORRENT_VERSION=954479ffd00eb58ad14f9a667b3b9b1e108e80a2
 ARG GEOIP2_RUTORRENT_VERSION=9f7b59e29bc472eec8c3943d7646bf9462577b16
 
-FROM --platform=$BUILDPLATFORM alpine AS src
+ARG ALPINE_VERSION=3.17
+ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
+
+FROM --platform=$BUILDPLATFORM alpine:${ALPINE_VERSION} AS src
 RUN apk --update --no-cache add curl git subversion tar tree xz
 WORKDIR /src
 
@@ -34,7 +35,10 @@ RUN curl -sSL "https://c-ares.haxx.se/download/c-ares-${CARES_VERSION}.tar.gz" |
 
 FROM src AS src-xmlrpc
 ARG XMLRPC_VERSION
-RUN svn checkout "http://svn.code.sf.net/p/xmlrpc-c/code/release_number/${XMLRPC_VERSION}/" .
+RUN <<EOT
+git clone https://github.com/crazy-max/xmlrpc-c.git .
+git reset --hard $XMLRPC_VERSION
+EOT
 
 FROM src AS src-curl
 ARG CURL_VERSION
@@ -73,7 +77,10 @@ EOT
 
 FROM src AS src-geoip2-phpext
 ARG GEOIP2_PHPEXT_VERSION
-RUN curl -SsL "https://pecl.php.net/get/geoip-${GEOIP2_PHPEXT_VERSION}.tgz" -o "geoip.tgz"
+RUN <<EOT
+git clone https://github.com/rlerdorf/geoip.git .
+git reset --hard $GEOIP2_PHPEXT_VERSION
+EOT
 
 FROM src AS src-rutorrent
 ARG RUTORRENT_VERSION
@@ -95,7 +102,7 @@ FROM src AS src-mmdb
 RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
   && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-Country.mmdb"
 
-FROM crazymax/alpine-s6:${ALPINE_S6_TAG} AS builder
+FROM crazymax/alpine-s6:${ALPINE_S6_VERSION} AS builder
 RUN apk --update --no-cache add \
     autoconf \
     automake \
@@ -112,8 +119,8 @@ RUN apk --update --no-cache add \
     nghttp2-dev \
     openssl-dev \
     pcre-dev \
-    php7-dev \
-    php7-pear \
+    php81-dev \
+    php81-pear \
     tar \
     tree \
     xz \
@@ -239,12 +246,18 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/geoip2-phpext
 COPY --from=src-geoip2-phpext /src .
-RUN pecl install geoip.tgz
-RUN mkdir -p ${DIST_PATH}/usr/lib/php7/modules
-RUN cp -f /usr/lib/php7/modules/geoip.so ${DIST_PATH}/usr/lib/php7/modules/
+RUN <<EOT
+  set -e
+  phpize81
+  ./configure
+  make
+  make install
+EOT
+RUN mkdir -p ${DIST_PATH}/usr/lib/php81/modules
+RUN cp -f /usr/lib/php81/modules/geoip.so ${DIST_PATH}/usr/lib/php81/modules/
 RUN tree ${DIST_PATH}
 
-FROM crazymax/alpine-s6:${ALPINE_S6_TAG}
+FROM crazymax/alpine-s6:${ALPINE_S6_VERSION}
 COPY --from=builder /dist /
 COPY --from=src-rutorrent --chown=nobody:nogroup /src /var/www/rutorrent
 COPY --from=src-geoip2-rutorrent --chown=nobody:nogroup /src /var/www/rutorrent/plugins/geoip2
@@ -282,22 +295,22 @@ RUN apk --update --no-cache add \
     ncurses \
     openssl \
     pcre \
-    php7 \
-    php7-bcmath \
-    php7-cli \
-    php7-ctype \
-    php7-curl \
-    php7-fpm \
-    php7-json \
-    php7-mbstring \
-    php7-openssl \
-    php7-phar \
-    php7-posix \
-    php7-session \
-    php7-sockets \
-    php7-xml \
-    php7-zip \
-    php7-zlib \
+    php81 \
+    php81-bcmath \
+    php81-cli \
+    php81-ctype \
+    php81-curl \
+    php81-fpm \
+    php81-json \
+    php81-mbstring \
+    php81-openssl \
+    php81-phar \
+    php81-posix \
+    php81-session \
+    php81-sockets \
+    php81-xml \
+    php81-zip \
+    php81-zlib \
     python3 \
     py3-pip \
     shadow \
