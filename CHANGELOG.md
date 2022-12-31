@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.10-0.9.8-0.13.8-r21 (2022/12/31)
+
+* Set `S6_KILL_GRACETIME` to 10 seconds (#171)
+* Alpine Linux 3.17 (#195)
+* PHP 8.1 (#195)
+* GeoIP2 PHP extension 1.3.1 (#195)
+* Nginx 1.22.1 (#195)
+
 ## 3.10-0.9.8-0.13.8-r20 (2022/05/02)
 
 * Fix unrar not available since alpine 3.15 (#161)
