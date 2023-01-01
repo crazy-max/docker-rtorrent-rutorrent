@@ -7,11 +7,6 @@ ARG XMLRPC_VERSION=01.58.00
 ARG LIBTORRENT_VERSION=v0.13.8
 ARG RTORRENT_VERSION=v0.9.8
 ARG MKTORRENT_VERSION=v1.1
-
-ARG NGINX_VERSION=1.22.1
-ARG NGINX_DAV_VERSION=v3.0.0
-ARG NGINX_UID=102
-ARG NGINX_GID=102
 ARG GEOIP2_PHPEXT_VERSION=1.3.1
 
 # 3.10
@@ -63,16 +58,6 @@ ARG MKTORRENT_VERSION
 RUN <<EOT
 git clone https://github.com/esmil/mktorrent.git .
 git reset --hard $MKTORRENT_VERSION
-EOT
-
-FROM src AS src-nginx
-ARG NGINX_VERSION
-ARG NGINX_DAV_VERSION
-RUN curl -sSL "https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz" | tar xz --strip 1
-RUN <<EOT
-git clone https://github.com/arut/nginx-dav-ext-module.git nginx-dav-ext
-cd nginx-dav-ext
-git reset --hard $NGINX_DAV_VERSION
 EOT
 
 FROM src AS src-geoip2-phpext
@@ -196,56 +181,6 @@ RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
-WORKDIR /usr/local/src/nginx
-COPY --from=src-nginx /src .
-ARG NGINX_UID
-ARG NGINX_GID
-RUN addgroup -g ${NGINX_UID} -S nginx
-RUN adduser -S -D -H -u ${NGINX_GID} -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx
-RUN ./configure \
-  --prefix=/usr/lib/nginx \
-  --sbin-path=/sbin/nginx \
-  --pid-path=/var/pid/nginx \
-  --conf-path=/etc/nginx/nginx.conf \
-  --http-log-path=/dev/stdout \
-  --error-log-path=/dev/stderr \
-  --pid-path=/var/pid/nginx.pid \
-  --user=nginx \
-  --group=nginx \
-  --with-file-aio \
-  --with-pcre-jit \
-  --with-threads \
-  --with-poll_module \
-  --with-select_module \
-  --with-stream_ssl_module \
-  --with-http_addition_module \
-  --with-http_auth_request_module \
-  --with-http_dav_module \
-  --with-http_degradation_module \
-  --with-http_flv_module \
-  --with-http_gunzip_module \
-  --with-http_gzip_static_module \
-  --with-mail_ssl_module \
-  --with-http_mp4_module \
-  --with-http_random_index_module \
-  --with-http_realip_module \
-  --with-http_secure_link_module \
-  --with-http_slice_module \
-  --with-http_ssl_module \
-  --with-http_stub_status_module \
-  --with-http_sub_module \
-  --with-http_v2_module \
-  --with-mail=dynamic \
-  --with-stream=dynamic \
-  --with-http_geoip_module=dynamic \
-  --with-http_image_filter_module=dynamic \
-  --with-http_xslt_module=dynamic \
-  --add-dynamic-module=./nginx-dav-ext
-RUN make -j$(nproc)
-RUN make install -j$(nproc)
-RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
-RUN tree ${DIST_PATH}
-
 WORKDIR /usr/local/src/geoip2-phpext
 COPY --from=src-geoip2-phpext /src .
 RUN <<EOT
@@ -276,8 +211,6 @@ ENV PYTHONPATH="$PYTHONPATH:/var/www/rutorrent" \
 RUN echo "@314 http://dl-cdn.alpinelinux.org/alpine/v3.14/main" >> /etc/apk/repositories \
   && apk --update --no-cache add unrar@314
 
-ARG NGINX_UID
-ARG NGINX_GID
 RUN apk --update --no-cache add \
     apache2-utils \
     bash \
@@ -295,8 +228,10 @@ RUN apk --update --no-cache add \
     libstdc++ \
     mediainfo \
     ncurses \
+    nginx \
+    nginx-mod-http-dav-ext \
+    nginx-mod-http-geoip2 \
     openssl \
-    pcre \
     php81 \
     php81-bcmath \
     php81-cli \
@@ -322,10 +257,6 @@ RUN apk --update --no-cache add \
     unzip \
     util-linux \
     zip \
-    zlib \
-  && ln -s /usr/lib/nginx/modules /etc/nginx/modules \
-  && addgroup -g ${NGINX_UID} -S nginx \
-  && adduser -S -D -H -u ${NGINX_GID} -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx \
   && pip3 install --upgrade pip \
   && pip3 install cfscrape cloudscraper \
   && addgroup -g ${PGID} rtorrent \
