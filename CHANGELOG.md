@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.10-0.9.8-0.13.8-r22 (2023/01/02)
+
+* Install nginx and webdav module from Alpine repo (#200)
+* Fix xmlrpc-c build configuration (#198)
+
 ## 3.10-0.9.8-0.13.8-r21 (2022/12/31)
 
 * Set `S6_KILL_GRACETIME` to 10 seconds (#171)
