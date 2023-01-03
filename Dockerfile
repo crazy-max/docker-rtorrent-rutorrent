@@ -149,7 +149,7 @@ RUN ./configure \
    --disable-wininet-client \
    --disable-libwww-client
 RUN make -j$(nproc)
-RUN make install -j$(nproc)
+RUN make install -j$(nproc) CXXFLAGS="-flto"
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
@@ -159,7 +159,7 @@ RUN ./autogen.sh
 RUN ./configure \
   --with-posix-fallocate
 RUN make -j$(nproc)
-RUN make install -j$(nproc)
+RUN make install -j$(nproc) CXXFLAGS="-O2 -flto"
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
@@ -169,7 +169,7 @@ RUN ./autogen.sh
 RUN ./configure \
   --with-xmlrpc-c \
   --with-ncurses
-RUN make -j$(nproc)
+RUN make -j$(nproc) CXXFLAGS="-O2 -flto"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
