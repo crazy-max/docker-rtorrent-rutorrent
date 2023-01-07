@@ -199,19 +199,19 @@ echo "Bootstrapping ruTorrent configuration..."
 cat > /var/www/rutorrent/conf/config.php <<EOL
 <?php
 
-// For snoopy client
-@define('HTTP_USER_AGENT', '${RU_HTTP_USER_AGENT}', true);
-@define('HTTP_TIME_OUT', ${RU_HTTP_TIME_OUT}, true);
-@define('HTTP_USE_GZIP', ${RU_HTTP_USE_GZIP}, true);
+// for snoopy client
+\$httpUserAgent = '${RU_HTTP_USER_AGENT}';
+\$httpTimeOut = ${RU_HTTP_TIME_OUT};
+\$httpUseGzip = ${RU_HTTP_USE_GZIP};
 
-@define('RPC_TIME_OUT', ${RU_RPC_TIME_OUT}, true);
+// for xmlrpc actions
+\$rpcTimeOut = ${RU_RPC_TIME_OUT};
+\$rpcLogCalls = ${RU_LOG_RPC_CALLS};
+\$rpcLogFaults = ${RU_LOG_RPC_FAULTS};
 
-@define('LOG_RPC_CALLS', ${RU_LOG_RPC_CALLS}, true);
-@define('LOG_RPC_FAULTS', ${RU_LOG_RPC_FAULTS}, true);
-
-// For php
-@define('PHP_USE_GZIP', ${RU_PHP_USE_GZIP}, true);
-@define('PHP_GZIP_LEVEL', ${RU_PHP_GZIP_LEVEL}, true);
+// for php
+\$phpUseGzip = ${RU_PHP_USE_GZIP};
+\$phpGzipLevel = ${RU_PHP_GZIP_LEVEL};
 
 // Rand for schedulers start, +0..X seconds
 \$schedule_rand = ${RU_SCHEDULE_RAND};
@@ -234,6 +234,7 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 \$scgi_port = 0;
 \$scgi_host = "unix:///var/run/rtorrent/scgi.socket";
 \$XMLRPCMountPoint = "/RPC2"; // DO NOT DELETE THIS LINE!!! DO NOT COMMENT THIS LINE!!!
+\$throttleMaxSpeed = 327625*1024; // DO NOT EDIT THIS LINE!!! DO NOT COMMENT THIS LINE!!!
 
 \$pathToExternals = array(
     "php"    => '',
@@ -262,6 +263,9 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 \$canUseXSendFile = false;
 
 \$locale = '${RU_LOCALE}';
+
+\$enableCSRFCheck = false; // If true then Origin and Referer will be checked
+\$enabledOrigins = array(); // List of enabled domains for CSRF check (only hostnames, without protocols, port etc.). If empty, then will retrieve domain from HTTP_HOST / HTTP_X_FORWARDED_HOST
 EOL
 chown nobody:nogroup "/var/www/rutorrent/conf/config.php"
 
@@ -308,7 +312,7 @@ fi
 echo "Checking ruTorrent custom plugins..."
 plugins=$(ls -l /data/rutorrent/plugins | grep -E '^d' | awk '{print $9}')
 for plugin in ${plugins}; do
-  if [ "${plugin}" == "theme" ]; then
+  if [ "${plugin}" = "theme" ]; then
     echo "  WARNING: theme plugin cannot be overriden"
     continue
   fi

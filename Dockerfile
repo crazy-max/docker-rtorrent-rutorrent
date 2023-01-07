@@ -9,8 +9,8 @@ ARG RTORRENT_VERSION=v0.9.8
 ARG MKTORRENT_VERSION=v1.1
 ARG GEOIP2_PHPEXT_VERSION=1.3.1
 
-# 3.10
-ARG RUTORRENT_VERSION=954479ffd00eb58ad14f9a667b3b9b1e108e80a2
+# v4.0-stable
+ARG RUTORRENT_VERSION=06222a00375bdd0f1f1b5b58bda29e7025316428
 ARG GEOIP2_RUTORRENT_VERSION=9f7b59e29bc472eec8c3943d7646bf9462577b16
 
 ARG ALPINE_VERSION=3.17
@@ -197,7 +197,8 @@ RUN tree ${DIST_PATH}
 FROM crazymax/alpine-s6:${ALPINE_S6_VERSION}
 COPY --from=builder /dist /
 COPY --from=src-rutorrent --chown=nobody:nogroup /src /var/www/rutorrent
-COPY --from=src-geoip2-rutorrent --chown=nobody:nogroup /src /var/www/rutorrent/plugins/geoip2
+# FIXME: https://github.com/Micdu70/geoip2-rutorrent not compatible with ruTorrent 4
+#COPY --from=src-geoip2-rutorrent --chown=nobody:nogroup /src /var/www/rutorrent/plugins/geoip2
 COPY --from=src-mmdb /src /var/mmdb
 
 ENV PYTHONPATH="$PYTHONPATH:/var/www/rutorrent" \
