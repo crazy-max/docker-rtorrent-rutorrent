@@ -10,6 +10,7 @@ mkdir -p /data/rtorrent \
   /etc/rtorrent \
   /var/cache/nginx \
   /var/lib/nginx \
+  /var/log/nginx \
   /var/run/nginx \
   /var/run/php-fpm \
   /var/run/rtorrent
@@ -24,6 +25,7 @@ chown -R rtorrent:rtorrent \
   /tpls \
   /var/cache/nginx \
   /var/lib/nginx \
+  /var/log/nginx \
   /var/log/php81 \
   /var/run/nginx \
   /var/run/php-fpm \
