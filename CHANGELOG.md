@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.10-0.9.8-0.13.8-r23 (2023/01/07)
+
+* Fix PHP version in `.rtlocal.rc` (#204)
+* Make rtorrent and libtorrent with `-O2 -flto` (#202)
+
 ## 3.10-0.9.8-0.13.8-r22 (2023/01/02)
 
 * Install nginx and webdav module from Alpine repo (#200)
