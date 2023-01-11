@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0-0.9.8-0.13.8-r0 (2023/01/11)
+
+* ruTorrent v4.0-stable (#208)
+* Update GeoIP2 ruTorrent plugin (#211)
+* Fix nginx logs folder perms (#207)
+
 ## 3.10-0.9.8-0.13.8-r23 (2023/01/07)
 
 * Fix PHP version in `.rtlocal.rc` (#204)
