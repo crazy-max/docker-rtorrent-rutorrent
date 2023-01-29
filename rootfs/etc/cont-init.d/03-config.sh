@@ -220,6 +220,7 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 \$log_file = '${RU_LOG_FILE}';
 \$do_diagnostic = ${RU_DO_DIAGNOSTIC};
 
+// Set to true if rTorrent is hosted on the SAME machine as ruTorrent
 \$localHostedMode = true;
 
 // Save uploaded torrents to profile/torrents directory or not
