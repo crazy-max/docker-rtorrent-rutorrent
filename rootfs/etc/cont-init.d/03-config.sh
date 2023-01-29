@@ -40,7 +40,6 @@ RU_SAVE_UPLOADED_TORRENTS=${RU_SAVE_UPLOADED_TORRENTS:-true}
 RU_OVERWRITE_UPLOADED_TORRENTS=${RU_OVERWRITE_UPLOADED_TORRENTS:-false}
 RU_FORBID_USER_SETTINGS=${RU_FORBID_USER_SETTINGS:-false}
 RU_LOCALE=${RU_LOCALE:-UTF8}
-RU_LOCAL_HOSTED_MODE=${RU_LOCAL_HOSTED_MODE:-false}
 
 RT_DHT_PORT=${RT_DHT_PORT:-6881}
 RT_INC_PORT=${RT_INC_PORT:-50000}
@@ -221,9 +220,7 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 \$log_file = '${RU_LOG_FILE}';
 \$do_diagnostic = ${RU_DO_DIAGNOSTIC};
 
-// If true, skip checking for remote exes.
-// Set to true if rTorrent is hosted on the SAME machine as ruTorrent.
-\$localHostedMode = ${RU_LOCAL_HOSTED_MODE};
+\$localHostedMode = true;
 
 // Save uploaded torrents to profile/torrents directory or not
 \$saveUploadedTorrents = ${RU_SAVE_UPLOADED_TORRENTS};
