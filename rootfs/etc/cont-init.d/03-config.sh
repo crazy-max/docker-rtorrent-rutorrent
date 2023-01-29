@@ -221,7 +221,8 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 \$log_file = '${RU_LOG_FILE}';
 \$do_diagnostic = ${RU_DO_DIAGNOSTIC};
 
-// If true, skip checking for remote exes if rTorrent is hosted on the same machine as ruTorrent. Instead, we can use the a Linux shell session and cache results.
+// If true, skip checking for remote exes.
+// Set to true if rTorrent is hosted on the SAME machine as ruTorrent.
 \$localHostedMode = ${RU_LOCAL_HOSTED_MODE};
 
 // Save uploaded torrents to profile/torrents directory or not

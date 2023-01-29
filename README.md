@@ -152,7 +152,7 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `RU_OVERWRITE_UPLOADED_TORRENTS`: Existing .torrent files will be overwritten (default `false`)
 * `RU_FORBID_USER_SETTINGS`: If true, allows for single user style configuration, even with webauth (default `false`)
 * `RU_LOCALE`: Set default locale for ruTorrent (default `UTF8`)
-* `RU_LOCAL_HOSTED_MODE`: If true, skip checking for remote exes if rTorrent is hosted on the same machine as ruTorrent. This can improve load times (default `false`)
+* `RU_LOCAL_HOSTED_MODE`: If true, skip checking for remote exes. Set to true if rTorrent is hosted on the SAME machine as ruTorrent. This can improve load times (default `false`)
 
 ## Volumes
 
