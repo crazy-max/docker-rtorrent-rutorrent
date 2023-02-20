@@ -223,6 +223,9 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 // Set to true if rTorrent is hosted on the SAME machine as ruTorrent
 \$localHostedMode = true;
 
+// Set to true to enable rapid cached loading of ruTorrent plugins
+\$cachedPluginLoading = false;
+
 // Save uploaded torrents to profile/torrents directory or not
 \$saveUploadedTorrents = ${RU_SAVE_UPLOADED_TORRENTS};
 
