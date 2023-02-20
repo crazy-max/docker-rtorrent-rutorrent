@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.2-0.9.8-0.13.8-r0 (2023/02/21)
+
+* ruTorrent v4.0.2-hotfix (#218)
+
 ## 4.0.1-0.9.8-0.13.8-r1 (2023/02/05)
 
 * Set `$localHostedMode = true` (#215)
