@@ -37,6 +37,7 @@ RU_PHP_GZIP_LEVEL=${RU_PHP_GZIP_LEVEL:-2}
 RU_SCHEDULE_RAND=${RU_SCHEDULE_RAND:-10}
 RU_LOG_FILE=${RU_LOG_FILE:-/data/rutorrent/rutorrent.log}
 RU_DO_DIAGNOSTIC=${RU_DO_DIAGNOSTIC:-true}
+RU_CACHED_PLUGIN_LOADING=${RU_CACHED_PLUGIN_LOADING:-false}
 RU_PLUGIN_JS_CACHE_EXPIRE=${RU_PLUGIN_JS_CACHE_EXPIRE:-3*60}
 RU_MISC_CACHE_EXPIRE=${RU_MISC_CACHE_EXPIRE:-3*60*24}
 RU_SAVE_UPLOADED_TORRENTS=${RU_SAVE_UPLOADED_TORRENTS:-true}
@@ -227,7 +228,7 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 \$localHostedMode = true;
 
 // Set to true to enable rapid cached loading of ruTorrent plugins
-\$cachedPluginLoading = false;
+\$cachedPluginLoading = ${RU_CACHED_PLUGIN_LOADING};
 
 // Sets duration ruTorrent plugin javascript cache is valid for in minutes
 // Default is 3 hours which equals 3 hours * 60 minutes due to caching issues

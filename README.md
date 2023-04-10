@@ -148,6 +148,7 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `RU_SCHEDULE_RAND`: Rand for schedulers start, +0..X seconds (default `10`)
 * `RU_LOG_FILE`: ruTorrent log file path for errors messages (default `/data/rutorrent/rutorrent.log`)
 * `RU_DO_DIAGNOSTIC`: ruTorrent diagnostics like permission checking (default `true`)
+* `RU_CACHED_PLUGIN_LOADING`: Set to `true` to enable rapid cached loading of ruTorrent plugins (default `false`)
 * `RU_PLUGIN_JS_CACHE_EXPIRE`: Sets duration ruTorrent plugin javascript cache is valid for in minutes (default `3*60`)
 * `RU_MISC_CACHE_EXPIRE`: Sets duration ruTorrent miscellaneous web browser cache is valid for in minutes (default `3*60*24`)
 * `RU_SAVE_UPLOADED_TORRENTS`: Save torrents files added wia ruTorrent in `/data/rutorrent/share/torrents` (default `true`)
