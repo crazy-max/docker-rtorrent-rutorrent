@@ -25,6 +25,7 @@ RT_LOG_LEVEL=${RT_LOG_LEVEL:-info}
 RT_LOG_EXECUTE=${RT_LOG_EXECUTE:-false}
 RT_LOG_XMLRPC=${RT_LOG_XMLRPC:-false}
 
+RU_REMOVE_CORE_PLUGINS=${RU_REMOVE_CORE_PLUGINS:-httprpc}
 RU_HTTP_USER_AGENT=${RU_HTTP_USER_AGENT:-Mozilla/5.0 (Windows NT 6.0; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0}
 RU_HTTP_TIME_OUT=${RU_HTTP_TIME_OUT:-30}
 RU_HTTP_USE_GZIP=${RU_HTTP_USE_GZIP:-true}
@@ -291,7 +292,7 @@ fi
 chown rtorrent:rtorrent /data/rutorrent/conf/plugins.ini
 
 # Remove ruTorrent core plugins
-if [ -n "$RU_REMOVE_CORE_PLUGINS" ]; then
+if [ "$RU_REMOVE_CORE_PLUGINS" != "false" ]; then
   for i in ${RU_REMOVE_CORE_PLUGINS//,/ }
   do
     if [ -z "$i" ]; then continue; fi
