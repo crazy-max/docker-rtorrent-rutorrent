@@ -237,6 +237,7 @@ RUN apk --update --no-cache add \
     php81-cli \
     php81-ctype \
     php81-curl \
+    php81-dom \
     php81-fpm \
     php81-json \
     php81-mbstring \
