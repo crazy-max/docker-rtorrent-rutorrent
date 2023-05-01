@@ -124,7 +124,7 @@ RUN tree ${DIST_PATH}
 WORKDIR /usr/local/src/cares
 COPY --from=src-cares /src .
 RUN ./configure
-RUN make -j$(nproc)
+RUN make -j$(nproc) CFLAGS="-O2 -flto"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
@@ -138,7 +138,7 @@ RUN ./configure \
   --with-brotli \
   --with-ssl \
   --with-zlib
-RUN make -j$(nproc)
+RUN make -j$(nproc) CFLAGS="-O2 -flto -pipe"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
