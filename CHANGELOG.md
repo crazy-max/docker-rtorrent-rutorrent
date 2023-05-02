@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.1.5-0.9.8-0.13.8-r0 (2023/05/02)
+
+* ruTorrent v4.1.5 (#238)
+* Optimize cURL build (#239)
+* Add `php81-dom` extension (#237)
+
 ## 4.1.3-0.9.8-0.13.8-r0 (2023/04/27)
 
 * ruTorrent v4.1.3 (#235)
