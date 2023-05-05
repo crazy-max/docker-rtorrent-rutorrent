@@ -43,6 +43,7 @@ RU_OVERWRITE_UPLOADED_TORRENTS=${RU_OVERWRITE_UPLOADED_TORRENTS:-false}
 RU_FORBID_USER_SETTINGS=${RU_FORBID_USER_SETTINGS:-false}
 RU_LOCALE=${RU_LOCALE:-UTF8}
 
+RT_SESSION_FOLDER=${RT_SESSION_FOLDER:-.session}
 RT_DHT_PORT=${RT_DHT_PORT:-6881}
 RT_INC_PORT=${RT_INC_PORT:-50000}
 XMLRPC_PORT=${XMLRPC_PORT:-8000}
@@ -138,7 +139,7 @@ EOL
 echo "Initializing files and folders..."
 mkdir -p /data/geoip \
   /data/rtorrent/log \
-  /data/rtorrent/.session \
+  /data/rtorrent/$RT_SESSION_FOLDER \
   /data/rtorrent/watch \
   /data/rutorrent/conf/users \
   /data/rutorrent/plugins \
@@ -153,7 +154,7 @@ touch /passwd/rpc.htpasswd \
   /passwd/webdav.htpasswd \
   /data/rtorrent/log/rtorrent.log \
   "${RU_LOG_FILE}"
-rm -f /data/rtorrent/.session/rtorrent.lock
+rm -f /data/rtorrent/$RT_SESSION_FOLDER/rtorrent.lock
 
 # Check htpasswd files
 if [ ! -s "/passwd/rpc.htpasswd" ]; then
@@ -175,6 +176,7 @@ fi
 # rTorrent local config
 echo "Checking rTorrent local configuration..."
 sed -e "s!@RT_LOG_LEVEL@!$RT_LOG_LEVEL!g" \
+  -e "s!@RT_SESSION_FOLDER@!$RT_SESSION_FOLDER!g" \
   -e "s!@RT_DHT_PORT@!$RT_DHT_PORT!g" \
   -e "s!@RT_INC_PORT@!$RT_INC_PORT!g" \
   -e "s!@XMLRPC_SIZE_LIMIT@!$XMLRPC_SIZE_LIMIT!g" \
@@ -387,7 +389,7 @@ chown rtorrent:rtorrent \
 chown -R rtorrent:rtorrent \
   /data/geoip \
   /data/rtorrent/log \
-  /data/rtorrent/.session \
+  /data/rtorrent/"${RT_SESSION_FOLDER}" \
   /data/rtorrent/watch \
   /data/rutorrent/conf \
   /data/rutorrent/plugins \
