@@ -131,6 +131,7 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `RT_LOG_LEVEL`: rTorrent log level (default `info`)
 * `RT_LOG_EXECUTE`: Log executed commands to `/data/rtorrent/log/execute.log` (default `false`)
 * `RT_LOG_XMLRPC`: Log XMLRPC queries to `/data/rtorrent/log/xmlrpc.log` (default `false`)
+* `RT_SESSION_SAVE_SECONDS`: Seconds between writing torrent information to disk (default `3600`)
 * `RT_DHT_PORT`: DHT UDP port (`dht.port.set`, default `6881`)
 * `RT_INC_PORT`: Incoming connections (`network.port_range.set`, default `50000`)
 
@@ -328,6 +329,18 @@ resolve your public IP address. Here are some commands you can use:
 * `dig +short myip.opendns.com @resolver1.opendns.com`
 * `curl -s ifconfig.me`
 * `curl -s ident.me` 
+
+### Configure rTorrent session saving
+
+`RT_SESSION_SAVE_SECONDS` is the seconds between writing torrent information to disk.
+The default is 3600 seconds which equals 1 hour. rTorrent has a bad default of 20 minutes.
+Twenty minutes is bad for the lifespan of SSDs and greatly reduces torrent throughput.
+
+It is no longer possible to lose torrents added through ruTorrent on this docker container.
+Only torrent statistics are lost during a crash. (Ratio, Total Uploaded & Downloaded etc.)
+
+Higher values will reduce disk usage, at the cost of minor stat loss during a crash.
+Consider increasing to 10800 seconds (3 hours) if running thousands of torrents.
 
 ## Upgrade
 
