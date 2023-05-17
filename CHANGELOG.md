@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.1.5-0.9.8-0.13.8-r1 (2023/05/17)
+
+* Improve session saving in rTorrent (#242)
+
 ## 4.1.5-0.9.8-0.13.8-r0 (2023/05/02)
 
 * ruTorrent v4.1.5 (#238)
