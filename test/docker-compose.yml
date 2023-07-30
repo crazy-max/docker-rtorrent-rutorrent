@@ -1,0 +1,58 @@
+services:
+  rtorrent-rutorrent:
+    image: ${RTORRENT_RUTORRENT_IMAGE:-crazymax/rtorrent-rutorrent}
+    container_name: ${RTORRENT_RUTORRENT_CONTAINER:-rtorrent-rutorrent}
+    networks:
+      - rtorrent-rutorrent
+    expose:
+      - "${RT_DHT_PORT}/udp"
+      - "${XMLRPC_PORT}"
+      - "${RUTORRENT_PORT}"
+      - "${WEBDAV_PORT}"
+      - "${RT_INC_PORT}"
+    ports:
+      - target: ${RT_DHT_PORT}
+        published: ${RT_DHT_PORT}
+        protocol: udp
+      - target: ${RUTORRENT_PORT}
+        published: ${RUTORRENT_PORT}
+        protocol: tcp
+      - target: ${WEBDAV_PORT}
+        published: ${WEBDAV_PORT}
+        protocol: tcp
+      - target: ${RT_INC_PORT}
+        published: ${RT_INC_PORT}
+        protocol: tcp
+    env_file:
+      - "rtorrent-rutorrent.env"
+      - ".env"
+    volumes:
+      - "rtorrent-rutorrent-data:/data"
+      - "rtorrent-rutorrent-downloads:/downloads"
+      - "rtorrent-rutorrent-passwd:/passwd"
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000
+    restart: always
+
+  rtorrent-logs:
+    image: bash
+    command: bash -c 'tail -f /data/rtorrent/log/*.log'
+    networks:
+      - rtorrent-rutorrent
+    depends_on:
+      - rtorrent-rutorrent
+    volumes:
+      - "rtorrent-rutorrent-data:/data"
+    restart: always
+
+volumes:
+  rtorrent-rutorrent-data:
+  rtorrent-rutorrent-downloads:
+  rtorrent-rutorrent-passwd:
+
+networks:
+  rtorrent-rutorrent:
+    name: rtorrent-rutorrent
