@@ -1,3 +1,5 @@
+name: rtorrent-rutorrent
+
 services:
   rtorrent-rutorrent:
     image: ${RTORRENT_RUTORRENT_IMAGE:-crazymax/rtorrent-rutorrent}
@@ -39,9 +41,9 @@ services:
 
   rtorrent-logs:
     image: bash
+    container_name: rtorrent-rutorrent-logs
     command: bash -c 'tail -f /data/rtorrent/log/*.log'
-    networks:
-      - rtorrent-rutorrent
+    network_mode: none
     depends_on:
       - rtorrent-rutorrent
     volumes:

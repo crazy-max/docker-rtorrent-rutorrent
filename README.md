@@ -187,8 +187,8 @@ following command:
 ```shell
 mkdir data downloads passwd
 chown ${PUID}:${PGID} data downloads passwd
-docker-compose up -d
-docker-compose logs -f
+docker compose up -d
+docker compose logs -f
 ```
 
 ### Command line
@@ -312,7 +312,7 @@ closed forcefully and the lockfile isn't removed. This stale lockfile will
 prevent rTorrent from restarting until the lockfile is removed manually.
 
 The timeout period can be extended by either adding the parameter `-t XX` to
-the docker command or `stop_grace_period: XXs` in docker-compose.yml, where
+the docker command or `stop_grace_period: XXs` in `compose.yml`, where
 `XX` is the number of seconds to wait for a graceful shutdown.
 
 ### WAN IP address
@@ -347,8 +347,8 @@ Consider increasing to 10800 seconds (3 hours) if running thousands of torrents.
 To upgrade, pull the newer image and launch the container:
 
 ```shell
-docker-compose pull
-docker-compose up -d
+docker compose pull
+docker compose up -d
 ```
 
 ## Contributing
