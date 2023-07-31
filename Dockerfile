@@ -13,75 +13,61 @@ ARG GEOIP2_PHPEXT_VERSION=1.3.1
 ARG RUTORRENT_VERSION=96cd4bb2cbbb2b8035996a78f774e12c1a8aafd7
 ARG GEOIP2_RUTORRENT_VERSION=4ff2bde530bb8eef13af84e4413cedea97eda148
 
-ARG ALPINE_VERSION=3.17
+ARG ALPINE_VERSION=3.18
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
 
-FROM --platform=$BUILDPLATFORM alpine:${ALPINE_VERSION} AS src
-RUN apk --update --no-cache add curl git subversion tar tree xz
+FROM --platform=${BUILDPLATFORM} alpine:${ALPINE_VERSION} AS src
+RUN apk --update --no-cache add curl git tar tree xz
 WORKDIR /src
 
 FROM src AS src-libsig
 ARG LIBSIG_VERSION
-RUN curl -sSL "http://ftp.gnome.org/pub/GNOME/sources/libsigc++/3.0/libsigc++-${LIBSIG_VERSION}.tar.xz" | tar xJv --strip 1
+RUN curl -sSL "https://download.gnome.org/sources/libsigc%2B%2B/3.0/libsigc%2B%2B-${LIBSIG_VERSION}.tar.xz" | tar xJv --strip 1
 
 FROM src AS src-cares
 ARG CARES_VERSION
-RUN curl -sSL "https://c-ares.haxx.se/download/c-ares-${CARES_VERSION}.tar.gz" | tar xz --strip 1
+RUN curl -sSL "https://c-ares.org/download/c-ares-${CARES_VERSION}.tar.gz" | tar xz --strip 1
 
 FROM src AS src-xmlrpc
+RUN git init . && git remote add origin "https://github.com/crazy-max/xmlrpc-c.git"
 ARG XMLRPC_VERSION
-RUN <<EOT
-git clone https://github.com/crazy-max/xmlrpc-c.git .
-git reset --hard $XMLRPC_VERSION
-EOT
+RUN git fetch origin "${XMLRPC_VERSION}" && git checkout -q FETCH_HEAD
 
 FROM src AS src-curl
 ARG CURL_VERSION
-RUN curl -sSL "https://curl.haxx.se/download/curl-${CURL_VERSION}.tar.gz" | tar xz --strip 1
+RUN curl -sSL "https://curl.se/download/curl-${CURL_VERSION}.tar.gz" | tar xz --strip 1
 
 FROM src AS src-libtorrent
+RUN git init . && git remote add origin "https://github.com/rakshasa/libtorrent.git"
 ARG LIBTORRENT_VERSION
-RUN <<EOT
-git clone https://github.com/rakshasa/libtorrent.git .
-git reset --hard $LIBTORRENT_VERSION
-EOT
+RUN git fetch origin "${LIBTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 
 FROM src AS src-rtorrent
+RUN git init . && git remote add origin "https://github.com/rakshasa/rtorrent.git"
 ARG RTORRENT_VERSION
-RUN <<EOT
-git clone https://github.com/rakshasa/rtorrent.git .
-git reset --hard $RTORRENT_VERSION
-EOT
+RUN git fetch origin "${RTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 
 FROM src AS src-mktorrent
+RUN git init . && git remote add origin "https://github.com/esmil/mktorrent.git"
 ARG MKTORRENT_VERSION
-RUN <<EOT
-git clone https://github.com/esmil/mktorrent.git .
-git reset --hard $MKTORRENT_VERSION
-EOT
+RUN git fetch origin "${MKTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 
 FROM src AS src-geoip2-phpext
+RUN git init . && git remote add origin "https://github.com/rlerdorf/geoip.git"
 ARG GEOIP2_PHPEXT_VERSION
-RUN <<EOT
-git clone https://github.com/rlerdorf/geoip.git .
-git reset --hard $GEOIP2_PHPEXT_VERSION
-EOT
+RUN git fetch origin "${GEOIP2_PHPEXT_VERSION}" && git checkout -q FETCH_HEAD
 
 FROM src AS src-rutorrent
+RUN git init . && git remote add origin "https://github.com/Novik/ruTorrent.git"
 ARG RUTORRENT_VERSION
-RUN <<EOT
-git clone https://github.com/Novik/ruTorrent.git .
-git reset --hard $RUTORRENT_VERSION
-rm -rf .git* conf/users plugins/geoip share
-EOT
+RUN git fetch origin "${RUTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+RUN rm -rf .git* conf/users plugins/geoip share
 
 FROM src AS src-geoip2-rutorrent
+RUN git init . && git remote add origin "https://github.com/Micdu70/geoip2-rutorrent.git"
 ARG GEOIP2_RUTORRENT_VERSION
-RUN <<EOT
-git clone https://github.com/Micdu70/geoip2-rutorrent .
-git reset --hard $GEOIP2_RUTORRENT_VERSION
-rm -rf .git*
-EOT
+RUN git fetch origin "${GEOIP2_RUTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+RUN rm -rf .git*
 
 FROM src AS src-mmdb
 RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
