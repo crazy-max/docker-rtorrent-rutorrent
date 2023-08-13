@@ -22,7 +22,6 @@ chown rtorrent:rtorrent \
 chown -R rtorrent:rtorrent \
   /etc/rtorrent \
   /passwd \
-  /tpls \
   /var/cache/nginx \
   /var/lib/nginx \
   /var/log/nginx \
