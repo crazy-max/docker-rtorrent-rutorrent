@@ -89,6 +89,7 @@ RUN apk --update --no-cache add \
     ncurses-dev \
     nghttp2-dev \
     openssl-dev \
+    patch \
     pcre-dev \
     php81-dev \
     php81-pear \
@@ -141,6 +142,8 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/libtorrent
 COPY --from=src-libtorrent /src .
+COPY /patches/libtorrent .
+RUN patch -p1 < throttle-fix-0.13.8.patch
 RUN ./autogen.sh
 RUN ./configure \
   --with-posix-fallocate
@@ -151,6 +154,12 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/rtorrent
 COPY --from=src-rtorrent /src .
+COPY /patches/rtorrent .
+RUN patch -p1 < lockfile-fix.patch \
+  && patch -p1 < scgi-fix.patch \
+  && patch -p1 < session-file-fix.patch \
+  && patch -p1 < xmlrpc-fix.patch \
+  && patch -p1 < xmlrpc-logic-fix.patch
 RUN ./autogen.sh
 RUN ./configure \
   --with-xmlrpc-c \
