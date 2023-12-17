@@ -1,6 +1,6 @@
 # Changelog
 
-## 4.2.9-0.9.8+1-0.13.8+1-r0 (2023/12/17)
+## 4.2.9-0.9.8_1-0.13.8_1-r0 (2023/12/17)
 
 * rTorrent patches
   * Avoid stack overflow for lockfile buffer
