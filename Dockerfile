@@ -156,6 +156,7 @@ WORKDIR /usr/local/src/rtorrent
 COPY --from=src-rtorrent /src .
 COPY /patches/rtorrent .
 RUN patch -p1 < lockfile-fix.patch \
+  && patch -p1 < rtorrent-scrape.patch \
   && patch -p1 < scgi-fix.patch \
   && patch -p1 < session-file-fix.patch \
   && patch -p1 < xmlrpc-fix.patch \

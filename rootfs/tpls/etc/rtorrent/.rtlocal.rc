@@ -43,6 +43,9 @@ schedule2 = session_save, 1200, @RT_SESSION_SAVE_SECONDS@, ((session.save))
 # Save torrents immediately to prevent losing them between session saving intervals
 method.set_key = event.download.inserted, 2_save_session, ((d.save_full_session))
 
+# Configure whether to delay tracker announces at startup
+trackers.delay_scrape = @RT_TRACKER_DELAY_SCRAPE@
+
 # Logging
 ## levels = critical error warn notice info debug
 ## groups = connection_* dht_* peer_* rpc_* storage_* thread_* tracker_* torrent_*
