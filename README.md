@@ -42,6 +42,8 @@ ___
   * [Edit a ruTorrent plugin configuration](#edit-a-rutorrent-plugin-configuration)
   * [Increase Docker timeout to allow rTorrent to shutdown gracefully](#increase-docker-timeout-to-allow-rtorrent-to-shutdown-gracefully)
   * [WAN IP address](#wan-ip-address)
+  * [Configure rTorrent session saving](#configure-rtorrent-session-saving)
+  * [Configure rTorrent tracker scrape](#rtorrent-tracker-scrape-patch)
 * [Upgrade](#upgrade)
 * [Contributing](#contributing)
 * [License](#license)
@@ -62,6 +64,7 @@ ___
 * [mktorrent](https://github.com/Rudde/mktorrent) installed for ruTorrent create plugin
 * [Traefik](https://github.com/containous/traefik-library-image) Docker image as reverse proxy and creation/renewal of Let's Encrypt certificates (see [this template](examples/traefik))
 * [geoip-updater](https://github.com/crazy-max/geoip-updater) Docker image to download MaxMind's GeoIP2 databases on a time-based schedule for geolocation
+* [rTorrent Patches](https://github.com/crazy-max/docker-rtorrent-rutorrent/tree/master/patches/rtorrent) Extended support for rTorrent to increase software stability.
 
 ## Build locally
 
@@ -132,6 +135,7 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `RT_LOG_EXECUTE`: Log executed commands to `/data/rtorrent/log/execute.log` (default `false`)
 * `RT_LOG_XMLRPC`: Log XMLRPC queries to `/data/rtorrent/log/xmlrpc.log` (default `false`)
 * `RT_SESSION_SAVE_SECONDS`: Seconds between writing torrent information to disk (default `3600`)
+* `RT_TRACKER_DELAY_SCRAPE`: Delay tracker announces at startup (default `true`)
 * `RT_DHT_PORT`: DHT UDP port (`dht.port.set`, default `6881`)
 * `RT_INC_PORT`: Incoming connections (`network.port_range.set`, default `50000`)
 
@@ -341,6 +345,14 @@ Only torrent statistics are lost during a crash. (Ratio, Total Uploaded & Downlo
 
 Higher values will reduce disk usage, at the cost of minor stat loss during a crash.
 Consider increasing to 10800 seconds (3 hours) if running thousands of torrents.
+
+### rTorrent tracker scrape patch
+
+`RT_TRACKER_DELAY_SCRAPE` specifies whether to delay tracker announces at rTorrent startup.
+The default value is `true`. There are two main benefits to keeping this feature enabled:
+
+1) Software Stability: rTorrent will not crash or time-out with tens of thousands of trackers.
+2) Immediate Access: ruTorrent can be accessed immediately after rTorrent is started.
 
 ## Upgrade
 
