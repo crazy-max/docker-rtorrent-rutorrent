@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1
 
 ARG LIBSIG_VERSION=3.0.3
-ARG CARES_VERSION=1.17.2
-ARG CURL_VERSION=7.78.0
+ARG CARES_VERSION=1.24.0
+ARG CURL_VERSION=8.5.0
 ARG XMLRPC_VERSION=01.58.00
 ARG LIBTORRENT_VERSION=v0.13.8
 ARG RTORRENT_VERSION=v0.9.8
@@ -110,7 +110,7 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/cares
 COPY --from=src-cares /src .
-RUN ./configure
+RUN ./configure --disable-tests
 RUN make -j$(nproc) CFLAGS="-O2 -flto"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
@@ -123,7 +123,7 @@ RUN ./configure \
   --enable-tls-srp \
   --enable-gnu-tls \
   --with-brotli \
-  --with-ssl \
+  --with-openssl \
   --with-zlib
 RUN make -j$(nproc) CFLAGS="-O2 -flto -pipe"
 RUN make install -j$(nproc)
