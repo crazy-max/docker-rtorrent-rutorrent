@@ -30,3 +30,31 @@ target "image-all" {
     "linux/arm64"
   ]
 }
+
+target "image-amd64" {
+  inherits = ["image"]
+  platforms = [
+    "linux/amd64"
+  ]
+}
+
+target "image-arm64" {
+  inherits = ["image"]
+  platforms = [
+    "linux/arm64"
+  ]
+}
+
+target "image-arm-v6" {
+  inherits = ["image"]
+  platforms = [
+    "linux/arm/v6"
+  ]
+}
+
+target "image-arm-v7" {
+  inherits = ["image"]
+  platforms = [
+    "linux/arm/v7"
+  ]
+}

@@ -81,6 +81,7 @@ RUN apk --update --no-cache add \
     brotli-dev \
     build-base \
     cppunit-dev \
+    cmake \
     gd-dev \
     geoip-dev \
     libtool \
@@ -110,22 +111,16 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/cares
 COPY --from=src-cares /src .
-RUN ./configure
-RUN make -j$(nproc) CFLAGS="-O2 -flto"
+RUN cmake . -D CARES_SHARED=ON -D CMAKE_BUILD_TYPE:STRING="Release" -D CMAKE_C_FLAGS_RELEASE:STRING="-O2 -pipe -flto=\"$(nproc)\""
+RUN cmake --build . --clean-first --parallel $(nproc)
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/curl
 COPY --from=src-curl /src .
-RUN ./configure \
-  --enable-ares \
-  --enable-tls-srp \
-  --enable-gnu-tls \
-  --with-brotli \
-  --with-ssl \
-  --with-zlib
-RUN make -j$(nproc) CFLAGS="-O2 -flto -pipe"
+RUN cmake . -D ENABLE_ARES=ON -D CURL_LTO=ON -D CURL_USE_OPENSSL=ON -D CURL_BROTLI=ON -D BUILD_SHARED_LIBS=ON -D CMAKE_BUILD_TYPE:STRING="Release" -D CMAKE_C_FLAGS_RELEASE:STRING="-O2 -pipe -flto=\"$(nproc)\""
+RUN cmake --build . --clean-first --parallel $(nproc)
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
@@ -135,8 +130,8 @@ COPY --from=src-xmlrpc /src .
 RUN ./configure \
    --disable-wininet-client \
    --disable-libwww-client
-RUN make -j$(nproc)
-RUN make install -j$(nproc) CXXFLAGS="-flto"
+RUN make -j$(nproc) CFLAGS="-w -O3 -flto" CXXFLAGS="-w -O3 -flto"
+RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
@@ -147,8 +142,8 @@ RUN patch -p1 < throttle-fix-0.13.8.patch
 RUN ./autogen.sh
 RUN ./configure \
   --with-posix-fallocate
-RUN make -j$(nproc)
-RUN make install -j$(nproc) CXXFLAGS="-O2 -flto"
+RUN make -j$(nproc) CXXFLAGS="-w -O2 -flto"
+RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
@@ -165,7 +160,7 @@ RUN ./autogen.sh
 RUN ./configure \
   --with-xmlrpc-c \
   --with-ncurses
-RUN make -j$(nproc) CXXFLAGS="-O2 -flto"
+RUN make -j$(nproc) CXXFLAGS="-w -O2 -flto"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}

@@ -14,9 +14,6 @@ on:
       - '*'
     paths-ignore:
       - '**.md'
-  pull_request:
-    paths-ignore:
-      - '**.md'
 
 env:
   DOCKERHUB_SLUG: crazymax/rtorrent-rutorrent
