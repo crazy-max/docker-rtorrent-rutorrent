@@ -88,11 +88,6 @@ jobs:
           if-no-files-found: error
           retention-days: 1
       -
-        name: Remove tags from meta bake definition
-        run: |
-          # we just want labels being set in this job
-          jq -r 'del(.target."docker-metadata-action".tags)' "/tmp/bake-meta.json" > "${{ steps.meta.outputs.bake-file }}"
-      -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       -
@@ -122,11 +117,13 @@ jobs:
         with:
           files: |
             ./docker-bake.hcl
-            ${{ steps.meta.outputs.bake-file }}
+            /tmp/bake-meta.json
           targets: image
           set: |
+            *.tags=
+            *.platform=${{ matrix.platform }}
             *.cache-from=type=gha,scope=build-${{ env.PLATFORM_PAIR }}
-            *.cache-to=type=gha,scope=build-${{ env.PLATFORM_PAIR }}
+            *.cache-to=type=gha,scope=build-${{ env.PLATFORM_PAIR }},mode=max
             *.output=type=image,"name=${{ env.DOCKERHUB_SLUG }},${{ env.GHCR_SLUG }}",push-by-digest=true,name-canonical=true,push=${{ github.event_name != 'pull_request' }}
       -
         name: Export digest
@@ -181,12 +178,13 @@ jobs:
         name: Create manifest list and push
         working-directory: /tmp/digests
         run: |
-          docker buildx imagetools create $(jq -cr '.target."docker-metadata-action".tags[] | select(startswith("${{ env.DOCKERHUB_SLUG }}") | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+          docker buildx imagetools create $(jq -cr '.target."docker-metadata-action".tags | map(select(startswith("${{ env.DOCKERHUB_SLUG }}")) | "-t " + .) | join(" ")' /tmp/bake-meta.json) \
             $(printf '${{ env.DOCKERHUB_SLUG }}@sha256:%s ' *)
-          docker buildx imagetools create $(jq -cr '.target."docker-metadata-action".tags[] | select(startswith("${{ env.GHCR_SLUG }}") | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+          docker buildx imagetools create $(jq -cr '.target."docker-metadata-action".tags | map(select(startswith("${{ env.GHCR_SLUG }}")) | "-t " + .) | join(" ")' /tmp/bake-meta.json) \
             $(printf '${{ env.GHCR_SLUG }}@sha256:%s ' *)
       -
         name: Inspect image
         run: |
-          docker buildx imagetools inspect ${{ env.DOCKERHUB_SLUG }}:${{ steps.meta.outputs.version }}
-          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:${{ steps.meta.outputs.version }}
+          tag=$(jq -r '.target."docker-metadata-action".args.DOCKER_META_VERSION' /tmp/bake-meta.json)
+          docker buildx imagetools inspect ${{ env.DOCKERHUB_SLUG }}:${tag}
+          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:${tag}
