@@ -53,6 +53,7 @@ ___
 * Run as non-root user
 * Multi-platform image
 * Latest [rTorrent](https://github.com/rakshasa/rtorrent) / [libTorrent](https://github.com/rakshasa/libtorrent) release compiled from source
+  * Includes [rTorrent patches](./patches/rtorrent) to increase software stability
 * Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
 * Name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) for asynchronous DNS requests (including name resolves)
 * Enhanced [rTorrent config](rootfs/tpls/.rtorrent.rc) and bootstraping with a [local config](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
@@ -64,7 +65,6 @@ ___
 * [mktorrent](https://github.com/Rudde/mktorrent) installed for ruTorrent create plugin
 * [Traefik](https://github.com/containous/traefik-library-image) Docker image as reverse proxy and creation/renewal of Let's Encrypt certificates (see [this template](examples/traefik))
 * [geoip-updater](https://github.com/crazy-max/geoip-updater) Docker image to download MaxMind's GeoIP2 databases on a time-based schedule for geolocation
-* [rTorrent Patches](https://github.com/crazy-max/docker-rtorrent-rutorrent/tree/master/patches/rtorrent) Extended support for rTorrent to increase software stability.
 
 ## Build locally
 
