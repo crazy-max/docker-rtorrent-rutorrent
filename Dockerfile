@@ -127,11 +127,9 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/xmlrpc
 COPY --from=src-xmlrpc /src .
-RUN ./configure \
-   --disable-wininet-client \
-   --disable-libwww-client
-RUN make -j$(nproc)
-RUN make install -j$(nproc) CXXFLAGS="-flto"
+RUN ./configure --disable-wininet-client --disable-libwww-client --disable-cplusplus
+RUN make -j$(nproc) CFLAGS="-w -O3 -flto" CXXFLAGS="-w -O3 -flto"
+RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
@@ -140,10 +138,9 @@ COPY --from=src-libtorrent /src .
 COPY /patches/libtorrent .
 RUN patch -p1 < throttle-fix-0.13.8.patch
 RUN ./autogen.sh
-RUN ./configure \
-  --with-posix-fallocate
-RUN make -j$(nproc)
-RUN make install -j$(nproc) CXXFLAGS="-O2 -flto"
+RUN ./configure --with-posix-fallocate
+RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto"
+RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
@@ -157,17 +154,15 @@ RUN patch -p1 < lockfile-fix.patch \
   && patch -p1 < xmlrpc-fix.patch \
   && patch -p1 < xmlrpc-logic-fix.patch
 RUN ./autogen.sh
-RUN ./configure \
-  --with-xmlrpc-c \
-  --with-ncurses
-RUN make -j$(nproc) CXXFLAGS="-O2 -flto"
+RUN ./configure --with-xmlrpc-c --with-ncurses
+RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/mktorrent
 COPY --from=src-mktorrent /src .
-RUN make -j$(nproc)
+RUN make -j$(nproc) CC=gcc CFLAGS="-w -O3 -flto"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
