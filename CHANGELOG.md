@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.2.9-0.9.8_2-0.13.8_1-r0 (2023/12/22)
+
+* rTorrent: tracker scrape feature patch (#288)
+* cURL 8.5.0, c-ares 1.24.0 (#295)
+
 ## 4.2.9-0.9.8_1-0.13.8_1-r0 (2023/12/17)
 
 * rTorrent patches
