@@ -13,7 +13,7 @@ ARG GEOIP2_PHPEXT_VERSION=1.3.1
 ARG RUTORRENT_VERSION=e7c81203eff5d43f6f2757ba4b05573d22f11e35
 ARG GEOIP2_RUTORRENT_VERSION=4ff2bde530bb8eef13af84e4413cedea97eda148
 
-ARG ALPINE_VERSION=3.18
+ARG ALPINE_VERSION=3.19
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
 
 FROM --platform=${BUILDPLATFORM} alpine:${ALPINE_VERSION} AS src
@@ -92,8 +92,8 @@ RUN apk --update --no-cache add \
     openssl-dev \
     patch \
     pcre-dev \
-    php81-dev \
-    php81-pear \
+    php82-dev \
+    php82-pear \
     tar \
     tree \
     xz \
@@ -171,13 +171,13 @@ WORKDIR /usr/local/src/geoip2-phpext
 COPY --from=src-geoip2-phpext /src .
 RUN <<EOT
   set -e
-  phpize81
+  phpize82
   ./configure
   make
   make install
 EOT
-RUN mkdir -p ${DIST_PATH}/usr/lib/php81/modules
-RUN cp -f /usr/lib/php81/modules/geoip.so ${DIST_PATH}/usr/lib/php81/modules/
+RUN mkdir -p ${DIST_PATH}/usr/lib/php82/modules
+RUN cp -f /usr/lib/php82/modules/geoip.so ${DIST_PATH}/usr/lib/php82/modules/
 RUN tree ${DIST_PATH}
 
 FROM crazymax/alpine-s6:${ALPINE_S6_VERSION}
@@ -205,6 +205,7 @@ RUN apk --update --no-cache add \
     brotli \
     ca-certificates \
     coreutils \
+    cppunit-dev \
     dhclient \
     ffmpeg \
     findutils \
@@ -218,23 +219,20 @@ RUN apk --update --no-cache add \
     nginx-mod-http-dav-ext \
     nginx-mod-http-geoip2 \
     openssl \
-    php81 \
-    php81-bcmath \
-    php81-cli \
-    php81-ctype \
-    php81-curl \
-    php81-dom \
-    php81-fpm \
-    php81-json \
-    php81-mbstring \
-    php81-openssl \
-    php81-phar \
-    php81-posix \
-    php81-session \
-    php81-sockets \
-    php81-xml \
-    php81-zip \
-    php81-zlib \
+    php82 \
+    php82-bcmath \
+    php82-ctype \
+    php82-curl \
+    php82-dom \
+    php82-fpm \
+    php82-mbstring \
+    php82-openssl \
+    php82-phar \
+    php82-posix \
+    php82-session \
+    php82-sockets \
+    php82-xml \
+    php82-zip \
     python3 \
     py3-pip \
     shadow \
@@ -244,8 +242,8 @@ RUN apk --update --no-cache add \
     unzip \
     util-linux \
     zip \
-  && pip3 install --upgrade pip \
-  && pip3 install cfscrape cloudscraper \
+  && pip3 install --upgrade --break-system-packages pip \
+  && pip3 install --break-system-packages cfscrape cloudscraper \
   && addgroup -g ${PGID} rtorrent \
   && adduser -D -H -u ${PUID} -G rtorrent -s /bin/sh rtorrent \
   && curl --version \
