@@ -54,8 +54,9 @@ ___
 * Multi-platform image
 * Latest [rTorrent](https://github.com/rakshasa/rtorrent) / [libTorrent](https://github.com/rakshasa/libtorrent) release compiled from source
   * Includes [rTorrent patches](./patches/rtorrent) to increase software stability
+  * Includes [libtorrent patches](./patches/libtorrent) to increase software stability
 * Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
-* Name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) for asynchronous DNS requests (including name resolves)
+* Domain name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) and [UDNS](https://www.corpit.ru/mjt/udns.html) for asynchronous DNS requests
 * Enhanced [rTorrent config](rootfs/tpls/.rtorrent.rc) and bootstraping with a [local config](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
 * XMLRPC through nginx over SCGI socket (basic auth optional)
 * WebDAV on completed downloads (basic auth optional)
