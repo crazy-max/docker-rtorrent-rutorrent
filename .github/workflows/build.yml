@@ -81,7 +81,7 @@ jobs:
           mv "${{ steps.meta.outputs.bake-file }}" "/tmp/bake-meta.json"
       -
         name: Upload meta bake definition
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: bake-meta
           path: /tmp/bake-meta.json
@@ -133,7 +133,7 @@ jobs:
           touch "/tmp/digests/${digest#sha256:}"
       -
         name: Upload digest
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: digests
           path: /tmp/digests/*
