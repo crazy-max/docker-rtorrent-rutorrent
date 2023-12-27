@@ -66,6 +66,7 @@ ___
 * [mktorrent](https://github.com/Rudde/mktorrent) installed for ruTorrent create plugin
 * [Traefik](https://github.com/containous/traefik-library-image) Docker image as reverse proxy and creation/renewal of Let's Encrypt certificates (see [this template](examples/traefik))
 * [geoip-updater](https://github.com/crazy-max/geoip-updater) Docker image to download MaxMind's GeoIP2 databases on a time-based schedule for geolocation
+* [ruTorrent throttle plugin](https://github.com/Novik/ruTorrent/wiki/PluginThrottle) with rTorrent support for 10Gbps
 
 ## Build locally
 
