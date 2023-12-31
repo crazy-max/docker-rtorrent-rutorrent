@@ -155,7 +155,10 @@ RUN patch -p1 < lockfile-fix.patch \
   && patch -p1 < scgi-fix.patch \
   && patch -p1 < session-file-fix.patch \
   && patch -p1 < xmlrpc-fix.patch \
-  && patch -p1 < xmlrpc-logic-fix.patch
+  && patch -p1 < xmlrpc-logic-fix.patch \
+  && patch -p1 < rtorrent-ml-cg-fix.patch \
+  && patch -p1 < rtorrent-ml-cui-fix.patch \
+  && patch -p1 < rtorrent-ml-dc-fix.patch
 RUN ./autogen.sh
 RUN ./configure --with-xmlrpc-c --with-ncurses
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto"
