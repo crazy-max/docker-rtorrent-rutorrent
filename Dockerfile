@@ -141,7 +141,7 @@ RUN patch -p1 < throttle-fix-0.13.8.patch \
   && patch -p1 < libtorrent-udns-0.13.8.patch \
   && patch -p1 < libtorrent-scanf-0.13.8.patch
 RUN ./autogen.sh
-RUN ./configure --with-posix-fallocate
+RUN ./configure --with-posix-fallocate --enable-aligned
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
