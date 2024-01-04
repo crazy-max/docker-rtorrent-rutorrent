@@ -44,6 +44,7 @@ ___
   * [WAN IP address](#wan-ip-address)
   * [Configure rTorrent session saving](#configure-rtorrent-session-saving)
   * [Configure rTorrent tracker scrape](#rtorrent-tracker-scrape-patch)
+  * [Configure rTorrent launch mode](#rtorrent-launch-mode)
 * [Upgrade](#upgrade)
 * [Contributing](#contributing)
 * [License](#license)
@@ -139,6 +140,7 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `RT_TRACKER_DELAY_SCRAPE`: Delay tracker announces at startup (default `true`)
 * `RT_DHT_PORT`: DHT UDP port (`dht.port.set`, default `6881`)
 * `RT_INC_PORT`: Incoming connections (`network.port_range.set`, default `50000`)
+* `RT_DAEMON_MODE`: Run rTorrent in daemon mode (default `true`)
 
 ### ruTorrent
 
@@ -354,6 +356,13 @@ The default value is `true`. There are two main benefits to keeping this feature
 
 1) Software Stability: rTorrent will not crash or time-out with tens of thousands of trackers.
 2) Immediate Access: ruTorrent can be accessed immediately after rTorrent is started.
+
+## rTorrent launch mode
+`RT_DAEMON_MODE` when set to `true` will run rTorrent in the background using daemon mode.
+The default value is true for daemon mode. This will disable the rTorrent ncurses interface.
+
+`RT_DAEMON_MODE` when set to `false` will run rTorrent in the foreground using a linux screen.
+The name of the linux screen is `rtorrent`. This feature may be required for graceful exit.
 
 ## Upgrade
 

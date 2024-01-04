@@ -241,6 +241,7 @@ RUN apk --update --no-cache add \
     php82-zip \
     python3 \
     py3-pip \
+    screen \
     shadow \
     sox \
     tar \
