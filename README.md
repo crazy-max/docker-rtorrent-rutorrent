@@ -44,6 +44,7 @@ ___
   * [WAN IP address](#wan-ip-address)
   * [Configure rTorrent session saving](#configure-rtorrent-session-saving)
   * [Configure rTorrent tracker scrape](#rtorrent-tracker-scrape-patch)
+  * [Configure rTorrent send receive buffers](#rtorrent-send-receive-buffers)
 * [Upgrade](#upgrade)
 * [Contributing](#contributing)
 * [License](#license)
@@ -139,6 +140,8 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `RT_TRACKER_DELAY_SCRAPE`: Delay tracker announces at startup (default `true`)
 * `RT_DHT_PORT`: DHT UDP port (`dht.port.set`, default `6881`)
 * `RT_INC_PORT`: Incoming connections (`network.port_range.set`, default `50000`)
+* `RT_SEND_BUFFER_SIZE`: Sets default tcp wmem value (`network.send_buffer.size.set`, default `4M`)
+* `RT_RECEIVE_BUFFER_SIZE`: Sets default tcp rmem value (`network.receive_buffer.size.set`, default `4M`)
 
 ### ruTorrent
 
@@ -354,6 +357,25 @@ The default value is `true`. There are two main benefits to keeping this feature
 
 1) Software Stability: rTorrent will not crash or time-out with tens of thousands of trackers.
 2) Immediate Access: ruTorrent can be accessed immediately after rTorrent is started.
+
+### rTorrent send receive buffers
+
+Overriding the default TCP rmem and wmem values for rTorrent improves torrent throughput.
+
+`RT_SEND_BUFFER_SIZE`: Sets default tcp wmem value for the socket.
+`RT_RECEIVE_BUFFER_SIZE`: Sets default tcp rmem value for the socket.
+
+Recommended values
+`2GB of less system memory`: Reduce to 1M send and 1M receive regardless of speed.
+`4GB to 16GB of system memory`: Keep at default values of 4M send and 4M receive.
+`16GB to 32GB of system memory`: Increase to 8M send for 500Mbps speeds.
+`32GB to 64GB of system memory`: Increase to 16M send for 1G speeds.
+`64GB to 128GB of system memory`: Increase to 32M send for 2.5G speeds.
+`128GB to 256GB of system memory`: Increase to 64M send for 10G speeds.
+
+Memory is better spent elsewhere except under limited circumstances for high memory and speed conditions.
+The default values should not be increased, unless both the memory and speed requirements are met.
+These values of system memory are also recommended based on the port speed for rTorrent to reduce disk usage.
 
 ## Upgrade
 

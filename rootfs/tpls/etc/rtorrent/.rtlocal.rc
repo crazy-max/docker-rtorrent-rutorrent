@@ -46,6 +46,10 @@ method.set_key = event.download.inserted, 2_save_session, ((d.save_full_session)
 # Configure whether to delay tracker announces at startup
 trackers.delay_scrape = @RT_TRACKER_DELAY_SCRAPE@
 
+# Configure TCP rmem and wmem for rTorrent client
+network.send_buffer.size.set = @RT_SEND_BUFFER_SIZE@
+network.receive_buffer.size.set = @RT_RECEIVE_BUFFER_SIZE@
+
 # Logging
 ## levels = critical error warn notice info debug
 ## groups = connection_* dht_* peer_* rpc_* storage_* thread_* tracker_* torrent_*
