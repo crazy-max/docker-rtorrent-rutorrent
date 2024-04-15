@@ -44,6 +44,8 @@ RU_SAVE_UPLOADED_TORRENTS=${RU_SAVE_UPLOADED_TORRENTS:-true}
 RU_OVERWRITE_UPLOADED_TORRENTS=${RU_OVERWRITE_UPLOADED_TORRENTS:-false}
 RU_FORBID_USER_SETTINGS=${RU_FORBID_USER_SETTINGS:-false}
 RU_LOCALE=${RU_LOCALE:-UTF8}
+RU_SCGI_PORT=${RU_SCGI_PORT:-0}
+RU_SCGI_HOST=${RU_SCGI_HOST:-unix:///var/run/rtorrent/scgi.socket}
 
 RT_DHT_PORT=${RT_DHT_PORT:-6881}
 RT_INC_PORT=${RT_INC_PORT:-50000}
@@ -243,8 +245,8 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 \$forbidUserSettings = ${RU_FORBID_USER_SETTINGS};
 
 // For web->rtorrent link through unix domain socket
-\$scgi_port = 0;
-\$scgi_host = "unix:///var/run/rtorrent/scgi.socket";
+\$scgi_port = ${RU_SCGI_PORT};
+\$scgi_host = "${RU_SCGI_HOST}";
 \$XMLRPCMountPoint = "/RPC2"; // DO NOT DELETE THIS LINE!!! DO NOT COMMENT THIS LINE!!!
 \$throttleMaxSpeed = 327625*1024; // DO NOT EDIT THIS LINE!!! DO NOT COMMENT THIS LINE!!!
 

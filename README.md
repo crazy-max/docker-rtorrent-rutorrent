@@ -159,6 +159,8 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `RU_OVERWRITE_UPLOADED_TORRENTS`: Existing .torrent files will be overwritten (default `false`)
 * `RU_FORBID_USER_SETTINGS`: If true, allows for single user style configuration, even with webauth (default `false`)
 * `RU_LOCALE`: Set default locale for ruTorrent (default `UTF8`)
+* `RU_SCGI_PORT`: Set default scgi port for ruTorrent to connect (default `0`)
+* `RU_SCGI_HOST`: Set default scgi host for ruTorrent to connect (default `unix:///var/run/rtorrent/scgi.socket`)
 
 ## Volumes
 
