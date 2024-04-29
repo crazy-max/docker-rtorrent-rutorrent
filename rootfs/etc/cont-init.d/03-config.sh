@@ -320,6 +320,7 @@ if [ -d "/var/www/rutorrent/plugins/create" ]; then
 \$useExternal = 'mktorrent';
 \$pathToCreatetorrent = '/usr/local/bin/mktorrent';
 \$recentTrackersMaxCount = 15;
+\$useInternalHybrid = true;
 EOL
   chown nobody:nogroup "/var/www/rutorrent/plugins/create/conf.php"
 else
