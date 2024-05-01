@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.3.0-0.9.8_3-0.13.8_2-r0 (2024/05/01)
+
+* Set `useInternalHybrid` ruTorrent setting to `true` (#341) 
+* Fix missing changes in `.rtlocal.rc` (#338)
+
 ## 4.3.0-0.9.8_2-0.13.8_2-r0 (2024/04/27)
 
 * ruTorrent v4.3.0 (#327 #316)
