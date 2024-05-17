@@ -4,14 +4,15 @@ ARG LIBSIG_VERSION=3.0.3
 ARG CARES_VERSION=1.24.0
 ARG CURL_VERSION=8.5.0
 ARG XMLRPC_VERSION=01.58.00
-ARG LIBTORRENT_VERSION=v0.13.8
-ARG RTORRENT_VERSION=v0.9.8
 ARG MKTORRENT_VERSION=v1.1
 ARG GEOIP2_PHPEXT_VERSION=1.3.1
 
 # v4.3.1
 ARG RUTORRENT_VERSION=97b431479022ceb1cc81df6b7e234e606bd3e13c
 ARG GEOIP2_RUTORRENT_VERSION=4ff2bde530bb8eef13af84e4413cedea97eda148
+
+# rTorrent stickz v3
+ARG RTORRENT_STICKZ_VERSION=491dc6ed1ab3744d3b14800c33550564204bc8f5
 
 ARG ALPINE_VERSION=3.19
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
@@ -37,15 +38,10 @@ FROM src AS src-curl
 ARG CURL_VERSION
 RUN curl -sSL "https://curl.se/download/curl-${CURL_VERSION}.tar.gz" | tar xz --strip 1
 
-FROM src AS src-libtorrent
-RUN git init . && git remote add origin "https://github.com/rakshasa/libtorrent.git"
-ARG LIBTORRENT_VERSION
-RUN git fetch origin "${LIBTORRENT_VERSION}" && git checkout -q FETCH_HEAD
-
 FROM src AS src-rtorrent
-RUN git init . && git remote add origin "https://github.com/rakshasa/rtorrent.git"
-ARG RTORRENT_VERSION
-RUN git fetch origin "${RTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+RUN git init . && git remote add origin "https://github.com/stickz/rtorrent.git"
+ARG RTORRENT_STICKZ_VERSION
+RUN git fetch origin "${RTORRENT_STICKZ_VERSION}" && git checkout -q FETCH_HEAD
 
 FROM src AS src-mktorrent
 RUN git init . && git remote add origin "https://github.com/esmil/mktorrent.git"
@@ -90,7 +86,6 @@ RUN apk --update --no-cache add \
     ncurses-dev \
     nghttp2-dev \
     openssl-dev \
-    patch \
     pcre-dev \
     php82-dev \
     php82-pear \
@@ -134,34 +129,21 @@ RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
-WORKDIR /usr/local/src/libtorrent
-COPY --from=src-libtorrent /src .
-COPY /patches/libtorrent .
-RUN patch -p1 < throttle-fix-0.13.8.patch \
-  && patch -p1 < libtorrent-udns-0.13.8.patch \
-  && patch -p1 < libtorrent-scanf-0.13.8.patch
+WORKDIR /usr/local/src/rtorrent
+COPY --from=src-rtorrent /src .
+
+WORKDIR /usr/local/src/rtorrent/libtorrent
 RUN ./autogen.sh
 RUN ./configure --with-posix-fallocate --enable-aligned
-RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto"
+RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
-WORKDIR /usr/local/src/rtorrent
-COPY --from=src-rtorrent /src .
-COPY /patches/rtorrent .
-RUN patch -p1 < lockfile-fix.patch \
-  && patch -p1 < rtorrent-scrape.patch \
-  && patch -p1 < scgi-fix.patch \
-  && patch -p1 < session-file-fix.patch \
-  && patch -p1 < xmlrpc-fix.patch \
-  && patch -p1 < xmlrpc-logic-fix.patch \
-  && patch -p1 < rtorrent-ml-cg-fix.patch \
-  && patch -p1 < rtorrent-ml-cui-fix.patch \
-  && patch -p1 < rtorrent-ml-dc-fix.patch
+WORKDIR /usr/local/src/rtorrent/rtorrent
 RUN ./autogen.sh
 RUN ./configure --with-xmlrpc-c --with-ncurses
-RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto"
+RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
