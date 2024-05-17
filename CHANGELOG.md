@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.3.1-0.9.8_3-0.13.8_2-r0 (2024/05/17)
+
+* ruTorrent v4.3.1 (#344)
+* Disallow ruTorrent `httprpc` core plugin removal (#346)
+
 ## 4.3.0-0.9.8_3-0.13.8_2-r0 (2024/05/01)
 
 * Set `useInternalHybrid` ruTorrent setting to `true` (#341) 
