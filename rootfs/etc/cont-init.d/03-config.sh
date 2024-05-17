@@ -306,6 +306,11 @@ if [ "$RU_REMOVE_CORE_PLUGINS" != "false" ]; then
   for i in ${RU_REMOVE_CORE_PLUGINS//,/ }
   do
     if [ -z "$i" ]; then continue; fi
+    if [ "$i" == "httprpc" ]; then
+      echo "Warning: skipping core plugin httprpc, required for ruTorrent v4.3+ operation"
+      echo "Please remove httprpc from RU_REMOVE_CORE_PLUGINS environment varriable"
+      continue;
+    fi      
     echo "Removing core plugin $i..."
     rm -rf "/var/www/rutorrent/plugins/${i}"
   done
