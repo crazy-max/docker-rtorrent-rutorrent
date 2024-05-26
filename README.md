@@ -52,9 +52,9 @@ ___
 
 * Run as non-root user
 * Multi-platform image
-* Latest [rTorrent](https://github.com/rakshasa/rtorrent) / [libTorrent](https://github.com/rakshasa/libtorrent) release compiled from source
-  * Includes [rTorrent patches](./patches/rtorrent) to increase software stability
-  * Includes [libtorrent patches](./patches/libtorrent) to increase software stability
+* Latest rTorrent and libTorrent from [rTorrent stickz](https://github.com/stickz/rtorrent) project.
+  * Includes significant performance and stability improvements.
+  * Includes compatibility with Link Time Optimizations.
 * Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
 * Domain name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) and [UDNS](https://www.corpit.ru/mjt/udns.html) for asynchronous DNS requests
 * Enhanced [rTorrent config](rootfs/tpls/.rtorrent.rc) and bootstraping with a [local config](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
