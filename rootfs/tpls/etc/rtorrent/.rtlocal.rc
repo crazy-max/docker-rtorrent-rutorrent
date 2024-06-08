@@ -41,7 +41,8 @@ network.xmlrpc.size_limit.set = @XMLRPC_SIZE_LIMIT@
 schedule2 = session_save, 1200, @RT_SESSION_SAVE_SECONDS@, ((session.save))
 
 # Save torrents immediately to prevent losing them between session saving intervals
-method.set_key = event.download.inserted, 2_save_session, ((d.save_full_session))
+# Schedule task to run in background (with unique hash) to avoid startup impact
+method.set_key = event.download.inserted, 2_save_session, "schedule2 = ((d.hash)), 0, 0, ((d.save_full_session))"
 
 # Configure whether to delay tracker announces at startup
 trackers.delay_scrape = @RT_TRACKER_DELAY_SCRAPE@
