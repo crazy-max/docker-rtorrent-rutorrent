@@ -27,7 +27,7 @@ RUN curl -sSL "https://download.gnome.org/sources/libsigc%2B%2B/3.0/libsigc%2B%2
 
 FROM src AS src-cares
 ARG CARES_VERSION
-RUN curl -sSL "https://c-ares.org/download/c-ares-${CARES_VERSION}.tar.gz" | tar xz --strip 1
+RUN curl -sSL "https://github.com/c-ares/c-ares/releases/download/cares-${CARES_VERSION//\./\_}/c-ares-${CARES_VERSION}.tar.gz" | tar xz --strip 1
 
 FROM src AS src-xmlrpc
 RUN git init . && git remote add origin "https://github.com/crazy-max/xmlrpc-c.git"
