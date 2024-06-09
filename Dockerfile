@@ -1,101 +1,75 @@
 # syntax=docker/dockerfile:1
 
-ARG ALPINE_S6_TAG=3.15-2.2.0.3
-
 ARG LIBSIG_VERSION=3.0.3
-ARG CARES_VERSION=1.17.2
-ARG CURL_VERSION=7.78.0
+ARG CARES_VERSION=1.24.0
+ARG CURL_VERSION=8.5.0
 ARG XMLRPC_VERSION=01.58.00
-ARG LIBTORRENT_VERSION=v0.13.8
-ARG RTORRENT_VERSION=v0.9.8
 ARG MKTORRENT_VERSION=v1.1
+ARG GEOIP2_PHPEXT_VERSION=1.3.1
 
-ARG NGINX_VERSION=1.21.1
-ARG NGINX_DAV_VERSION=v3.0.0
-ARG NGINX_UID=102
-ARG NGINX_GID=102
-ARG GEOIP2_PHPEXT_VERSION=1.1.1
+# v4.3.2
+ARG RUTORRENT_VERSION=201ef857f1863df6b5463c31fa27434915116717
+ARG GEOIP2_RUTORRENT_VERSION=4ff2bde530bb8eef13af84e4413cedea97eda148
 
-# 3.10
-ARG RUTORRENT_VERSION=954479ffd00eb58ad14f9a667b3b9b1e108e80a2
-ARG GEOIP2_RUTORRENT_VERSION=9f7b59e29bc472eec8c3943d7646bf9462577b16
+# v3.2-0.9.8-0.13.8
+ARG RTORRENT_STICKZ_VERSION=970deaebe765e8f56bc342aa03e5c81c8d4c9c8f
 
-FROM --platform=$BUILDPLATFORM alpine AS src
-RUN apk --update --no-cache add curl git subversion tar tree xz
+ARG ALPINE_VERSION=3.19
+ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
+
+FROM --platform=${BUILDPLATFORM} alpine:${ALPINE_VERSION} AS src
+RUN apk --update --no-cache add curl git tar tree xz
 WORKDIR /src
 
 FROM src AS src-libsig
 ARG LIBSIG_VERSION
-RUN curl -sSL "http://ftp.gnome.org/pub/GNOME/sources/libsigc++/3.0/libsigc++-${LIBSIG_VERSION}.tar.xz" | tar xJv --strip 1
+RUN curl -sSL "https://download.gnome.org/sources/libsigc%2B%2B/3.0/libsigc%2B%2B-${LIBSIG_VERSION}.tar.xz" | tar xJv --strip 1
 
 FROM src AS src-cares
 ARG CARES_VERSION
-RUN curl -sSL "https://c-ares.haxx.se/download/c-ares-${CARES_VERSION}.tar.gz" | tar xz --strip 1
+RUN curl -sSL "https://c-ares.org/download/c-ares-${CARES_VERSION}.tar.gz" | tar xz --strip 1
 
 FROM src AS src-xmlrpc
+RUN git init . && git remote add origin "https://github.com/crazy-max/xmlrpc-c.git"
 ARG XMLRPC_VERSION
-RUN svn checkout "http://svn.code.sf.net/p/xmlrpc-c/code/release_number/${XMLRPC_VERSION}/" .
+RUN git fetch origin "${XMLRPC_VERSION}" && git checkout -q FETCH_HEAD
 
 FROM src AS src-curl
 ARG CURL_VERSION
-RUN curl -sSL "https://curl.haxx.se/download/curl-${CURL_VERSION}.tar.gz" | tar xz --strip 1
-
-FROM src AS src-libtorrent
-ARG LIBTORRENT_VERSION
-RUN <<EOT
-git clone https://github.com/rakshasa/libtorrent.git .
-git reset --hard $LIBTORRENT_VERSION
-EOT
+RUN curl -sSL "https://curl.se/download/curl-${CURL_VERSION}.tar.gz" | tar xz --strip 1
 
 FROM src AS src-rtorrent
-ARG RTORRENT_VERSION
-RUN <<EOT
-git clone https://github.com/rakshasa/rtorrent.git .
-git reset --hard $RTORRENT_VERSION
-EOT
+RUN git init . && git remote add origin "https://github.com/stickz/rtorrent.git"
+ARG RTORRENT_STICKZ_VERSION
+RUN git fetch origin "${RTORRENT_STICKZ_VERSION}" && git checkout -q FETCH_HEAD
 
 FROM src AS src-mktorrent
+RUN git init . && git remote add origin "https://github.com/esmil/mktorrent.git"
 ARG MKTORRENT_VERSION
-RUN <<EOT
-git clone https://github.com/esmil/mktorrent.git .
-git reset --hard $MKTORRENT_VERSION
-EOT
-
-FROM src AS src-nginx
-ARG NGINX_VERSION
-ARG NGINX_DAV_VERSION
-RUN curl -sSL "https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz" | tar xz --strip 1
-RUN <<EOT
-git clone https://github.com/arut/nginx-dav-ext-module.git nginx-dav-ext
-cd nginx-dav-ext
-git reset --hard $NGINX_DAV_VERSION
-EOT
+RUN git fetch origin "${MKTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 
 FROM src AS src-geoip2-phpext
+RUN git init . && git remote add origin "https://github.com/rlerdorf/geoip.git"
 ARG GEOIP2_PHPEXT_VERSION
-RUN curl -SsL "https://pecl.php.net/get/geoip-${GEOIP2_PHPEXT_VERSION}.tgz" -o "geoip.tgz"
+RUN git fetch origin "${GEOIP2_PHPEXT_VERSION}" && git checkout -q FETCH_HEAD
 
 FROM src AS src-rutorrent
+RUN git init . && git remote add origin "https://github.com/Novik/ruTorrent.git"
 ARG RUTORRENT_VERSION
-RUN <<EOT
-git clone https://github.com/Novik/ruTorrent.git .
-git reset --hard $RUTORRENT_VERSION
-rm -rf .git* conf/users plugins/geoip share
-EOT
+RUN git fetch origin "${RUTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+RUN rm -rf .git* conf/users plugins/geoip share
 
 FROM src AS src-geoip2-rutorrent
+RUN git init . && git remote add origin "https://github.com/Micdu70/geoip2-rutorrent.git"
 ARG GEOIP2_RUTORRENT_VERSION
-RUN <<EOT
-git clone https://github.com/Micdu70/geoip2-rutorrent .
-git reset --hard $GEOIP2_RUTORRENT_VERSION
-rm -rf .git*
-EOT
+RUN git fetch origin "${GEOIP2_RUTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+RUN rm -rf .git*
 
 FROM src AS src-mmdb
 RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
   && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-Country.mmdb"
 
-FROM crazymax/alpine-s6:${ALPINE_S6_TAG} AS builder
+FROM crazymax/alpine-s6:${ALPINE_S6_VERSION} AS builder
 RUN apk --update --no-cache add \
     autoconf \
     automake \
@@ -103,6 +77,7 @@ RUN apk --update --no-cache add \
     brotli-dev \
     build-base \
     cppunit-dev \
+    cmake \
     gd-dev \
     geoip-dev \
     libtool \
@@ -112,10 +87,11 @@ RUN apk --update --no-cache add \
     nghttp2-dev \
     openssl-dev \
     pcre-dev \
-    php7-dev \
-    php7-pear \
+    php82-dev \
+    php82-pear \
     tar \
     tree \
+    udns-dev \
     xz \
     zlib-dev
 
@@ -131,120 +107,68 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/cares
 COPY --from=src-cares /src .
-RUN ./configure
-RUN make -j$(nproc)
+RUN cmake . -D CARES_SHARED=ON -D CMAKE_BUILD_TYPE:STRING="Release" -D CMAKE_C_FLAGS_RELEASE:STRING="-O3 -flto=\"$(nproc)\" -pipe"
+RUN cmake --build . --clean-first --parallel $(nproc)
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/curl
 COPY --from=src-curl /src .
-RUN ./configure \
-  --enable-ares \
-  --enable-tls-srp \
-  --enable-gnu-tls \
-  --with-brotli \
-  --with-ssl \
-  --with-zlib
-RUN make -j$(nproc)
+RUN cmake . -D ENABLE_ARES=ON CURL_LTO=ON -D CURL_USE_OPENSSL=ON -D CURL_BROTLI=ON -D CURL_ZSTD=ON -D BUILD_SHARED_LIBS=ON -D CMAKE_BUILD_TYPE:STRING="Release" -D CMAKE_C_FLAGS_RELEASE:STRING="-O3 -flto=\"$(nproc)\" -pipe"
+RUN cmake --build . --clean-first --parallel $(nproc)
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/xmlrpc
 COPY --from=src-xmlrpc /src .
-RUN ./configure
-RUN make -j$(nproc)
-RUN make install -j$(nproc)
-RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
-RUN tree ${DIST_PATH}
-
-WORKDIR /usr/local/src/libtorrent
-COPY --from=src-libtorrent /src .
-RUN ./autogen.sh
-RUN ./configure \
-  --with-posix-fallocate
-RUN make -j$(nproc)
+RUN ./configure --disable-wininet-client --disable-libwww-client --disable-cplusplus
+RUN make -j$(nproc) CFLAGS="-w -O3 -flto" CXXFLAGS="-w -O3 -flto"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/rtorrent
 COPY --from=src-rtorrent /src .
+
+WORKDIR /usr/local/src/rtorrent/libtorrent
 RUN ./autogen.sh
-RUN ./configure \
-  --with-xmlrpc-c \
-  --with-ncurses
-RUN make -j$(nproc)
+RUN ./configure --with-posix-fallocate --enable-aligned
+RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
+RUN make install -j$(nproc)
+RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
+RUN tree ${DIST_PATH}
+
+WORKDIR /usr/local/src/rtorrent/rtorrent
+RUN ./autogen.sh
+RUN ./configure --with-xmlrpc-c --with-ncurses
+RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/mktorrent
 COPY --from=src-mktorrent /src .
-RUN make -j$(nproc)
-RUN make install -j$(nproc)
-RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
-RUN tree ${DIST_PATH}
-
-WORKDIR /usr/local/src/nginx
-COPY --from=src-nginx /src .
-ARG NGINX_UID
-ARG NGINX_GID
-RUN addgroup -g ${NGINX_UID} -S nginx
-RUN adduser -S -D -H -u ${NGINX_GID} -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx
-RUN ./configure \
-  --prefix=/usr/lib/nginx \
-  --sbin-path=/sbin/nginx \
-  --pid-path=/var/pid/nginx \
-  --conf-path=/etc/nginx/nginx.conf \
-  --http-log-path=/dev/stdout \
-  --error-log-path=/dev/stderr \
-  --pid-path=/var/pid/nginx.pid \
-  --user=nginx \
-  --group=nginx \
-  --with-file-aio \
-  --with-pcre-jit \
-  --with-threads \
-  --with-poll_module \
-  --with-select_module \
-  --with-stream_ssl_module \
-  --with-http_addition_module \
-  --with-http_auth_request_module \
-  --with-http_dav_module \
-  --with-http_degradation_module \
-  --with-http_flv_module \
-  --with-http_gunzip_module \
-  --with-http_gzip_static_module \
-  --with-mail_ssl_module \
-  --with-http_mp4_module \
-  --with-http_random_index_module \
-  --with-http_realip_module \
-  --with-http_secure_link_module \
-  --with-http_slice_module \
-  --with-http_ssl_module \
-  --with-http_stub_status_module \
-  --with-http_sub_module \
-  --with-http_v2_module \
-  --with-mail=dynamic \
-  --with-stream=dynamic \
-  --with-http_geoip_module=dynamic \
-  --with-http_image_filter_module=dynamic \
-  --with-http_xslt_module=dynamic \
-  --add-dynamic-module=./nginx-dav-ext
-RUN make -j$(nproc)
+RUN make -j$(nproc) CC=gcc CFLAGS="-w -O3 -flto"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/geoip2-phpext
 COPY --from=src-geoip2-phpext /src .
-RUN pecl install geoip.tgz
-RUN mkdir -p ${DIST_PATH}/usr/lib/php7/modules
-RUN cp -f /usr/lib/php7/modules/geoip.so ${DIST_PATH}/usr/lib/php7/modules/
+RUN <<EOT
+  set -e
+  phpize82
+  ./configure
+  make
+  make install
+EOT
+RUN mkdir -p ${DIST_PATH}/usr/lib/php82/modules
+RUN cp -f /usr/lib/php82/modules/geoip.so ${DIST_PATH}/usr/lib/php82/modules/
 RUN tree ${DIST_PATH}
 
-FROM crazymax/alpine-s6:${ALPINE_S6_TAG}
+FROM crazymax/alpine-s6:${ALPINE_S6_VERSION}
 COPY --from=builder /dist /
 COPY --from=src-rutorrent --chown=nobody:nogroup /src /var/www/rutorrent
 COPY --from=src-geoip2-rutorrent --chown=nobody:nogroup /src /var/www/rutorrent/plugins/geoip2
@@ -257,12 +181,15 @@ ENV PYTHONPATH="$PYTHONPATH:/var/www/rutorrent" \
   PUID="1000" \
   PGID="1000"
 
+# increase rmem_max and wmem_max for rTorrent configuration
+RUN echo "net.core.rmem_max = 67108864" >> /etc/sysctl.conf \
+  && echo "net.core.wmem_max = 67108864" >> /etc/sysctl.conf \
+  && sysctl -p
+
 # unrar package is not available since alpine 3.15
 RUN echo "@314 http://dl-cdn.alpinelinux.org/alpine/v3.14/main" >> /etc/apk/repositories \
   && apk --update --no-cache add unrar@314
 
-ARG NGINX_UID
-ARG NGINX_GID
 RUN apk --update --no-cache add \
     apache2-utils \
     bash \
@@ -271,6 +198,7 @@ RUN apk --update --no-cache add \
     brotli \
     ca-certificates \
     coreutils \
+    cppunit-dev \
     dhclient \
     ffmpeg \
     findutils \
@@ -280,39 +208,37 @@ RUN apk --update --no-cache add \
     libstdc++ \
     mediainfo \
     ncurses \
+    nginx \
+    nginx-mod-http-dav-ext \
+    nginx-mod-http-geoip2 \
     openssl \
-    pcre \
-    php7 \
-    php7-bcmath \
-    php7-cli \
-    php7-ctype \
-    php7-curl \
-    php7-fpm \
-    php7-json \
-    php7-mbstring \
-    php7-openssl \
-    php7-phar \
-    php7-posix \
-    php7-session \
-    php7-sockets \
-    php7-xml \
-    php7-zip \
-    php7-zlib \
+    php82 \
+    php82-bcmath \
+    php82-ctype \
+    php82-curl \
+    php82-dom \
+    php82-fileinfo \
+    php82-fpm \
+    php82-mbstring \
+    php82-openssl \
+    php82-phar \
+    php82-posix \
+    php82-session \
+    php82-sockets \
+    php82-xml \
+    php82-zip \
     python3 \
     py3-pip \
     shadow \
     sox \
     tar \
     tzdata \
+    udns \
     unzip \
     util-linux \
     zip \
-    zlib \
-  && ln -s /usr/lib/nginx/modules /etc/nginx/modules \
-  && addgroup -g ${NGINX_UID} -S nginx \
-  && adduser -S -D -H -u ${NGINX_GID} -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx \
-  && pip3 install --upgrade pip \
-  && pip3 install cfscrape cloudscraper \
+  && pip3 install --upgrade --break-system-packages pip \
+  && pip3 install --break-system-packages cfscrape cloudscraper \
   && addgroup -g ${PGID} rtorrent \
   && adduser -D -H -u ${PUID} -G rtorrent -s /bin/sh rtorrent \
   && curl --version \

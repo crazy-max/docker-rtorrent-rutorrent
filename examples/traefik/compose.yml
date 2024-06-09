@@ -1,8 +1,9 @@
-version: "3.2"
+name: rtorrent-rutorrent
 
 services:
   traefik:
     image: traefik:2.5
+    container_name: traefik
     command:
       - "--global.checknewversion=false"
       - "--global.sendanonymoususage=false"
@@ -22,6 +23,8 @@ services:
       - "--providers.docker"
       - "--providers.docker.watch=true"
       - "--providers.docker.exposedbydefault=false"
+    networks:
+      - rtorrent-rutorrent
     ports:
       - target: 80
         published: 80
@@ -36,6 +39,9 @@ services:
 
   geoip-updater:
     image: crazymax/geoip-updater:latest
+    container_name: geoip-updater
+    networks:
+      - rtorrent-rutorrent
     volumes:
       - "./data/geoip:/data"
     env_file:
@@ -44,6 +50,9 @@ services:
 
   rtorrent-rutorrent:
     image: crazymax/rtorrent-rutorrent:latest
+    container_name: rtorrent-rutorrent
+    networks:
+      - rtorrent-rutorrent
     expose:
       - "${RT_DHT_PORT}/udp"
       - "${XMLRPC_PORT}"
@@ -89,9 +98,15 @@ services:
 
   rtorrent-logs:
     image: bash
+    container_name: rtorrent-rutorrent-logs
     command: bash -c 'tail -f /log/*.log'
+    network_mode: none
     depends_on:
       - rtorrent-rutorrent
     volumes:
       - "./data/rtorrent/log:/log"
     restart: always
+
+networks:
+  rtorrent-rutorrent:
+    name: rtorrent-rutorrent

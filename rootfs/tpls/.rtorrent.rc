@@ -48,7 +48,7 @@ system.umask.set = 0022
 encoding.add = UTF-8
 
 # Watch a directory for new torrents, and stop those that have been deleted
-schedule2 = watch_directory, 1, 1, (cat,"load.start=",(cfg.watch),"*.torrent")
+directory.watch.added = (cat,(cfg.watch)), load.start
 schedule2 = untied_directory, 5, 5, (cat,"stop_untied=",(cfg.watch),"*.torrent")
 
 # Close torrents when diskspace is low
@@ -58,6 +58,3 @@ schedule2 = monitor_diskspace, 15, 60, ((close_low_diskspace,1000M))
 method.insert = d.get_finished_dir, simple, "cat=$cfg.download_complete=,$d.custom1="
 method.insert = d.move_to_complete, simple, "d.directory.set=$argument.1=; execute=mkdir,-p,$argument.1=; execute=mv,-u,$argument.0=,$argument.1=; d.save_full_session="
 method.set_key = event.download.finished,move_complete,"d.move_to_complete=$d.data_path=,$d.get_finished_dir="
-
-# Erase data when torrent deleted (no need erasedata plugin on ruTorrent)
-method.set_key = event.download.erased,delete_erased,"execute=rm,-rf,--,$d.data_path="

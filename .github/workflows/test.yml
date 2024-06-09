@@ -1,5 +1,9 @@
 name: test
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches:
@@ -7,10 +11,12 @@ on:
     paths-ignore:
       - '**.md'
   pull_request:
-    branches:
-      - 'master'
     paths-ignore:
       - '**.md'
+
+env:
+  BUILD_TAG: rtorrent-rutorrent:test
+  CONTAINER_NAME: rtorrent-rutorrent
 
 jobs:
   test:
@@ -18,59 +24,43 @@ jobs:
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v3
-      -
-        name: Prepare
-        id: prep
-        run: |
-          echo ::set-output name=build_tag::test
-          echo ::set-output name=container_name::rtorrent-rutorrent
-          echo ::set-output name=running_timeout::120
-          echo ::set-output name=running_log_check::ready to handle connections
+        uses: actions/checkout@v4
       -
         name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       -
         name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       -
         name: Build
-        uses: docker/bake-action@v2
+        uses: docker/bake-action@v4
         with:
           targets: image-local
           set: |
             *.cache-from=type=gha
         env:
-          DEFAULT_TAG: ${{ steps.prep.outputs.build_tag }}
+          DEFAULT_TAG: ${{ env.BUILD_TAG }}
       -
-        name: Start container
+        name: Start
         run: |
-          docker rm -f ${{ steps.prep.outputs.container_name }} > /dev/null 2>&1 || true
-          docker run -d --name ${{ steps.prep.outputs.container_name }} ${{ steps.prep.outputs.build_tag }}
+          docker compose up -d
+        working-directory: test
+        env:
+          RTORRENT_RUTORRENT_IMAGE: ${{ env.BUILD_TAG }}
+          RTORRENT_RUTORRENT_CONTAINER: ${{ env.CONTAINER_NAME }}
       -
-        name: Test run
-        run: |
-          TIMEOUT=$((SECONDS + ${{ steps.prep.outputs.running_timeout }}))
-          while read LOGLINE; do
-            echo ${LOGLINE}
-            if [[ ${LOGLINE} == *"${{ steps.prep.outputs.running_log_check }}"* ]]; then
-              echo "🎉 Container up!"
-              break
-            fi
-            if [[ $SECONDS -gt ${TIMEOUT} ]]; then
-              >&2 echo "❌ Failed to run ${{ steps.prep.outputs.container_name }} container"
-              exit 1
-            fi
-          done < <(docker logs -f ${{ steps.prep.outputs.container_name }} 2>&1)
-
-          CONTAINER_STATUS=$(docker container inspect --format "{{.State.Status}}" ${{ steps.prep.outputs.container_name }})
-          if [[ ${CONTAINER_STATUS} != "running" ]]; then
-            >&2 echo "❌ Container ${{ steps.prep.outputs.container_name }} returned status '$CONTAINER_STATUS'"
-            exit 1
-          fi
+        name: Check container logs
+        uses: crazy-max/.github/.github/actions/container-logs-check@main
+        with:
+          container_name: ${{ env.CONTAINER_NAME }}
+          log_check: "ready to handle connections"
+          timeout: 120
       -
-        name: Container logs
+        name: Logs
         if: always()
         run: |
-          docker logs ${{ steps.prep.outputs.container_name }}
-          docker rm -f ${{ steps.prep.outputs.container_name }} > /dev/null 2>&1 || true
+          docker compose logs
+        working-directory: test
+        env:
+          RTORRENT_RUTORRENT_IMAGE: ${{ env.BUILD_TAG }}
+          RTORRENT_RUTORRENT_CONTAINER: ${{ env.CONTAINER_NAME }}

@@ -1,16 +1,11 @@
-version: "3.2"
+name: rtorrent-rutorrent
 
 services:
-  geoip-updater:
-    image: crazymax/geoip-updater:latest
-    volumes:
-      - "./data/geoip:/data"
-    env_file:
-      - "./geoip-updater.env"
-    restart: always
-
   rtorrent-rutorrent:
-    image: crazymax/rtorrent-rutorrent:latest
+    image: ${RTORRENT_RUTORRENT_IMAGE:-crazymax/rtorrent-rutorrent}
+    container_name: ${RTORRENT_RUTORRENT_CONTAINER:-rtorrent-rutorrent}
+    networks:
+      - rtorrent-rutorrent
     expose:
       - "${RT_DHT_PORT}/udp"
       - "${XMLRPC_PORT}"
@@ -34,9 +29,9 @@ services:
       - "rtorrent-rutorrent.env"
       - ".env"
     volumes:
-      - "./data:/data"
-      - "./downloads:/downloads"
-      - "./passwd:/passwd"
+      - "rtorrent-rutorrent-data:/data"
+      - "rtorrent-rutorrent-downloads:/downloads"
+      - "rtorrent-rutorrent-passwd:/passwd"
     ulimits:
       nproc: 65535
       nofile:
@@ -46,9 +41,20 @@ services:
 
   rtorrent-logs:
     image: bash
-    command: bash -c 'tail -f /log/*.log'
+    container_name: rtorrent-rutorrent-logs
+    command: bash -c 'tail -f /data/rtorrent/log/*.log'
+    network_mode: none
     depends_on:
       - rtorrent-rutorrent
     volumes:
-      - "./data/rtorrent/log:/log"
+      - "rtorrent-rutorrent-data:/data"
     restart: always
+
+volumes:
+  rtorrent-rutorrent-data:
+  rtorrent-rutorrent-downloads:
+  rtorrent-rutorrent-passwd:
+
+networks:
+  rtorrent-rutorrent:
+    name: rtorrent-rutorrent

@@ -1,9 +1,17 @@
 name: labels
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches:
       - 'master'
+    paths:
+      - '.github/labels.yml'
+      - '.github/workflows/labels.yml'
+  pull_request:
     paths:
       - '.github/labels.yml'
       - '.github/workflows/labels.yml'
@@ -14,7 +22,9 @@ jobs:
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       -
         name: Run Labeler
-        uses: crazy-max/ghaction-github-labeler@v3
+        uses: crazy-max/ghaction-github-labeler@v5
+        with:
+          dry-run: ${{ github.event_name == 'pull_request' }}

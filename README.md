@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://hub.docker.com/r/crazymax/rtorrent-rutorrent/tags?page=1&ordering=last_updated"><img src="https://img.shields.io/github/v/tag/crazy-max/docker-rtorrent-rutorrent?label=version&style=flat-square" alt="Latest Version"></a>
-  <a href="https://github.com/crazy-max/docker-rtorrent-rutorrent/actions?workflow=build"><img src="https://img.shields.io/github/workflow/status/crazy-max/docker-rtorrent-rutorrent/build?label=build&logo=github&style=flat-square" alt="Build Status"></a>
+  <a href="https://github.com/crazy-max/docker-rtorrent-rutorrent/actions?workflow=build"><img src="https://img.shields.io/github/actions/workflow/status/crazy-max/docker-rtorrent-rutorrent/build.yml?branch=master&label=build&logo=github&style=flat-square" alt="Build Status"></a>
   <a href="https://hub.docker.com/r/crazymax/rtorrent-rutorrent/"><img src="https://img.shields.io/docker/stars/crazymax/rtorrent-rutorrent.svg?style=flat-square&logo=docker" alt="Docker Stars"></a>
   <a href="https://hub.docker.com/r/crazymax/rtorrent-rutorrent/"><img src="https://img.shields.io/docker/pulls/crazymax/rtorrent-rutorrent.svg?style=flat-square&logo=docker" alt="Docker Pulls"></a>
   <br /><a href="https://github.com/sponsors/crazy-max"><img src="https://img.shields.io/badge/sponsor-crazy--max-181717.svg?logo=github&style=flat-square" alt="Become a sponsor"></a>
@@ -11,10 +11,12 @@
 
 ## About
 
-[rTorrent](https://github.com/rakshasa/rtorrent) and [ruTorrent](https://github.com/Novik/ruTorrent) Docker image based on Alpine Linux.<br />
-If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other Docker images!
+[rTorrent](https://github.com/rakshasa/rtorrent) with [ruTorrent](https://github.com/Novik/ruTorrent)
+Docker image.
 
-💡 Want to be notified of new releases? Check out 🔔 [Diun (Docker Image Update Notifier)](https://github.com/crazy-max/diun) project!
+> [!TIP] 
+> Want to be notified of new releases? Check out 🔔 [Diun (Docker Image Update Notifier)](https://github.com/crazy-max/diun)
+> project!
 
 ___
 
@@ -34,11 +36,14 @@ ___
   * [XMLRPC through nginx](#xmlrpc-through-nginx)
   * [WebDAV](#webdav)
   * [Populate .htpasswd files](#populate-htpasswd-files)
-  * [Boostrap config `.rtlocal.rc`](#boostrap-config-rtlocalrc)
+  * [Bootstrap config `.rtlocal.rc`](#bootstrap-config-rtlocalrc)
   * [Override or add a ruTorrent plugin/theme](#override-or-add-a-rutorrent-plugintheme)
   * [Edit a ruTorrent plugin configuration](#edit-a-rutorrent-plugin-configuration)
   * [Increase Docker timeout to allow rTorrent to shutdown gracefully](#increase-docker-timeout-to-allow-rtorrent-to-shutdown-gracefully)
   * [WAN IP address](#wan-ip-address)
+  * [Configure rTorrent session saving](#configure-rtorrent-session-saving)
+  * [Configure rTorrent tracker scrape](#rtorrent-tracker-scrape-patch)
+  * [Configure rTorrent send receive buffers](#rtorrent-send-receive-buffers)
 * [Upgrade](#upgrade)
 * [Contributing](#contributing)
 * [License](#license)
@@ -47,9 +52,11 @@ ___
 
 * Run as non-root user
 * Multi-platform image
-* Latest [rTorrent](https://github.com/rakshasa/rtorrent) / [libTorrent](https://github.com/rakshasa/libtorrent) release compiled from source
+* Latest rTorrent and libTorrent from [rTorrent stickz](https://github.com/stickz/rtorrent) project.
+  * Includes significant performance and stability improvements.
+  * Includes compatibility with Link Time Optimizations.
 * Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
-* Name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) for asynchronous DNS requests (including name resolves)
+* Domain name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) and [UDNS](https://www.corpit.ru/mjt/udns.html) for asynchronous DNS requests
 * Enhanced [rTorrent config](rootfs/tpls/.rtorrent.rc) and bootstraping with a [local config](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
 * XMLRPC through nginx over SCGI socket (basic auth optional)
 * WebDAV on completed downloads (basic auth optional)
@@ -128,12 +135,16 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `RT_LOG_LEVEL`: rTorrent log level (default `info`)
 * `RT_LOG_EXECUTE`: Log executed commands to `/data/rtorrent/log/execute.log` (default `false`)
 * `RT_LOG_XMLRPC`: Log XMLRPC queries to `/data/rtorrent/log/xmlrpc.log` (default `false`)
+* `RT_SESSION_SAVE_SECONDS`: Seconds between writing torrent information to disk (default `3600`)
+* `RT_TRACKER_DELAY_SCRAPE`: Delay tracker announces at startup (default `true`)
 * `RT_DHT_PORT`: DHT UDP port (`dht.port.set`, default `6881`)
 * `RT_INC_PORT`: Incoming connections (`network.port_range.set`, default `50000`)
+* `RT_SEND_BUFFER_SIZE`: Sets default tcp wmem value (`network.send_buffer.size.set`, default `4M`)
+* `RT_RECEIVE_BUFFER_SIZE`: Sets default tcp rmem value (`network.receive_buffer.size.set`, default `4M`)
 
 ### ruTorrent
 
-* `RU_REMOVE_CORE_PLUGINS`: Remove ruTorrent core plugins ; comma separated (default `erasedata,httprpc`)
+* `RU_REMOVE_CORE_PLUGINS`: Comma separated list of core plugins to remove ; set to `false` to disable removal 
 * `RU_HTTP_USER_AGENT`: ruTorrent HTTP user agent (default `Mozilla/5.0 (Windows NT 6.0; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0`)
 * `RU_HTTP_TIME_OUT`: ruTorrent HTTP timeout in seconds (default `30`)
 * `RU_HTTP_USE_GZIP`: Use HTTP Gzip compression (default `true`)
@@ -145,6 +156,7 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `RU_SCHEDULE_RAND`: Rand for schedulers start, +0..X seconds (default `10`)
 * `RU_LOG_FILE`: ruTorrent log file path for errors messages (default `/data/rutorrent/rutorrent.log`)
 * `RU_DO_DIAGNOSTIC`: ruTorrent diagnostics like permission checking (default `true`)
+* `RU_CACHED_PLUGIN_LOADING`: Set to `true` to enable rapid cached loading of ruTorrent plugins (default `false`)
 * `RU_SAVE_UPLOADED_TORRENTS`: Save torrents files added wia ruTorrent in `/data/rutorrent/share/torrents` (default `true`)
 * `RU_OVERWRITE_UPLOADED_TORRENTS`: Existing .torrent files will be overwritten (default `false`)
 * `RU_FORBID_USER_SETTINGS`: If true, allows for single user style configuration, even with webauth (default `false`)
@@ -182,8 +194,8 @@ following command:
 ```shell
 mkdir data downloads passwd
 chown ${PUID}:${PGID} data downloads passwd
-docker-compose up -d
-docker-compose logs -f
+docker compose up -d
+docker compose logs -f
 ```
 
 ### Command line
@@ -239,7 +251,7 @@ Htpasswd files used:
 * `rutorrent.htpasswd`: ruTorrent basic auth
 * `webdav.htpasswd`: WebDAV on completed downloads
 
-### Boostrap config `.rtlocal.rc`
+### Bootstrap config `.rtlocal.rc`
 
 When rTorrent is started the bootstrap config [/etc/rtorrent/.rtlocal.rc](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
 is imported. This configuration cannot be changed unless you rebuild the image
@@ -307,7 +319,7 @@ closed forcefully and the lockfile isn't removed. This stale lockfile will
 prevent rTorrent from restarting until the lockfile is removed manually.
 
 The timeout period can be extended by either adding the parameter `-t XX` to
-the docker command or `stop_grace_period: XXs` in docker-compose.yml, where
+the docker command or `stop_grace_period: XXs` in `compose.yml`, where
 `XX` is the number of seconds to wait for a graceful shutdown.
 
 ### WAN IP address
@@ -325,20 +337,66 @@ resolve your public IP address. Here are some commands you can use:
 * `curl -s ifconfig.me`
 * `curl -s ident.me` 
 
+### Configure rTorrent session saving
+
+`RT_SESSION_SAVE_SECONDS` is the seconds between writing torrent information to
+disk. The default is 3600 seconds which equals 1 hour. rTorrent has a bad
+default of 20 minutes. Twenty minutes is bad for the lifespan of SSDs and
+greatly reduces torrent throughput.
+
+It is no longer possible to lose torrents added through ruTorrent on this
+docker container. Only torrent statistics are lost during a crash. (Ratio,
+Total Uploaded & Downloaded etc.)
+
+Higher values will reduce disk usage, at the cost of minor stat loss during a
+crash. Consider increasing to 10800 seconds (3 hours) if running thousands of
+torrents.
+
+### rTorrent tracker scrape patch
+
+`RT_TRACKER_DELAY_SCRAPE` specifies whether to delay tracker announces at
+rTorrent startup. The default value is `true`. There are two main benefits to
+keeping this feature enabled:
+
+1) Software Stability: rTorrent will not crash or time-out with tens of thousands of trackers.
+2) Immediate Access: ruTorrent can be accessed immediately after rTorrent is started.
+
+### rTorrent send receive buffers
+
+Overriding the default TCP rmem and wmem values for rTorrent improves torrent
+throughput.
+
+* `RT_SEND_BUFFER_SIZE`: Sets default tcp wmem value for the socket.
+* `RT_RECEIVE_BUFFER_SIZE`: Sets default tcp rmem value for the socket.
+
+Recommended values:
+* `2GB of less system memory`: Reduce to 1M send and 1M receive regardless of speed.
+* `4GB to 16GB of system memory`: Keep at default values of 4M send and 4M receive.
+* `16GB to 32GB of system memory`: Increase to 8M send for 500Mbps speeds.
+* `32GB to 64GB of system memory`: Increase to 16M send for 1G speeds.
+* `64GB to 128GB of system memory`: Increase to 32M send for 2.5G speeds.
+* `128GB to 256GB of system memory`: Increase to 64M send for 10G speeds.
+
+Memory is better spent elsewhere except under limited circumstances for high
+memory and speed conditions. The default values should not be increased, unless
+both the memory and speed requirements are met. These values of system memory
+are also recommended based on the port speed for rTorrent to reduce disk usage.
+
 ## Upgrade
 
 To upgrade, pull the newer image and launch the container:
 
 ```shell
-docker-compose pull
-docker-compose up -d
+docker compose pull
+docker compose up -d
 ```
 
 ## Contributing
 
-Want to contribute? Awesome! The most basic way to show your support is to star the project, or to raise issues. You
-can also support this project by [**becoming a sponsor on GitHub**](https://github.com/sponsors/crazy-max) or by making
-a [Paypal donation](https://www.paypal.me/crazyws) to ensure this journey continues indefinitely!
+Want to contribute? Awesome! The most basic way to show your support is to star
+the project, or to raise issues. You can also support this project by [**becoming a sponsor on GitHub**](https://github.com/sponsors/crazy-max)
+or by making a [PayPal donation](https://www.paypal.me/crazyws) to ensure this
+journey continues indefinitely!
 
 Thanks again for your support, it is much appreciated! :pray:
 

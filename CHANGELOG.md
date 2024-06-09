@@ -1,5 +1,133 @@
 # Changelog
 
+## 4.3.2-3.1-r0 (2024/06/01)
+
+* rTorrent v3.1 (#355)
+
+## 4.3.2-3.0-r0 (2024/05/27)
+
+* ruTorrent v4.3.2 (#344)
+* Switch to [rTorrent stickz](https://github.com/stickz/rtorrent) repo (#347)
+* Disable listening for IPv6 ofr nginx (#349)
+
+## 4.3.1-0.9.8_3-0.13.8_2-r0 (2024/05/17)
+
+* ruTorrent v4.3.1 (#344)
+* Disallow ruTorrent `httprpc` core plugin removal (#346)
+
+## 4.3.0-0.9.8_3-0.13.8_2-r0 (2024/05/01)
+
+* Set `useInternalHybrid` ruTorrent setting to `true` (#341) 
+* Fix missing changes in `.rtlocal.rc` (#338)
+
+## 4.3.0-0.9.8_2-0.13.8_2-r0 (2024/04/27)
+
+* ruTorrent v4.3.0 (#327 #316)
+* rTorrent: Add TCP socket configurations (#322)
+* Add `php82-fileinfo` package (#325)
+* rTorrent: Set of patches to fix memory leaks (#308)
+* rTorrent: Fix memory access crash (#310)
+
+## 4.2.9-0.9.8_2-0.13.8_2-r0 (2023/12/27)
+
+* UDNS support (#303)
+* Fix PHP version in rtlocal.rc (#305)
+
+## 4.2.9-0.9.8_2-0.13.8_1-r0 (2023/12/23)
+
+* rTorrent: tracker scrape feature patch (#288)
+* Alpine Linux 3.19 and PHP 8.2 (#297)
+* cURL 8.5.0, c-ares 1.24.0 (#295)
+
+## 4.2.9-0.9.8_1-0.13.8_1-r0 (2023/12/17)
+
+* rTorrent patches
+  * Avoid stack overflow for lockfile buffer
+  * Increase maximum SCGI request to 16MB
+  * Fix saving session files
+  * Fix a common rtorrent xml-rpc crash when trying to queue an invalid task
+  * Resolve xmlrpc logic crash
+* libtorrent patches
+  * Allow 10 gigabit speed throttles
+
+## 4.2.9-0.9.8-0.13.8-r0 (2023/11/18)
+
+* ruTorrent v4.2.9 (#282)
+
+## 4.2.6-0.9.8-0.13.8-r0 (2023/09/24)
+
+* ruTorrent v4.2.6 (#266)
+
+## 4.2.5-0.9.8-0.13.8-r0 (2023/08/29)
+
+* ruTorrent v4.2.5 (#263)
+
+## 4.2.2-0.9.8-0.13.8-r0 (2023/08/13)
+
+* ruTorrent v4.2.2 (#260)
+
+## 4.1.7-0.9.8-0.13.8-r0 (2023/08/01)
+
+* ruTorrent v4.1.7 (#251 #248)
+* Alpine Linux 3.18 (#258)
+
+## 4.1.5-0.9.8-0.13.8-r1 (2023/05/17)
+
+* Improve session saving in rTorrent (#242)
+
+## 4.1.5-0.9.8-0.13.8-r0 (2023/05/02)
+
+* ruTorrent v4.1.5 (#238)
+* Optimize cURL build (#239)
+* Add `php81-dom` extension (#237)
+
+## 4.1.3-0.9.8-0.13.8-r0 (2023/04/27)
+
+* ruTorrent v4.1.3 (#235)
+
+## 4.0.4-0.9.8-0.13.8-r0 (2023/04/10)
+
+* ruTorrent v4.0.4 (#231)
+* Fix `RU_REMOVE_CORE_PLUGINS` defaults (#230)
+* Remove erase data workaround (#229)
+* Improve watch directory support (#219)
+
+## 4.0.2-0.9.8-0.13.8-r0 (2023/02/21)
+
+* ruTorrent v4.0.2-hotfix (#218)
+
+## 4.0.1-0.9.8-0.13.8-r1 (2023/02/05)
+
+* Set `$localHostedMode = true` (#215)
+
+## 4.0.1-0.9.8-0.13.8-r0 (2023/01/29)
+
+* ruTorrent v4.0.1-hotfix (#214)
+
+## 4.0-0.9.8-0.13.8-r0 (2023/01/11)
+
+* ruTorrent v4.0-stable (#208)
+* Update GeoIP2 ruTorrent plugin (#211)
+* Fix nginx logs folder perms (#207)
+
+## 3.10-0.9.8-0.13.8-r23 (2023/01/07)
+
+* Fix PHP version in `.rtlocal.rc` (#204)
+* Make rtorrent and libtorrent with `-O2 -flto` (#202)
+
+## 3.10-0.9.8-0.13.8-r22 (2023/01/02)
+
+* Install nginx and webdav module from Alpine repo (#200)
+* Fix xmlrpc-c build configuration (#198)
+
+## 3.10-0.9.8-0.13.8-r21 (2022/12/31)
+
+* Set `S6_KILL_GRACETIME` to 10 seconds (#171)
+* Alpine Linux 3.17 (#195)
+* PHP 8.1 (#195)
+* GeoIP2 PHP extension 1.3.1 (#195)
+* Nginx 1.22.1 (#195)
+
 ## 3.10-0.9.8-0.13.8-r20 (2022/05/02)
 
 * Fix unrar not available since alpine 3.15 (#161)
@@ -161,7 +289,7 @@
 
 * Switch to GitHub Actions
 * Stop publishing Docker image on Quay
-* Move boostrap (default) config for rTorrent to `/etc/rtorrent/.rtlocal.rc`
+* Move bootstrap (default) config for rTorrent to `/etc/rtorrent/.rtlocal.rc`
 * Run as non-root user
 * Prevent exposing nginx version
 * Set timezone through tzdata
@@ -169,10 +297,10 @@
 > :warning: **UPGRADE NOTES**
 > As the Docker container now runs as a non-root user, you have to first stop the container and change permissions to volumes:
 > ```
-> docker-compose stop
+> docker compose stop
 > chown -R 1000:1000 data/ passwd/
-> docker-compose pull
-> docker-compose up -d
+> docker compose pull
+> docker compose up -d
 > ```
 
 ## 3.9-0.9.8-0.13.8-RC3 (2019/09/04)
@@ -237,7 +365,7 @@
 
 * Add ruTorrent 3.8 web client
 * Add option to remove core plugins of ruTorrent (default `erasedata,httprpc`)
-* Add a boostrap (default) config for rTorrent in `/etc/.rtlocal.rc`
+* Add a bootstrap (default) config for rTorrent in `/etc/.rtlocal.rc`
 * Move `/var/rtorrent` to `/data/rtorrent`
 * Use Nginx WebDAV module instead of Apache
 * Compile Nginx from source for better performance
