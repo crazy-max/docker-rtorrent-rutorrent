@@ -44,6 +44,7 @@ ___
   * [Configure rTorrent session saving](#configure-rtorrent-session-saving)
   * [Configure rTorrent tracker scrape](#rtorrent-tracker-scrape-patch)
   * [Configure rTorrent send receive buffers](#rtorrent-send-receive-buffers)
+  * [Configure rTorrent disk space preallocation](#rtorrent-disk-space-preallocation)
 * [Upgrade](#upgrade)
 * [Contributing](#contributing)
 * [License](#license)
@@ -141,6 +142,7 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `RT_INC_PORT`: Incoming connections (`network.port_range.set`, default `50000`)
 * `RT_SEND_BUFFER_SIZE`: Sets default tcp wmem value (`network.send_buffer.size.set`, default `4M`)
 * `RT_RECEIVE_BUFFER_SIZE`: Sets default tcp rmem value (`network.receive_buffer.size.set`, default `4M`)
+* `RT_PREALLOCATE_TYPE`: Sets the type of [disk space preallocation](#rtorrent-disk-space-preallocation) (default `0`)
 
 ### ruTorrent
 
@@ -381,6 +383,27 @@ Memory is better spent elsewhere except under limited circumstances for high
 memory and speed conditions. The default values should not be increased, unless
 both the memory and speed requirements are met. These values of system memory
 are also recommended based on the port speed for rTorrent to reduce disk usage.
+
+### rTorrent disk space preallocation
+
+Preallocate disk space for contents of a torrent
+
+* `RT_PREALLOCATE_TYPE`: Sets the type of disk space preallocation to use.
+
+Acceptable values:
+* `0 = disabled (default value)`
+* `1 = enabled, allocate when a file is opened for write`
+* `2 = enabled, allocate space for the whole torrent at once`
+
+This feature is disabled by default becuase it only benefits HDDs.
+By allocating files in sequence we can increase the read speed for seeding.
+
+The first type "1" only allocates disk space for files which start downloading.
+Use where disk space is more important than speed. Or you intend to download selective torrent files.
+
+The second type "2" allocates disk space for the entire torrent, whether it's downloaded or not.
+This method is faster than "1" becuase it reduces random reads for the entire torrent.
+Use where speed is more important than disk space. Or you intend to download 100% of every torrent.
 
 ## Upgrade
 
