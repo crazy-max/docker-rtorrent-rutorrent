@@ -44,7 +44,7 @@ ARG RTORRENT_STICKZ_VERSION
 RUN git fetch origin "${RTORRENT_STICKZ_VERSION}" && git checkout -q FETCH_HEAD
 
 FROM src AS src-mktorrent
-RUN git init . && git remote add origin "https://github.com/esmil/mktorrent.git"
+RUN git init . && git remote add origin "https://github.com/pobrn/mktorrent.git"
 ARG MKTORRENT_VERSION
 RUN git fetch origin "${MKTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 
@@ -150,7 +150,11 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/mktorrent
 COPY --from=src-mktorrent /src .
-RUN make -j$(nproc) CC=gcc CFLAGS="-w -O3 -flto"
+RUN echo "CC = gcc" >> Makefile	
+RUN echo "CFLAGS = -w -flto -O3" >> Makefile
+RUN echo "USE_PTHREADS = 1" >> Makefile
+RUN echo "USE_OPENSSL = 1" >> Makefile
+RUN make -j$(nproc)
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
