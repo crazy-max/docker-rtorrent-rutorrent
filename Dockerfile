@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ARG LIBSIG_VERSION=3.0.3
-ARG CARES_VERSION=1.24.0
+ARG CARES_VERSION=1.31.0
 ARG CURL_VERSION=8.5.0
 ARG XMLRPC_VERSION=01.58.00
 ARG MKTORRENT_VERSION=v1.1
@@ -27,7 +27,7 @@ RUN curl -sSL "https://download.gnome.org/sources/libsigc%2B%2B/3.0/libsigc%2B%2
 
 FROM src AS src-cares
 ARG CARES_VERSION
-RUN curl -sSL "https://github.com/c-ares/c-ares/releases/download/cares-${CARES_VERSION//\./\_}/c-ares-${CARES_VERSION}.tar.gz" | tar xz --strip 1
+RUN curl -sSL "https://github.com/c-ares/c-ares/releases/download/v${CARES_VERSION}/c-ares-${CARES_VERSION}.tar.gz" | tar xz --strip 1
 
 FROM src AS src-xmlrpc
 RUN git init . && git remote add origin "https://github.com/crazy-max/xmlrpc-c.git"
