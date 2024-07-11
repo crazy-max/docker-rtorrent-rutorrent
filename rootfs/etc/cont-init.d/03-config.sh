@@ -253,7 +253,7 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 \$scgi_port = 0;
 \$scgi_host = "unix:///var/run/rtorrent/scgi.socket";
 \$XMLRPCMountPoint = "/RPC2"; // DO NOT DELETE THIS LINE!!! DO NOT COMMENT THIS LINE!!!
-\$throttleMaxSpeed = 327625*1024; // DO NOT EDIT THIS LINE!!! DO NOT COMMENT THIS LINE!!!
+\$throttleMaxSpeed = 4294967294; // DO NOT EDIT THIS LINE!!! DO NOT COMMENT THIS LINE!!!
 
 \$pathToExternals = array(
     "php"    => '',
