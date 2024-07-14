@@ -11,7 +11,7 @@
 
 ## About
 
-[rTorrent](https://github.com/rakshasa/rtorrent) with [ruTorrent](https://github.com/Novik/ruTorrent)
+[stickz rTorrent](https://github.com/stickz/rtorrent) with [ruTorrent](https://github.com/Novik/ruTorrent)
 Docker image.
 
 > [!TIP] 
