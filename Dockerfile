@@ -11,8 +11,8 @@ ARG GEOIP2_PHPEXT_VERSION=1.3.1
 ARG RUTORRENT_VERSION=9bf6e15c4864a71ff9e9ca5ea689fd001931279b
 ARG GEOIP2_RUTORRENT_VERSION=4ff2bde530bb8eef13af84e4413cedea97eda148
 
-# v5.1-0.9.8-0.13.8
-ARG RTORRENT_STICKZ_VERSION=278362bd83aebbf20be15c29c1d5085f7c383ff5
+# v5.3-0.9.8-0.13.8
+ARG RTORRENT_STICKZ_VERSION=effa2f24b0c6674d9e649dc626b659f4bd43c7b2
 
 ARG ALPINE_VERSION=3.19
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
@@ -134,7 +134,7 @@ COPY --from=src-rtorrent /src .
 
 WORKDIR /usr/local/src/rtorrent/libtorrent
 RUN ./autogen.sh
-RUN ./configure --with-posix-fallocate --enable-aligned
+RUN ./configure --enable-aligned --disable-instrumentation
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
