@@ -7,9 +7,10 @@ ARG XMLRPC_VERSION=01.58.00
 ARG MKTORRENT_VERSION=v1.1
 ARG GEOIP2_PHPEXT_VERSION=1.3.1
 
-# v4.3.6
-ARG RUTORRENT_VERSION=31c8d351002fb1bdcd71c0652aa516384d330712
+# v5.1.0
+ARG RUTORRENT_VERSION=84a98bfdd4380319fa1cac0a08ec8b137c494f72
 ARG GEOIP2_RUTORRENT_VERSION=4ff2bde530bb8eef13af84e4413cedea97eda148
+ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
 
 # v6.1-0.9.8-0.13.8
 ARG RTORRENT_STICKZ_VERSION=7e852c88465682864ef80d86f1d085d932ef3d89
@@ -18,7 +19,7 @@ ARG ALPINE_VERSION=3.19
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
 
 FROM --platform=${BUILDPLATFORM} alpine:${ALPINE_VERSION} AS src
-RUN apk --update --no-cache add curl git tar tree xz
+RUN apk --update --no-cache add curl git tar tree sed xz
 WORKDIR /src
 
 FROM src AS src-libsig
@@ -68,6 +69,13 @@ RUN rm -rf .git*
 FROM src AS src-mmdb
 RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
   && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-Country.mmdb"
+
+FROM src AS src-dump-torrent
+RUN git init . && git remote add origin "https://github.com/TheGoblinHero/dumptorrent.git"
+ARG DUMP_TORRENT_VERSION
+RUN git fetch origin "${DUMP_TORRENT_VERSION}" && git checkout -q FETCH_HEAD
+RUN sed -i '1i #include <sys/time.h>' scrapec.c
+RUN rm -rf .git*
 
 FROM crazymax/alpine-s6:${ALPINE_S6_VERSION} AS builder
 RUN apk --update --no-cache add \
@@ -170,6 +178,12 @@ RUN <<EOT
 EOT
 RUN mkdir -p ${DIST_PATH}/usr/lib/php82/modules
 RUN cp -f /usr/lib/php82/modules/geoip.so ${DIST_PATH}/usr/lib/php82/modules/
+RUN tree ${DIST_PATH}
+
+WORKDIR /usr/local/src/dump-torrent
+COPY --from=src-dump-torrent /src .
+RUN make dumptorrent -j$(nproc)
+RUN cp dumptorrent ${DIST_PATH}/usr/local/bin
 RUN tree ${DIST_PATH}
 
 FROM crazymax/alpine-s6:${ALPINE_S6_VERSION}
