@@ -12,8 +12,8 @@ ARG RUTORRENT_VERSION=12eb2cfba5846714cc9909865ceba3a7c1db0de7
 ARG GEOIP2_RUTORRENT_VERSION=4ff2bde530bb8eef13af84e4413cedea97eda148
 ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
 
-# v6.1-0.9.8-0.13.8
-ARG RTORRENT_STICKZ_VERSION=7e852c88465682864ef80d86f1d085d932ef3d89
+# v6.2-0.9.8-0.13.8
+ARG RTORRENT_STICKZ_VERSION=0165b4b6dde384d30c2b41ae6d6a2cd23b55c71e
 
 ARG ALPINE_VERSION=3.19
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
@@ -216,7 +216,6 @@ RUN apk --update --no-cache add \
     brotli \
     ca-certificates \
     coreutils \
-    cppunit-dev \
     dhclient \
     ffmpeg \
     findutils \
