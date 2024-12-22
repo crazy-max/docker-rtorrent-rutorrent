@@ -123,7 +123,7 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/curl
 COPY --from=src-curl /src .
-RUN cmake . -D ENABLE_ARES=ON CURL_LTO=ON -D CURL_USE_OPENSSL=ON -D CURL_BROTLI=ON -D CURL_ZSTD=ON -D BUILD_SHARED_LIBS=ON -D CMAKE_BUILD_TYPE:STRING="Release" -D CMAKE_C_FLAGS_RELEASE:STRING="-O3 -flto=\"$(nproc)\" -pipe"
+RUN cmake . -D ENABLE_ARES=ON -D CURL_LTO=ON -D CURL_USE_OPENSSL=ON -D CURL_BROTLI=ON -D CURL_ZSTD=ON -D BUILD_SHARED_LIBS=ON -D CMAKE_BUILD_TYPE:STRING="Release" -D CMAKE_C_FLAGS_RELEASE:STRING="-O3 -flto=\"$(nproc)\" -pipe"
 RUN cmake --build . --clean-first --parallel $(nproc)
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
