@@ -15,7 +15,7 @@ ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
 # v6.2-0.9.8-0.13.8
 ARG RTORRENT_STICKZ_VERSION=0165b4b6dde384d30c2b41ae6d6a2cd23b55c71e
 
-ARG ALPINE_VERSION=3.19
+ARG ALPINE_VERSION=3.20
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
 
 FROM --platform=${BUILDPLATFORM} alpine:${ALPINE_VERSION} AS src
@@ -95,8 +95,8 @@ RUN apk --update --no-cache add \
     nghttp2-dev \
     openssl-dev \
     pcre-dev \
-    php82-dev \
-    php82-pear \
+    php83-dev \
+    php83-pear \
     tar \
     tree \
     udns-dev \
@@ -171,13 +171,13 @@ WORKDIR /usr/local/src/geoip2-phpext
 COPY --from=src-geoip2-phpext /src .
 RUN <<EOT
   set -e
-  phpize82
+  phpize83
   ./configure
   make
   make install
 EOT
-RUN mkdir -p ${DIST_PATH}/usr/lib/php82/modules
-RUN cp -f /usr/lib/php82/modules/geoip.so ${DIST_PATH}/usr/lib/php82/modules/
+RUN mkdir -p ${DIST_PATH}/usr/lib/php83/modules
+RUN cp -f /usr/lib/php83/modules/geoip.so ${DIST_PATH}/usr/lib/php83/modules/
 RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/dump-torrent
@@ -229,21 +229,21 @@ RUN apk --update --no-cache add \
     nginx-mod-http-dav-ext \
     nginx-mod-http-geoip2 \
     openssl \
-    php82 \
-    php82-bcmath \
-    php82-ctype \
-    php82-curl \
-    php82-dom \
-    php82-fileinfo \
-    php82-fpm \
-    php82-mbstring \
-    php82-openssl \
-    php82-phar \
-    php82-posix \
-    php82-session \
-    php82-sockets \
-    php82-xml \
-    php82-zip \
+    php83 \
+    php83-bcmath \
+    php83-ctype \
+    php83-curl \
+    php83-dom \
+    php83-fileinfo \
+    php83-fpm \
+    php83-mbstring \
+    php83-openssl \
+    php83-phar \
+    php83-posix \
+    php83-session \
+    php83-sockets \
+    php83-xml \
+    php83-zip \
     python3 \
     py3-pip \
     shadow \
