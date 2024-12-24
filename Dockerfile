@@ -3,7 +3,6 @@
 ARG LIBSIG_VERSION=3.0.3
 ARG CARES_VERSION=1.34.4
 ARG CURL_VERSION=8.11.1
-ARG XMLRPC_VERSION=01.58.00
 ARG MKTORRENT_VERSION=v1.1
 ARG GEOIP2_PHPEXT_VERSION=1.3.1
 
@@ -12,8 +11,8 @@ ARG RUTORRENT_VERSION=25679a45a1e2ca9f7a9e01cab5cc554b8eaa7230
 ARG GEOIP2_RUTORRENT_VERSION=4ff2bde530bb8eef13af84e4413cedea97eda148
 ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
 
-# v6.3-0.9.8-0.13.8
-ARG RTORRENT_STICKZ_VERSION=ddbbe8a03fb94cf95ab9a6d7fd5c60e51c0353ba
+# v7.0-0.9.8-0.13.8
+ARG RTORRENT_STICKZ_VERSION=5bac501e336ec43cf81e00ff860eb0157cc6291a
 
 ARG ALPINE_VERSION=3.21
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
@@ -29,11 +28,6 @@ RUN curl -sSL "https://download.gnome.org/sources/libsigc%2B%2B/3.0/libsigc%2B%2
 FROM src AS src-cares
 ARG CARES_VERSION
 RUN curl -sSL "https://github.com/c-ares/c-ares/releases/download/v${CARES_VERSION}/c-ares-${CARES_VERSION}.tar.gz" | tar xz --strip 1
-
-FROM src AS src-xmlrpc
-RUN git init . && git remote add origin "https://github.com/crazy-max/xmlrpc-c.git"
-ARG XMLRPC_VERSION
-RUN git fetch origin "${XMLRPC_VERSION}" && git checkout -q FETCH_HEAD
 
 FROM src AS src-curl
 ARG CURL_VERSION
@@ -129,14 +123,6 @@ RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
-WORKDIR /usr/local/src/xmlrpc
-COPY --from=src-xmlrpc /src .
-RUN ./configure --disable-wininet-client --disable-libwww-client --disable-cplusplus --disable-abyss-server --disable-cgi-server
-RUN make -j$(nproc) CFLAGS="-w -O3 -flto" CXXFLAGS="-w -O3 -flto"
-RUN make install -j$(nproc)
-RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
-RUN tree ${DIST_PATH}
-
 WORKDIR /usr/local/src/rtorrent
 COPY --from=src-rtorrent /src .
 
@@ -150,7 +136,7 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/rtorrent/rtorrent
 RUN ./autogen.sh
-RUN ./configure --with-xmlrpc-c --with-ncurses
+RUN ./configure --with-xmlrpc-tinyxml2 --with-ncurses
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
