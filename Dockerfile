@@ -15,7 +15,7 @@ ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
 # v6.3-0.9.8-0.13.8
 ARG RTORRENT_STICKZ_VERSION=ddbbe8a03fb94cf95ab9a6d7fd5c60e51c0353ba
 
-ARG ALPINE_VERSION=3.20
+ARG ALPINE_VERSION=3.21
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
 
 FROM --platform=${BUILDPLATFORM} alpine:${ALPINE_VERSION} AS src
@@ -205,9 +205,11 @@ RUN echo "net.core.rmem_max = 67108864" >> /etc/sysctl.conf \
   && sysctl -p
 
 # unrar package is not available since alpine 3.15
+# dhclient package is not available since alpine 3.21
 RUN echo "@314 http://dl-cdn.alpinelinux.org/alpine/v3.14/main" >> /etc/apk/repositories \
-  && apk --update --no-cache add unrar@314
-
+  && echo "@320 http://dl-cdn.alpinelinux.org/alpine/v3.20/main" >> /etc/apk/repositories \
+  && apk --update --no-cache add unrar@314 dhclient@320
+  
 RUN apk --update --no-cache add \
     apache2-utils \
     bash \
@@ -216,7 +218,6 @@ RUN apk --update --no-cache add \
     brotli \
     ca-certificates \
     coreutils \
-    dhclient \
     ffmpeg \
     findutils \
     geoip \
