@@ -4,6 +4,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
+permissions:
+  contents: read
+
 on:
   schedule:
     - cron: '0 8 */6 * *' # every 6 days to keep cache
@@ -43,6 +47,11 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    permissions:
+      # same as global permissions
+      contents: read
+      # required to push to GHCR
+      packages: write
     timeout-minutes: 480
     needs:
       - prepare
@@ -143,6 +152,11 @@ jobs:
   merge:
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
+    permissions:
+      # same as global permissions
+      contents: read
+      # required to push to GHCR
+      packages: write
     needs:
       - build
     steps:
