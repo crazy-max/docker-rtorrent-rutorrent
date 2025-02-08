@@ -123,7 +123,7 @@ jobs:
       -
         name: Build
         id: bake
-        uses: docker/bake-action@v5
+        uses: docker/bake-action@v6
         with:
           files: |
             ./docker-bake.hcl
