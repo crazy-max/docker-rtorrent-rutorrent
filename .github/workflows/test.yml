@@ -37,8 +37,9 @@ jobs:
         uses: docker/setup-buildx-action@v3
       -
         name: Build
-        uses: docker/bake-action@v5
+        uses: docker/bake-action@v6
         with:
+          source: .
           targets: image-local
           set: |
             *.cache-from=type=gha,scope=build-linux-amd64
