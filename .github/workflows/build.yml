@@ -35,30 +35,12 @@ jobs:
       matrix:
         include:
           -
-            image: crazymax/rtorrent-rutorrent
-            login-registry: docker.io
-            login-username: crazymax
-            login-secret-key: DOCKER_PASSWORD
-          -
             image: ghcr.io/crazy-max/rtorrent-rutorrent
             login-registry: ghcr.io
             login-username: ${{ github.repository_owner }}
             login-secret-key: GITHUB_TOKEN
     with:
-      target: image-all
+      target: linux/arm/v7
       push: ${{ github.event_name != 'pull_request' }}
       cache: true
       cache-scope: build
-      meta-image: ${{ matrix.image }}
-      meta-tags: |
-        type=match,pattern=(.*)-r,group=1
-        type=ref,event=pr
-        type=edge
-      meta-labels: |
-        org.opencontainers.image.title=rTorrent and ruTorrent
-        org.opencontainers.image.description=rTorrent and ruTorrent
-        org.opencontainers.image.vendor=CrazyMax
-      login-registry: ${{ matrix.login-registry }}
-      login-username: ${{ matrix.login-username }}
-    secrets:
-      login-password: ${{ secrets[matrix.login-secret-key] }}
