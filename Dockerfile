@@ -11,8 +11,9 @@ ARG RUTORRENT_VERSION=cc07f10d62e9348fdc3438a17939155c581e4dfe
 ARG GEOIP2_RUTORRENT_VERSION=4ff2bde530bb8eef13af84e4413cedea97eda148
 ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
 
-# v7.2-0.9.8-0.13.8
-ARG RTORRENT_STICKZ_VERSION=2f99fa971d65aabc14a367ef077be58cd859bc79
+# rtorrent and libtorrent version 0.15.3
+ARG LIBTORRENT_VERSION=0cb559ea23fa67ded8aea69c93cba50ae0ab243f
+ARG RTORRENT_VERSION=6f8c1246dc013d1d5c39ecd66373346ac42fe746
 
 ARG ALPINE_VERSION=3.21
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
@@ -33,10 +34,15 @@ FROM src AS src-curl
 ARG CURL_VERSION
 RUN curl -sSL "https://curl.se/download/curl-${CURL_VERSION}.tar.gz" | tar xz --strip 1
 
+FROM src AS src-libtorrent
+RUN git init . && git remote add origin "https://github.com/rakshasa/libtorrent.git"
+ARG LIBTORRENT_VERSION
+RUN git fetch origin "${LIBTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+
 FROM src AS src-rtorrent
-RUN git init . && git remote add origin "https://github.com/stickz/rtorrent.git"
-ARG RTORRENT_STICKZ_VERSION
-RUN git fetch origin "${RTORRENT_STICKZ_VERSION}" && git checkout -q FETCH_HEAD
+RUN git init . && git remote add origin "https://github.com/rakshasa/rtorrent.git"
+ARG RTORRENT_VERSION
+RUN git fetch origin "${RTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 
 FROM src AS src-mktorrent
 RUN git init . && git remote add origin "https://github.com/pobrn/mktorrent.git"
@@ -93,7 +99,6 @@ RUN apk --update --no-cache add \
     php83-pear \
     tar \
     tree \
-    udns-dev \
     xz \
     zlib-dev
 
@@ -123,19 +128,18 @@ RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
-WORKDIR /usr/local/src/rtorrent
-COPY --from=src-rtorrent /src .
-
-WORKDIR /usr/local/src/rtorrent/libtorrent
-RUN ./autogen.sh
-RUN ./configure --enable-aligned --disable-instrumentation --enable-udns
+WORKDIR /usr/local/src/libtorrent
+COPY --from=src-libtorrent /src .
+RUN autoreconf -vfi
+RUN ./configure --enable-aligned
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
-WORKDIR /usr/local/src/rtorrent/rtorrent
-RUN ./autogen.sh
+WORKDIR /usr/local/src/rtorrent
+COPY --from=src-rtorrent /src .
+RUN autoreconf -vfi
 RUN ./configure --with-xmlrpc-tinyxml2 --with-ncurses
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make install -j$(nproc)
@@ -237,7 +241,6 @@ RUN apk --update --no-cache add \
     sox \
     tar \
     tzdata \
-    udns \
     unzip \
     util-linux \
     zip \
