@@ -11,8 +11,9 @@ ARG RUTORRENT_VERSION=cc07f10d62e9348fdc3438a17939155c581e4dfe
 ARG GEOIP2_RUTORRENT_VERSION=4ff2bde530bb8eef13af84e4413cedea97eda148
 ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
 
-# rtorrent and libtorrent version 0.15.3
+# libtorrent v0.15.3
 ARG LIBTORRENT_VERSION=0cb559ea23fa67ded8aea69c93cba50ae0ab243f
+# rtorrent v0.15.3
 ARG RTORRENT_VERSION=6f8c1246dc013d1d5c39ecd66373346ac42fe746
 
 ARG ALPINE_VERSION=3.21
@@ -148,7 +149,7 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/mktorrent
 COPY --from=src-mktorrent /src .
-RUN echo "CC = gcc" >> Makefile	
+RUN echo "CC = gcc" >> Makefile
 RUN echo "CFLAGS = -w -flto -O3" >> Makefile
 RUN echo "USE_PTHREADS = 1" >> Makefile
 RUN echo "USE_OPENSSL = 1" >> Makefile
@@ -199,7 +200,7 @@ RUN echo "net.core.rmem_max = 67108864" >> /etc/sysctl.conf \
 RUN echo "@314 http://dl-cdn.alpinelinux.org/alpine/v3.14/main" >> /etc/apk/repositories \
   && echo "@320 http://dl-cdn.alpinelinux.org/alpine/v3.20/main" >> /etc/apk/repositories \
   && apk --update --no-cache add unrar@314 dhclient@320
-  
+
 RUN apk --update --no-cache add \
     apache2-utils \
     bash \

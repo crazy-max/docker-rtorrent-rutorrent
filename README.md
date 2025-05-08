@@ -11,7 +11,7 @@
 
 ## About
 
-[stickz rTorrent](https://github.com/stickz/rtorrent) with [ruTorrent](https://github.com/Novik/ruTorrent)
+[rTorrent](https://github.com/rakshasa/rtorrent) with [ruTorrent](https://github.com/Novik/ruTorrent)
 Docker image.
 
 > [!TIP] 
@@ -53,9 +53,7 @@ ___
 
 * Run as non-root user
 * Multi-platform image
-* Latest rTorrent and libTorrent from [rTorrent stickz](https://github.com/stickz/rtorrent) project.
-  * Includes significant performance and stability improvements.
-  * Includes compatibility with Link Time Optimizations.
+* Latest [rTorrent](https://github.com/rakshasa/rtorrent) / [libTorrent](https://github.com/rakshasa/libtorrent) release compiled from source
 * Latest [ruTorrent](https://github.com/Novik/ruTorrent) release
 * Domain name resolving enhancements with [c-ares](https://github.com/rakshasa/rtorrent/wiki/Performance-Tuning#rtrorrent-with-c-ares) and [UDNS](https://www.corpit.ru/mjt/udns.html) for asynchronous DNS requests
 * Enhanced [rTorrent config](rootfs/tpls/.rtorrent.rc) and bootstraping with a [local config](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
