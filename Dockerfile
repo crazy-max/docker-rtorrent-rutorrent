@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1
 
 ARG LIBSIG_VERSION=3.0.3
-ARG CARES_VERSION=1.34.4
-ARG CURL_VERSION=8.11.1
+ARG CARES_VERSION=1.34.5
+ARG CURL_VERSION=8.12.1
 ARG MKTORRENT_VERSION=v1.1
 ARG GEOIP2_PHPEXT_VERSION=1.3.1
 
@@ -89,6 +89,7 @@ RUN apk --update --no-cache add \
     cmake \
     gd-dev \
     geoip-dev \
+    libpsl-dev \
     libtool \
     libxslt-dev \
     linux-headers \
