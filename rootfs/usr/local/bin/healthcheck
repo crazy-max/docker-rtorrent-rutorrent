@@ -2,7 +2,7 @@
 set -e
 
 # rTorrent
-curl --fail -d "<?xml version='1.0'?><methodCall><methodName>system.api_version</methodName></methodCall>" http://127.0.0.1:8001
+curl --fail -H "Content-Type: text/xml" -d "<?xml version='1.0'?><methodCall><methodName>system.api_version</methodName></methodCall>" http://127.0.0.1:8001
 
 # ruTorrent / PHP
 curl --fail http://127.0.0.1:8081/ping
