@@ -49,6 +49,7 @@ jobs:
       push: ${{ github.event_name != 'pull_request' }}
       cache: true
       cache-scope: build
+      set-meta-labels: true
       meta-image: ${{ matrix.image }}
       meta-tags: |
         type=match,pattern=(.*)-r,group=1
