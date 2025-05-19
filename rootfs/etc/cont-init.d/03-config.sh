@@ -130,7 +130,7 @@ cat > /usr/local/bin/healthcheck <<EOL
 set -e
 
 # rTorrent
-curl --fail -d "<?xml version='1.0'?><methodCall><methodName>system.api_version</methodName></methodCall>" http://127.0.0.1:${XMLRPC_HEALTH_PORT}
+curl --fail -H "Content-Type: text/xml" -d "<?xml version='1.0'?><methodCall><methodName>system.api_version</methodName></methodCall>" http://127.0.0.1:${XMLRPC_HEALTH_PORT}
 
 # ruTorrent / PHP
 curl --fail http://127.0.0.1:${RUTORRENT_HEALTH_PORT}/ping
@@ -312,7 +312,7 @@ if [ "$RU_REMOVE_CORE_PLUGINS" != "false" ]; then
       echo "Warning: skipping core plugin httprpc, required for ruTorrent v4.3+ operation"
       echo "Please remove httprpc from RU_REMOVE_CORE_PLUGINS environment varriable"
       continue;
-    fi      
+    fi
     echo "Removing core plugin $i..."
     rm -rf "/var/www/rutorrent/plugins/${i}"
   done
