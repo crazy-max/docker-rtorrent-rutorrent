@@ -11,10 +11,13 @@ ARG RUTORRENT_VERSION=b9b5872fb17169f3ddb76529b174a2a267a13774
 ARG GEOIP2_RUTORRENT_VERSION=4ff2bde530bb8eef13af84e4413cedea97eda148
 ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
 
-# libtorrent v0.15.3
-ARG LIBTORRENT_VERSION=0cb559ea23fa67ded8aea69c93cba50ae0ab243f
-# rtorrent v0.15.3
-ARG RTORRENT_VERSION=6f8c1246dc013d1d5c39ecd66373346ac42fe746
+# libtorrent v0.15.4 with stability patches
+# https://github.com/rakshasa/libtorrent/compare/0a4908ab52f2332703a8ef67f636b3d46c8bd127...a0a364e2863356f51d41a27ce7620471666c5c56
+ARG LIBTORRENT_VERSION=a0a364e2863356f51d41a27ce7620471666c5c56
+
+# rtorrent v0.15.4 with stability patches
+# https://github.com/rakshasa/rtorrent/compare/537c692f47274f970278478dab5f365954f1a0bd...231606afc16eef08ec1a344a7aaef7504343bb71
+ARG RTORRENT_VERSION=231606afc16eef08ec1a344a7aaef7504343bb71
 
 ARG ALPINE_VERSION=3.21
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
@@ -96,7 +99,6 @@ RUN apk --update --no-cache add \
     ncurses-dev \
     nghttp2-dev \
     openssl-dev \
-    patch \
     pcre-dev \
     php83-dev \
     php83-pear \
@@ -133,8 +135,6 @@ RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/libtorrent
 COPY --from=src-libtorrent /src .
-COPY /patches/libtorrent .
-RUN patch -p1 < libtorrent-0.15.3-resume-fix.patch
 RUN autoreconf -vfi
 RUN ./configure --enable-aligned
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
