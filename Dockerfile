@@ -19,7 +19,7 @@ ARG LIBTORRENT_VERSION=a0a364e2863356f51d41a27ce7620471666c5c56
 # https://github.com/rakshasa/rtorrent/compare/537c692f47274f970278478dab5f365954f1a0bd...231606afc16eef08ec1a344a7aaef7504343bb71
 ARG RTORRENT_VERSION=231606afc16eef08ec1a344a7aaef7504343bb71
 
-ARG ALPINE_VERSION=3.21
+ARG ALPINE_VERSION=3.22
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
 
 FROM --platform=${BUILDPLATFORM} alpine:${ALPINE_VERSION} AS src
@@ -100,12 +100,15 @@ RUN apk --update --no-cache add \
     nghttp2-dev \
     openssl-dev \
     pcre-dev \
-    php83-dev \
-    php83-pear \
+    php84-dev \
+    php84-pear \
     tar \
     tree \
     xz \
     zlib-dev
+	
+RUN ln -s /usr/bin/php84 /usr/bin/php \
+ && ln -s /usr/bin/php-config84 /usr/bin/php-config
 
 ENV DIST_PATH="/dist"
 
@@ -166,13 +169,13 @@ WORKDIR /usr/local/src/geoip2-phpext
 COPY --from=src-geoip2-phpext /src .
 RUN <<EOT
   set -e
-  phpize83
+  phpize84
   ./configure
   make
   make install
 EOT
-RUN mkdir -p ${DIST_PATH}/usr/lib/php83/modules
-RUN cp -f /usr/lib/php83/modules/geoip.so ${DIST_PATH}/usr/lib/php83/modules/
+RUN mkdir -p ${DIST_PATH}/usr/lib/php84/modules
+RUN cp -f /usr/lib/php84/modules/geoip.so ${DIST_PATH}/usr/lib/php84/modules/
 RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/dump-torrent
@@ -225,21 +228,21 @@ RUN apk --update --no-cache add \
     nginx-mod-http-dav-ext \
     nginx-mod-http-geoip2 \
     openssl \
-    php83 \
-    php83-bcmath \
-    php83-ctype \
-    php83-curl \
-    php83-dom \
-    php83-fileinfo \
-    php83-fpm \
-    php83-mbstring \
-    php83-openssl \
-    php83-phar \
-    php83-posix \
-    php83-session \
-    php83-sockets \
-    php83-xml \
-    php83-zip \
+    php84 \
+    php84-bcmath \
+    php84-ctype \
+    php84-curl \
+    php84-dom \
+    php84-fileinfo \
+    php84-fpm \
+    php84-mbstring \
+    php84-openssl \
+    php84-phar \
+    php84-posix \
+    php84-session \
+    php84-sockets \
+    php84-xml \
+    php84-zip \
     python3 \
     py3-pip \
     shadow \
@@ -254,6 +257,7 @@ RUN apk --update --no-cache add \
   && addgroup -g ${PGID} rtorrent \
   && adduser -D -H -u ${PUID} -G rtorrent -s /bin/sh rtorrent \
   && curl --version \
+  && ln -s /usr/bin/php84 /usr/bin/php \
   && rm -rf /tmp/*
 
 COPY rootfs /
