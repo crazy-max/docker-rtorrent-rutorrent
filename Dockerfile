@@ -11,13 +11,13 @@ ARG RUTORRENT_VERSION=e839191876b8d950dc2c6617cdfb2b726979d44e
 ARG GEOIP2_RUTORRENT_VERSION=4ff2bde530bb8eef13af84e4413cedea97eda148
 ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
 
-# libtorrent v0.15.4 with stability patches
-# https://github.com/rakshasa/libtorrent/compare/0a4908ab52f2332703a8ef67f636b3d46c8bd127...a0a364e2863356f51d41a27ce7620471666c5c56
-ARG LIBTORRENT_VERSION=a0a364e2863356f51d41a27ce7620471666c5c56
+# libtorrent v0.15.5
+ARG LIBTORRENT_BRANCH=stable-0.15
+ARG LIBTORRENT_VERSION=5737d5e283278a39f13de4fa65ecb3536937aa0c
 
-# rtorrent v0.15.4 with stability patches
-# https://github.com/rakshasa/rtorrent/compare/537c692f47274f970278478dab5f365954f1a0bd...231606afc16eef08ec1a344a7aaef7504343bb71
-ARG RTORRENT_VERSION=231606afc16eef08ec1a344a7aaef7504343bb71
+# rtorrent v0.15.5
+ARG RTORRENT_BRANCH=stable-0.15
+ARG RTORRENT_VERSION=4463bf418e21a8bb9a205651d980d772809550a9
 
 ARG ALPINE_VERSION=3.22
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
@@ -39,14 +39,16 @@ ARG CURL_VERSION
 RUN curl -sSL "https://curl.se/download/curl-${CURL_VERSION}.tar.gz" | tar xz --strip 1
 
 FROM src AS src-libtorrent
-RUN git init . && git remote add origin "https://github.com/rakshasa/libtorrent.git"
+ARG LIBTORRENT_BRANCH
+RUN git clone -b "${LIBTORRENT_BRANCH}" "https://github.com/rakshasa/libtorrent.git" .
 ARG LIBTORRENT_VERSION
-RUN git fetch origin "${LIBTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+RUN git reset --hard "${LIBTORRENT_VERSION}"
 
 FROM src AS src-rtorrent
-RUN git init . && git remote add origin "https://github.com/rakshasa/rtorrent.git"
+ARG RTORRENT_BRANCH
+RUN git clone -b "${RTORRENT_BRANCH}" "https://github.com/rakshasa/rtorrent.git" .
 ARG RTORRENT_VERSION
-RUN git fetch origin "${RTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+RUN git reset --hard "${RTORRENT_VERSION}"
 
 FROM src AS src-mktorrent
 RUN git init . && git remote add origin "https://github.com/pobrn/mktorrent.git"
