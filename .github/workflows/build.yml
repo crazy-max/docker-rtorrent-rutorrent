@@ -61,5 +61,8 @@ jobs:
         org.opencontainers.image.vendor=CrazyMax
       login-registry: ${{ matrix.login-registry }}
       login-username: ${{ matrix.login-username }}
+      buildx-driver-opts: |
+        image=crazymax/buildkit:cachev2
+      buildkitd-flags: --debug
     secrets:
       login-password: ${{ secrets[matrix.login-secret-key] }}
