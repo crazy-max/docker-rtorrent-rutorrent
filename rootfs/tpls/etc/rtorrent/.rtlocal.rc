@@ -23,6 +23,10 @@ session.path.set = (cat,(cfg.session))
 # PID file
 execute.nothrow = sh,-c,(cat,"echo >",(cfg.rundir),"rtorrent.pid"," ",(system.pid))
 
+# Bind address
+# FIXME: remove once https://github.com/rakshasa/rtorrent/issues/1569 is fixed
+network.bind_address.set = 0.0.0.0
+
 # SCGI socket and make it group-writable and secure
 network.scgi.open_local = (cat, (cfg.rundir), "scgi.socket")
 schedule2 = scgi_permission, 0, 0, (cat,"execute.nothrow=chmod,\"g+w,o=\",",(cfg.rundir),"scgi.socket")
