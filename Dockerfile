@@ -12,7 +12,7 @@ ARG GEOIP2_PHPEXT_VERSION=1.3.1
 
 ARG RUTORRENT_VERSION=v5.2.10
 ARG GEOIP2_RUTORRENT_VERSION=4ff2bde530bb8eef13af84e4413cedea97eda148
-ARG DUMP_TORRENT_VERSION=302ac444a20442edb4aeabef65b264a85ab88ce9
+ARG DUMPTORRENT_VERSION=v1.7.0
 
 ARG ALPINE_VERSION=3.22
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
@@ -69,11 +69,11 @@ FROM src AS src-mmdb
 RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
   && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-Country.mmdb"
 
-FROM src AS src-dump-torrent
-RUN git init . && git remote add origin "https://github.com/TheGoblinHero/dumptorrent.git"
-ARG DUMP_TORRENT_VERSION
-RUN git fetch origin "${DUMP_TORRENT_VERSION}" && git checkout -q FETCH_HEAD
-RUN sed -i '1i #include <sys/time.h>' scrapec.c
+FROM src AS src-dumptorrent
+RUN git init . && git remote add origin "https://github.com/tomcdj71/dumptorrent.git"
+ARG DUMPTORRENT_VERSION
+RUN git fetch origin "${DUMPTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+RUN sed -i '1i #include <sys/time.h>' src/scrapec.c
 RUN rm -rf .git*
 
 FROM crazymax/alpine-s6:${ALPINE_S6_VERSION} AS builder
@@ -173,10 +173,11 @@ RUN mkdir -p ${DIST_PATH}/usr/lib/php84/modules
 RUN cp -f /usr/lib/php84/modules/geoip.so ${DIST_PATH}/usr/lib/php84/modules/
 RUN tree ${DIST_PATH}
 
-WORKDIR /usr/local/src/dump-torrent
-COPY --from=src-dump-torrent /src .
-RUN make dumptorrent -j$(nproc)
-RUN cp dumptorrent ${DIST_PATH}/usr/local/bin
+WORKDIR /usr/local/src/dumptorrent
+COPY --from=src-dumptorrent /src .
+RUN cmake -B build/ -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_BUILD_TYPE=Release -S .
+RUN cmake --build build/ --config Release --parallel $(nproc)
+RUN cp build/dumptorrent build/scrapec ${DIST_PATH}/usr/local/bin
 RUN tree ${DIST_PATH}
 
 FROM crazymax/alpine-s6:${ALPINE_S6_VERSION}
