@@ -1,6 +1,5 @@
 # syntax=docker/dockerfile:1
 
-ARG LIBSIG_VERSION=3.0.3
 ARG CARES_VERSION=1.34.5
 ARG CURL_VERSION=8.14.1
 
@@ -20,10 +19,6 @@ ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
 FROM --platform=${BUILDPLATFORM} alpine:${ALPINE_VERSION} AS src
 RUN apk --update --no-cache add curl git tar tree sed xz
 WORKDIR /src
-
-FROM src AS src-libsig
-ARG LIBSIG_VERSION
-RUN curl -sSL "https://download.gnome.org/sources/libsigc%2B%2B/3.0/libsigc%2B%2B-${LIBSIG_VERSION}.tar.xz" | tar xJv --strip 1
 
 FROM src AS src-cares
 ARG CARES_VERSION
@@ -88,6 +83,7 @@ RUN apk --update --no-cache add \
     gd-dev \
     geoip-dev \
     libpsl-dev \
+    libsigc++3-dev \
     libtool \
     libxslt-dev \
     linux-headers \
@@ -106,14 +102,6 @@ RUN ln -s /usr/bin/php84 /usr/bin/php \
  && ln -s /usr/bin/php-config84 /usr/bin/php-config
 
 ENV DIST_PATH="/dist"
-
-WORKDIR /usr/local/src/libsig
-COPY --from=src-libsig /src .
-RUN ./configure
-RUN make -j$(nproc)
-RUN make install -j$(nproc)
-RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
-RUN tree ${DIST_PATH}
 
 WORKDIR /usr/local/src/cares
 COPY --from=src-cares /src .
@@ -217,6 +205,7 @@ RUN apk --update --no-cache add \
     geoip \
     grep \
     gzip \
+    libsigc++3 \
     libstdc++ \
     mediainfo \
     ncurses \
