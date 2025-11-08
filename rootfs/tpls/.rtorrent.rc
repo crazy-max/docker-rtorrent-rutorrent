@@ -6,7 +6,7 @@ throttle.max_peers.normal.set = 100
 throttle.min_peers.seed.set = 1
 throttle.max_peers.seed.set = 50
 
-# Maximum number of simultanious uploads per torrent
+# Maximum number of simultaneous uploads per torrent
 throttle.max_uploads.set = 15
 
 # Global upload and download rate in KiB. "0" for unlimited
@@ -21,14 +21,14 @@ dht.mode.set = auto
 # Enable peer exchange (for torrents not marked private)
 protocol.pex.set = yes
 
-# Check hash for finished torrents. Might be usefull until the bug is
+# Check hash for finished torrents. Might be useful until the bug is
 # fixed that causes lack of diskspace not to be properly reported
 pieces.hash.on_completion.set = yes
 
 # Set whether the client should try to connect to UDP trackers
 #trackers.use_udp.set = yes
 
-# Set the max amount of memory address space used to mapping file chunks. This refers to memory mapping, not
+# Set the max amount of memory address space used for mapping file chunks. This refers to memory mapping, not
 # physical memory allocation. Default: 1GB (max_memory_usage)
 # This may also be set using ulimit -m where 3/4 will be allocated to file chunks
 #pieces.memory.max.set = 1GB
@@ -54,7 +54,7 @@ schedule2 = untied_directory, 5, 5, (cat,"stop_untied=",(cfg.watch),"*.torrent")
 # Close torrents when diskspace is low
 schedule2 = monitor_diskspace, 15, 60, ((close_low_diskspace,1000M))
 
-# Move finished (no need Autotools/Automove plugin on ruTorrent)
+# Move finished (without Autotools/Automove plugin on ruTorrent)
 method.insert = d.get_finished_dir, simple, "cat=$cfg.download_complete=,$d.custom1="
 method.insert = d.move_to_complete, simple, "d.directory.set=$argument.1=; execute=mkdir,-p,$argument.1=; execute=mv,-u,$argument.0=,$argument.1=; d.save_full_session="
 method.set_key = event.download.finished,move_complete,"d.move_to_complete=$d.data_path=,$d.get_finished_dir="
