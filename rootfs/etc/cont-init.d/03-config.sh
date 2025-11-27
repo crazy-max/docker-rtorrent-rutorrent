@@ -31,7 +31,7 @@ RT_RECEIVE_BUFFER_SIZE=${RT_RECEIVE_BUFFER_SIZE:-4M}
 RT_PREALLOCATE_TYPE=${RT_PREALLOCATE_TYPE:-0}
 
 RU_REMOVE_CORE_PLUGINS=${RU_REMOVE_CORE_PLUGINS:-false}
-RU_HTTP_USER_AGENT=${RU_HTTP_USER_AGENT:-Mozilla/5.0 (Windows NT 6.0; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0}
+RU_HTTP_USER_AGENT=${RU_HTTP_USER_AGENT:-Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36}
 RU_HTTP_TIME_OUT=${RU_HTTP_TIME_OUT:-30}
 RU_HTTP_USE_GZIP=${RU_HTTP_USE_GZIP:-true}
 RU_RPC_TIME_OUT=${RU_RPC_TIME_OUT:-5}
@@ -43,6 +43,7 @@ RU_SCHEDULE_RAND=${RU_SCHEDULE_RAND:-10}
 RU_LOG_FILE=${RU_LOG_FILE:-/data/rutorrent/rutorrent.log}
 RU_DO_DIAGNOSTIC=${RU_DO_DIAGNOSTIC:-true}
 RU_CACHED_PLUGIN_LOADING=${RU_CACHED_PLUGIN_LOADING:-false}
+RU_PLUGIN_MINIFICATION=${RU_PLUGIN_MINIFICATION:-true}
 RU_SAVE_UPLOADED_TORRENTS=${RU_SAVE_UPLOADED_TORRENTS:-true}
 RU_OVERWRITE_UPLOADED_TORRENTS=${RU_OVERWRITE_UPLOADED_TORRENTS:-false}
 RU_FORBID_USER_SETTINGS=${RU_FORBID_USER_SETTINGS:-false}
@@ -239,6 +240,10 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 // Required to clear web browser cache during version upgrades
 \$cachedPluginLoading = ${RU_CACHED_PLUGIN_LOADING};
 
+// Stable change to reduce loading times by minimizing JavaScript networked
+// Only recommended to disable when required for debuging purposes
+\$pluginMinification = ${RU_PLUGIN_MINIFICATION};
+
 // Save uploaded torrents to profile/torrents directory or not
 \$saveUploadedTorrents = ${RU_SAVE_UPLOADED_TORRENTS};
 
@@ -252,8 +257,10 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 // For web->rtorrent link through unix domain socket
 \$scgi_port = 0;
 \$scgi_host = "unix:///var/run/rtorrent/scgi.socket";
-\$XMLRPCMountPoint = "/RPC2"; // DO NOT DELETE THIS LINE!!! DO NOT COMMENT THIS LINE!!!
-\$throttleMaxSpeed = 4294967294; // DO NOT EDIT THIS LINE!!! DO NOT COMMENT THIS LINE!!!
+
+// Same as upstream config: https://github.com/Novik/ruTorrent/blob/e839191876b8d950dc2c6617cdfb2b726979d44e/conf/config.php#L49-L52
+\$XMLRPCMountPoint = "/RPC2";
+\$throttleMaxSpeed = 327625*1024; // Can't be greater than 327625*1024 due to limitation in libtorrent ResourceManager::set_max_upload_unchoked function.
 
 \$pathToExternals = array(
     "php"    => '',
@@ -266,6 +273,7 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 
 // List of local interfaces
 \$localhosts = array(
+    "::1",
     "127.0.0.1",
     "localhost",
 );
