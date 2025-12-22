@@ -17,7 +17,7 @@ ARG ALPINE_VERSION=3.22
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
 
 FROM --platform=${BUILDPLATFORM} alpine:${ALPINE_VERSION} AS src
-RUN apk --update --no-cache add curl git tar tree sed xz
+RUN apk --update --no-cache add curl git patch tar tree sed xz
 WORKDIR /src
 
 FROM src AS src-cares
@@ -52,6 +52,8 @@ FROM src AS src-rutorrent
 RUN git init . && git remote add origin "https://github.com/Novik/ruTorrent.git"
 ARG RUTORRENT_VERSION
 RUN git fetch origin "${RUTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+COPY patches/rutorrent /tmp/rutorrent-patches
+RUN for f in  /tmp/rutorrent-patches/*.patch; do echo "apply $f"; patch -p1 < $f; done
 RUN rm -rf .git* conf/users plugins/geoip share
 
 FROM src AS src-geoip2-rutorrent

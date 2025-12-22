@@ -1,0 +1,95 @@
+From 4fcff5305eba49f8d004899a766467a7d071d1f1 Mon Sep 17 00:00:00 2001
+From: simonc56 <simchat@gmail.com>
+Date: Sun, 9 Nov 2025 21:18:35 +0100
+Subject: [PATCH] alias rtorrent deprecated commands
+
+---
+ js/content.js          | 11 +++++++++++
+ js/rtorrent.js         |  3 ++-
+ php/methods-0.10.2.php |  9 +++++++++
+ php/settings.php       | 10 ++++++++--
+ 4 files changed, 30 insertions(+), 3 deletions(-)
+ create mode 100644 php/methods-0.10.2.php
+
+diff --git a/js/content.js b/js/content.js
+index 7f734455..98a2f8e9 100644
+--- a/js/content.js
++++ b/js/content.js
+@@ -851,6 +851,17 @@ function correctContent()
+ 			"load"			:	{ name: "load.normal", prm: 1 }
+ 		});
+ 	}
++	if(theWebUI.systemInfo.rTorrent.iVersion>=0x1002)
++	{
++		$.extend(theRequestManager.aliases,
++		{
++			"dht"                           : { name: "dht.mode.set", prm: 1 },
++			"throttle.max_uploads.div"      : { name: "throttle.max_uploads.div._val", prm: 1 },
++			"throttle.max_uploads.global"   : { name: "throttle.max_uploads.global._val", prm: 1 },
++			"throttle.max_downloads.div"    : { name: "throttle.max_downloads.div._val", prm: 1 },
++			"throttle.max_downloads.global" : { name: "throttle.max_downloads.global._val", prm: 1 },
++		});
++	}
+ 	if(theWebUI.systemInfo.rTorrent.iVersion < 0x907) {
+ 		const title = theUILang.requiresAtLeastRtorrent.replace('{version}', 'v0.9.7');
+ 		$($$('webui.show_open_status')).attr({ disabled: '', title });
+diff --git a/js/rtorrent.js b/js/rtorrent.js
+index a137ddba..8eace0b2 100644
+--- a/js/rtorrent.js
++++ b/js/rtorrent.js
+@@ -379,7 +379,8 @@ rTorrentStub.prototype.setsettings = function()
+ 			else
+ 				prm = "auto";
+ 			prmType = "string";
+-			cmd = new rXMLRPCCommand('dht');
++			cmd = new rXMLRPCCommand('dht.mode.set');
++			cmd.addParameter("string",'');
+ 		}
+ 		else
+ 			cmd = new rXMLRPCCommand('set_'+this.ss[i].substr(1));
+diff --git a/php/methods-0.10.2.php b/php/methods-0.10.2.php
+new file mode 100644
+index 00000000..c1031cb3
+--- /dev/null
++++ b/php/methods-0.10.2.php
+@@ -0,0 +1,9 @@
++<?php
++
++$this->aliases = array_merge($this->aliases,array(
++"dht"                           => array( "name"=>"dht.mode.set", "prm"=>1 ),
++"throttle.max_uploads.div"      => array( "name"=>"throttle.max_uploads.div._val", "prm"=>1 ),
++"throttle.max_uploads.global"   => array( "name"=>"throttle.max_uploads.global._val", "prm"=>1 ),
++"throttle.max_downloads.div"    => array( "name"=>"throttle.max_downloads.div._val", "prm"=>1 ),
++"throttle.max_downloads.global" => array( "name"=>"throttle.max_downloads.global._val", "prm"=>1 ),
++));
+diff --git a/php/settings.php b/php/settings.php
+index c8ee7757..77c754a4 100644
+--- a/php/settings.php
++++ b/php/settings.php
+@@ -220,7 +220,10 @@ class rTorrentSettings
+ 			{
+ 				require_once( 'methods-0.9.4.php' );
+ 			}
+-			
++			if($this->iVersion>=0x1002)
++			{
++				require_once( 'methods-0.10.2.php' );
++			}
+ 			$this->apiVersion = 0;
+ 			if($this->iVersion>=0x901)
+ 			{
+@@ -230,7 +233,10 @@ class rTorrentSettings
+ 					$this->apiVersion = $req->val[0];
+ 			}
+ 
+-                        $req = new rXMLRPCRequest( new rXMLRPCCommand("to_kb", floatval(1024)) );
++			$req = new rXMLRPCRequest(new rXMLRPCCommand(
++				"convert.kb",
++				array('',floatval(1024))
++			));
+ 			if($req->run())
+ 			{
+ 				if(!$req->fault)
+-- 
+2.46.0.windows.1
+
