@@ -1,0 +1,53 @@
+From 5b1e02d103fe3fd991d885c44e85d9c3c339f14b Mon Sep 17 00:00:00 2001
+From: simonc56 <simchat@gmail.com>
+Date: Sun, 9 Nov 2025 21:19:01 +0100
+Subject: [PATCH] alias more rtorrent deprecated commands
+
+---
+ js/content.js          | 10 ++++++++++
+ php/methods-0.10.2.php | 10 ++++++++++
+ 2 files changed, 20 insertions(+)
+
+diff --git a/js/content.js b/js/content.js
+index 98a2f8e9..5d5304a9 100644
+--- a/js/content.js
++++ b/js/content.js
+@@ -860,6 +860,16 @@ function correctContent()
+ 			"throttle.max_uploads.global"   : { name: "throttle.max_uploads.global._val", prm: 1 },
+ 			"throttle.max_downloads.div"    : { name: "throttle.max_downloads.div._val", prm: 1 },
+ 			"throttle.max_downloads.global" : { name: "throttle.max_downloads.global._val", prm: 1 },
++			"ratio.enable"                  : { name: "group.seeding.ratio.enable", prm: 1 },
++			"ratio.disable"                 : { name: "group.seeding.ratio.disable", prm: 1 },
++			"ratio.min"                     : { name: "group2.seeding.ratio.min", prm: 0 },
++			"ratio.max"                     : { name: "group2.seeding.ratio.max", prm: 0 },
++			"ratio.upload"                  : { name: "group2.seeding.ratio.upload", prm: 0 },
++			"ratio.min.set"                 : { name: "group2.seeding.ratio.min.set", prm: 1 },
++			"ratio.max.set"                 : { name: "group2.seeding.ratio.max.set", prm: 1 },
++			"ratio.upload.set"              : { name: "group2.seeding.ratio.upload.set", prm: 1 },
++			"connection_leech"              : { name: "protocol.connection.leech.set", prm: 1 },
++			"connection_seed"               : { name: "protocol.connection.seed.set", prm: 1 },
+ 		});
+ 	}
+ 	if(theWebUI.systemInfo.rTorrent.iVersion < 0x907) {
+diff --git a/php/methods-0.10.2.php b/php/methods-0.10.2.php
+index c1031cb3..6c6148a0 100644
+--- a/php/methods-0.10.2.php
++++ b/php/methods-0.10.2.php
+@@ -6,4 +6,14 @@ $this->aliases = array_merge($this->aliases,array(
+ "throttle.max_uploads.global"   => array( "name"=>"throttle.max_uploads.global._val", "prm"=>1 ),
+ "throttle.max_downloads.div"    => array( "name"=>"throttle.max_downloads.div._val", "prm"=>1 ),
+ "throttle.max_downloads.global" => array( "name"=>"throttle.max_downloads.global._val", "prm"=>1 ),
++"ratio.enable"                  => array( "name"=>"group.seeding.ratio.enable", "prm"=>1 ),
++"ratio.disable"                 => array( "name"=>"group.seeding.ratio.disable", "prm"=>1 ),
++"ratio.min"                     => array( "name"=>"group2.seeding.ratio.min", "prm"=>0 ),
++"ratio.max"                     => array( "name"=>"group2.seeding.ratio.max", "prm"=>0 ),
++"ratio.upload"                  => array( "name"=>"group2.seeding.ratio.upload", "prm"=>0 ),
++"ratio.min.set"                 => array( "name"=>"group2.seeding.ratio.min.set", "prm"=>1 ),
++"ratio.max.set"                 => array( "name"=>"group2.seeding.ratio.max.set", "prm"=>1 ),
++"ratio.upload.set"              => array( "name"=>"group2.seeding.ratio.upload.set", "prm"=>1 ),
++"connection_leech"              => array( "name"=>"protocol.connection.leech.set", "prm"=>1 ),
++"connection_seed"               => array( "name"=>"protocol.connection.seed.set", "prm"=>1 ),
+ ));
+-- 
+2.46.0.windows.1
+
