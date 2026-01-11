@@ -67,5 +67,5 @@ log.add_output = "rpc_events","log"
 #log.execute = (cat,(cfg.logs),"execute.log")
 #log.xmlrpc = (cat,(cfg.logs),"xmlrpc.log")
 
-# Initialize plugins
-execute2 = {sh,-c,/usr/bin/php84 /var/www/rutorrent/php/initplugins.php rtorrent &}
+# Initialize plugins after a 10 seconds delay
+schedule2 = init_plugins, 10, 0, "execute2 = {sh,-c,/usr/bin/php84 /var/www/rutorrent/php/initplugins.php rtorrent &}"
