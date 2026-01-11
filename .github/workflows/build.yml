@@ -24,33 +24,22 @@ on:
 
 jobs:
   build:
-    uses: crazy-max/.github/.github/workflows/bake-distribute-mp.yml@44119dfc7a27a14e4e83eecfe1b7ce9abaf50c22
+    uses: docker/github-builder-experimental/.github/workflows/bake.yml@5876e8deef3c899c298ec80b07c43dd9e89d37f6
     permissions:
-      # same as global permissions
-      contents: read
-      # required to push to GHCR
-      packages: write
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          -
-            image: crazymax/rtorrent-rutorrent
-            login-registry: docker.io
-            login-username: crazymax
-            login-secret-key: DOCKER_PASSWORD
-          -
-            image: ghcr.io/crazy-max/rtorrent-rutorrent
-            login-registry: ghcr.io
-            login-username: ${{ github.repository_owner }}
-            login-secret-key: GITHUB_TOKEN
+      contents: read # same as global permissions
+      id-token: write # for signing attestation(s) with GitHub OIDC Token
+      packages: write # required to push to GHCR
     with:
+      setup-qemu: true
       target: image-all
-      push: ${{ github.event_name != 'pull_request' }}
       cache: true
       cache-scope: build
+      output: image
+      push: ${{ github.event_name != 'pull_request' }}
       set-meta-labels: true
-      meta-image: ${{ matrix.image }}
+      meta-images: |
+        crazymax/rtorrent-rutorrent
+        ghcr.io/crazy-max/rtorrent-rutorrent
       meta-tags: |
         type=match,pattern=(.*)-r,group=1
         type=ref,event=pr
@@ -59,7 +48,11 @@ jobs:
         org.opencontainers.image.title=rTorrent and ruTorrent
         org.opencontainers.image.description=rTorrent and ruTorrent
         org.opencontainers.image.vendor=CrazyMax
-      login-registry: ${{ matrix.login-registry }}
-      login-username: ${{ matrix.login-username }}
     secrets:
-      login-password: ${{ secrets[matrix.login-secret-key] }}
+      registry-auths: |
+        - registry: docker.io
+          username: ${{ vars.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+        - registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
