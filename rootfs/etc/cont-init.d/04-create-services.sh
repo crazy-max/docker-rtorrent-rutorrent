@@ -1,6 +1,8 @@
 #!/usr/bin/with-contenv sh
 # shellcheck shell=sh
 
+DATA_DIR=${DATA_DIR%/:-/data}
+
 mkdir -p /etc/services.d/nginx
 cat > /etc/services.d/nginx/run <<EOL
 #!/usr/bin/execlineb -P
@@ -23,8 +25,8 @@ mkdir -p /etc/services.d/rtorrent
 cat > /etc/services.d/rtorrent/run <<EOL
 #!/usr/bin/execlineb -P
 with-contenv
-/bin/export HOME /data/rtorrent
-/bin/export PWD /data/rtorrent
+/bin/export HOME ${DATA_DIR}/rtorrent
+/bin/export PWD ${DATA_DIR}/rtorrent
 s6-setuidgid ${PUID}:${PGID}
 EOL
 if [ -z "${WAN_IP}" ]; then

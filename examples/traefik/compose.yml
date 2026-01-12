@@ -70,8 +70,8 @@ services:
       - "rtorrent-rutorrent.env"
       - ".env"
     volumes:
-      - "./data:/data"
-      - "./downloads:/downloads"
+      - "./data:${DATA_DIR:-/data}"
+      - "./downloads:${DOWNLOAD_DIR:-/downloads}"
       - "./passwd:/passwd"
     labels:
       - "traefik.enable=true"
