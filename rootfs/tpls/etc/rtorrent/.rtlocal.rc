@@ -3,9 +3,6 @@ system.daemon.set = true
 
 # Instance layout
 method.insert = cfg.basedir, private|const|string, (cat,"/data/rtorrent/")
-method.insert = cfg.download, private|const|string, (cat,"/downloads/")
-method.insert = cfg.download_complete, private|const|string, (cat,(cfg.download),"complete/")
-method.insert = cfg.download_temp, private|const|string, (cat,(cfg.download),"temp/")
 method.insert = cfg.logs, private|const|string, (cat,(cfg.basedir),"log/")
 method.insert = cfg.session, private|const|string, (cat,(cfg.basedir),".session/")
 method.insert = cfg.watch, private|const|string, (cat,(cfg.basedir),"watch/")
@@ -13,9 +10,6 @@ method.insert = cfg.rundir, private|const|string, (cat,"/var/run/rtorrent/")
 
 # Gets the full path of data of a torrent (it's a workaround for the possibly empty 'd.base_path' attribute)
 method.insert = d.data_path, simple, "if=(d.is_multi_file), (cat,(d.directory),/), (cat,(d.directory),/,(d.name))"
-
-# Default directory to save the downloaded torrents
-directory.default.set = (cat,(cfg.download_temp))
 
 # Default session directory
 session.path.set = (cat,(cfg.session))

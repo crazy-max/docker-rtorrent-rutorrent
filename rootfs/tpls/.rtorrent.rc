@@ -1,3 +1,11 @@
+# Set default download paths
+method.insert = cfg.download, private|const|string, (cat,"/downloads/")
+method.insert = cfg.download_complete, private|const|string, (cat,(cfg.download),"complete/")
+method.insert = cfg.download_temp, private|const|string, (cat,(cfg.download),"temp/")
+
+# Default directory to save the downloaded torrents
+directory.default.set = (cat,(cfg.download_temp))
+
 # Maximum and minimum number of peers to connect to per torrent
 throttle.min_peers.normal.set = 1
 throttle.max_peers.normal.set = 100
