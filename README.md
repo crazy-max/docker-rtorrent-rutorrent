@@ -136,6 +136,7 @@ linux/arm64
 * `RT_LOG_EXECUTE`: Log executed commands to `/data/rtorrent/log/execute.log` (default `false`)
 * `RT_LOG_XMLRPC`: Log XMLRPC queries to `/data/rtorrent/log/xmlrpc.log` (default `false`)
 * `RT_SESSION_SAVE_SECONDS`: Seconds between writing torrent information to disk (default `3600`)
+* `RT_SESSION_FDATASYNC`: Force fdatasync when saving sessions (`system.files.session.fdatasync.set`, default `false`)
 * `RT_TRACKER_DELAY_SCRAPE`: Delay tracker announces at startup (default `true`)
 * `RT_DHT_PORT`: DHT UDP port (`dht.port.set`, default `6881`)
 * `RT_INC_PORT`: Incoming connections (`network.port_range.set`, default `50000`)
@@ -353,6 +354,10 @@ Total Uploaded & Downloaded etc.)
 Higher values will reduce disk usage, at the cost of minor stat loss during a
 crash. Consider increasing to 10800 seconds (3 hours) if running thousands of
 torrents.
+
+`RT_SESSION_FDATASYNC` controls whether each session save forces an immediate
+disk flush. It defaults to `false` to avoid long synchronous stalls with large
+sessions on slow disks.
 
 ### rTorrent tracker scrape patch
 
