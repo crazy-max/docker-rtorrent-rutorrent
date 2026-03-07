@@ -58,6 +58,9 @@ network.receive_buffer.size.set = @RT_RECEIVE_BUFFER_SIZE@
 # Configure preallocation feature for rTorrent client
 system.file.allocate.set = @RT_PREALLOCATE_TYPE@
 
+# Disable session fdatasync by default to avoid long UI stalls on large sessions / slow disks
+system.files.session.fdatasync.set = @RT_SESSION_FDATASYNC@
+
 # Logging
 ## levels = critical error warn notice info debug
 ## groups = connection_* dht_* peer_* rpc_* storage_* thread_* tracker_* torrent_*
