@@ -10,10 +10,11 @@ else
 
 	eval( FileUtil::getPluginConf( $plugin["name"] ) );
 
-	$retrieveCountry = ($retrieveCountry && (PHP_VERSION_ID >= 50400) && extension_loaded('bcmath') && extension_loaded('phar'));
+	$autoloadFile = __DIR__.'/vendor/autoload.php';
+	$retrieveCountry = ($retrieveCountry && (PHP_VERSION_ID >= 80100) && extension_loaded('bcmath') && is_file($autoloadFile));
 	if($retrieveCountry)
 	{
-		require_once 'geoip2.phar';
+		require_once $autoloadFile;
 
 		if($usePluginDatabase)
 		{

@@ -55,8 +55,24 @@ COPY patches/rutorrent /tmp/rutorrent-patches
 RUN for f in  /tmp/rutorrent-patches/*.patch; do echo "apply $f"; patch -p1 < $f; done
 RUN rm -rf .git* conf/users plugins/geoip share
 
+FROM composer:2 AS update-geoip2-rutorrent
+WORKDIR /app
+COPY geoip2-rutorrent/composer.json ./
+RUN composer update --no-dev --no-interaction --no-progress --prefer-dist --classmap-authoritative
+
+FROM scratch AS export-geoip2-rutorrent
+COPY --from=update-geoip2-rutorrent /app/composer.json /composer.json
+COPY --from=update-geoip2-rutorrent /app/composer.lock /composer.lock
+COPY --from=update-geoip2-rutorrent /app/vendor /vendor
+
+FROM composer:2 AS vendor-geoip2-rutorrent
+WORKDIR /app
+COPY geoip2-rutorrent/composer.json geoip2-rutorrent/composer.lock ./
+RUN composer install --no-dev --no-interaction --no-progress --prefer-dist --classmap-authoritative
+
 FROM src AS src-geoip2-rutorrent
 COPY geoip2-rutorrent /src
+COPY --from=vendor-geoip2-rutorrent /app/vendor /src/vendor
 
 FROM src AS src-mmdb
 RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
@@ -220,7 +236,6 @@ RUN apk --update --no-cache add \
     php84-fpm \
     php84-mbstring \
     php84-openssl \
-    php84-phar \
     php84-posix \
     php84-session \
     php84-sockets \

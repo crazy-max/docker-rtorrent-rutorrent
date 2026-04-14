@@ -30,3 +30,8 @@ target "image-all" {
     "linux/arm64"
   ]
 }
+
+target "geoip2-rutorrent-vendor" {
+  target = "export-geoip2-rutorrent"
+  output = ["type=local,dest=geoip2-rutorrent"]
+}
