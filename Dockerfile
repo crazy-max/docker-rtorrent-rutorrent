@@ -10,7 +10,6 @@ ARG MKTORRENT_VERSION=v1.1
 ARG GEOIP2_PHPEXT_VERSION=1.3.1
 
 ARG RUTORRENT_VERSION=v5.2.10
-ARG GEOIP2_RUTORRENT_VERSION=4ff2bde530bb8eef13af84e4413cedea97eda148
 ARG DUMPTORRENT_VERSION=v1.7.0
 
 ARG ALPINE_VERSION=3.22
@@ -57,10 +56,7 @@ RUN for f in  /tmp/rutorrent-patches/*.patch; do echo "apply $f"; patch -p1 < $f
 RUN rm -rf .git* conf/users plugins/geoip share
 
 FROM src AS src-geoip2-rutorrent
-RUN git init . && git remote add origin "https://github.com/Micdu70/geoip2-rutorrent.git"
-ARG GEOIP2_RUTORRENT_VERSION
-RUN git fetch origin "${GEOIP2_RUTORRENT_VERSION}" && git checkout -q FETCH_HEAD
-RUN rm -rf .git*
+COPY geoip2-rutorrent /src
 
 FROM src AS src-mmdb
 RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
