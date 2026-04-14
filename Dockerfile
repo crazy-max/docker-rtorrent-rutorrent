@@ -7,10 +7,8 @@ ARG LIBTORRENT_VERSION=v0.16.9
 ARG RTORRENT_VERSION=v0.16.9
 
 ARG MKTORRENT_VERSION=v1.1
-ARG GEOIP2_PHPEXT_VERSION=1.3.1
 
 ARG RUTORRENT_VERSION=v5.2.10
-ARG GEOIP2_RUTORRENT_VERSION=4ff2bde530bb8eef13af84e4413cedea97eda148
 ARG DUMPTORRENT_VERSION=v1.7.0
 
 ARG ALPINE_VERSION=3.22
@@ -43,11 +41,6 @@ RUN git init . && git remote add origin "https://github.com/pobrn/mktorrent.git"
 ARG MKTORRENT_VERSION
 RUN git fetch origin "${MKTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 
-FROM src AS src-geoip2-phpext
-RUN git init . && git remote add origin "https://github.com/rlerdorf/geoip.git"
-ARG GEOIP2_PHPEXT_VERSION
-RUN git fetch origin "${GEOIP2_PHPEXT_VERSION}" && git checkout -q FETCH_HEAD
-
 FROM src AS src-rutorrent
 RUN git init . && git remote add origin "https://github.com/Novik/ruTorrent.git"
 ARG RUTORRENT_VERSION
@@ -56,11 +49,24 @@ COPY patches/rutorrent /tmp/rutorrent-patches
 RUN for f in  /tmp/rutorrent-patches/*.patch; do echo "apply $f"; patch -p1 < $f; done
 RUN rm -rf .git* conf/users plugins/geoip share
 
+FROM composer:2 AS update-geoip2-rutorrent
+WORKDIR /app
+COPY geoip2-rutorrent/composer.json ./
+RUN composer update --no-dev --no-interaction --no-progress --prefer-dist --classmap-authoritative
+
+FROM scratch AS export-geoip2-rutorrent
+COPY --from=update-geoip2-rutorrent /app/composer.json /composer.json
+COPY --from=update-geoip2-rutorrent /app/composer.lock /composer.lock
+COPY --from=update-geoip2-rutorrent /app/vendor /vendor
+
+FROM composer:2 AS vendor-geoip2-rutorrent
+WORKDIR /app
+COPY geoip2-rutorrent/composer.json geoip2-rutorrent/composer.lock ./
+RUN composer install --no-dev --no-interaction --no-progress --prefer-dist --classmap-authoritative
+
 FROM src AS src-geoip2-rutorrent
-RUN git init . && git remote add origin "https://github.com/Micdu70/geoip2-rutorrent.git"
-ARG GEOIP2_RUTORRENT_VERSION
-RUN git fetch origin "${GEOIP2_RUTORRENT_VERSION}" && git checkout -q FETCH_HEAD
-RUN rm -rf .git*
+COPY geoip2-rutorrent /src
+COPY --from=vendor-geoip2-rutorrent /app/vendor /src/vendor
 
 FROM src AS src-mmdb
 RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
@@ -83,7 +89,6 @@ RUN apk --update --no-cache add \
     cppunit-dev \
     cmake \
     gd-dev \
-    geoip-dev \
     libpsl-dev \
     libsigc++3-dev \
     libtool \
@@ -150,19 +155,6 @@ RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
-WORKDIR /usr/local/src/geoip2-phpext
-COPY --from=src-geoip2-phpext /src .
-RUN <<EOT
-  set -e
-  phpize84
-  ./configure
-  make
-  make install
-EOT
-RUN mkdir -p ${DIST_PATH}/usr/lib/php84/modules
-RUN cp -f /usr/lib/php84/modules/geoip.so ${DIST_PATH}/usr/lib/php84/modules/
-RUN tree ${DIST_PATH}
-
 WORKDIR /usr/local/src/dumptorrent
 COPY --from=src-dumptorrent /src .
 RUN cmake -B build/ -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_BUILD_TYPE=Release -S .
@@ -204,7 +196,6 @@ RUN apk --update --no-cache add \
     coreutils \
     ffmpeg \
     findutils \
-    geoip \
     grep \
     gzip \
     libsigc++3 \
@@ -224,7 +215,6 @@ RUN apk --update --no-cache add \
     php84-fpm \
     php84-mbstring \
     php84-openssl \
-    php84-phar \
     php84-posix \
     php84-session \
     php84-sockets \

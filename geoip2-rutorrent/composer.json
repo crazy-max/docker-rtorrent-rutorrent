@@ -1,0 +1,11 @@
+{
+  "name": "docker-rtorrent-rutorrent/geoip2-rutorrent",
+  "description": "Vendored GeoIP2 ruTorrent plugin dependency manifest",
+  "type": "project",
+  "require": {
+    "geoip2/geoip2": "3.3.0"
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
