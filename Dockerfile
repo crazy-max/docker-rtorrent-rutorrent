@@ -7,7 +7,6 @@ ARG LIBTORRENT_VERSION=v0.16.9
 ARG RTORRENT_VERSION=v0.16.9
 
 ARG MKTORRENT_VERSION=v1.1
-ARG GEOIP2_PHPEXT_VERSION=1.3.1
 
 ARG RUTORRENT_VERSION=v5.2.10
 ARG DUMPTORRENT_VERSION=v1.7.0
@@ -41,11 +40,6 @@ FROM src AS src-mktorrent
 RUN git init . && git remote add origin "https://github.com/pobrn/mktorrent.git"
 ARG MKTORRENT_VERSION
 RUN git fetch origin "${MKTORRENT_VERSION}" && git checkout -q FETCH_HEAD
-
-FROM src AS src-geoip2-phpext
-RUN git init . && git remote add origin "https://github.com/rlerdorf/geoip.git"
-ARG GEOIP2_PHPEXT_VERSION
-RUN git fetch origin "${GEOIP2_PHPEXT_VERSION}" && git checkout -q FETCH_HEAD
 
 FROM src AS src-rutorrent
 RUN git init . && git remote add origin "https://github.com/Novik/ruTorrent.git"
@@ -95,7 +89,6 @@ RUN apk --update --no-cache add \
     cppunit-dev \
     cmake \
     gd-dev \
-    geoip-dev \
     libpsl-dev \
     libsigc++3-dev \
     libtool \
@@ -162,19 +155,6 @@ RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
 RUN tree ${DIST_PATH}
 
-WORKDIR /usr/local/src/geoip2-phpext
-COPY --from=src-geoip2-phpext /src .
-RUN <<EOT
-  set -e
-  phpize84
-  ./configure
-  make
-  make install
-EOT
-RUN mkdir -p ${DIST_PATH}/usr/lib/php84/modules
-RUN cp -f /usr/lib/php84/modules/geoip.so ${DIST_PATH}/usr/lib/php84/modules/
-RUN tree ${DIST_PATH}
-
 WORKDIR /usr/local/src/dumptorrent
 COPY --from=src-dumptorrent /src .
 RUN cmake -B build/ -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_BUILD_TYPE=Release -S .
@@ -216,7 +196,6 @@ RUN apk --update --no-cache add \
     coreutils \
     ffmpeg \
     findutils \
-    geoip \
     grep \
     gzip \
     libsigc++3 \
