@@ -4,4 +4,4 @@ plugin.runlevel: 15.1
 plugin.version: 4.0
 php.extensions.warning: bcmath
 php.extensions.error: json
-plugin.help: https://github.com/Novik/ruTorrent/wiki/PluginGeoIP2
+plugin.help: https://github.com/crazy-max/docker-rtorrent-rutorrent/tree/master/geoip2-rutorrent
