@@ -129,7 +129,7 @@ RUN tree ${DIST_PATH}
 WORKDIR /usr/local/src/libtorrent
 COPY --from=src-libtorrent /src .
 RUN autoreconf -vfi
-RUN ./configure --enable-aligned
+RUN ./configure --enable-aligned --enable-ipv6
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
@@ -138,7 +138,7 @@ RUN tree ${DIST_PATH}
 WORKDIR /usr/local/src/rtorrent
 COPY --from=src-rtorrent /src .
 RUN autoreconf -vfi
-RUN ./configure --with-xmlrpc-tinyxml2 --with-ncurses
+RUN ./configure --with-xmlrpc-tinyxml2 --with-ncurses --enable-ipv6
 RUN make -j$(nproc) CXXFLAGS="-w -O3 -flto -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make install -j$(nproc)
 RUN make DESTDIR=${DIST_PATH} install -j$(nproc)
