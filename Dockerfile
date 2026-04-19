@@ -168,7 +168,7 @@ COPY --from=src-rutorrent --chown=nobody:nogroup /src /var/www/rutorrent
 COPY --from=src-geoip2-rutorrent --chown=nobody:nogroup /src /var/www/rutorrent/plugins/geoip2
 COPY --from=src-mmdb /src /var/mmdb
 
-ENV PYTHONPATH="$PYTHONPATH:/var/www/rutorrent" \
+ENV PYTHONPATH="${PYTHONPATH:-}:/var/www/rutorrent" \
   S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
   S6_KILL_GRACETIME="10000" \
   TZ="UTC" \
