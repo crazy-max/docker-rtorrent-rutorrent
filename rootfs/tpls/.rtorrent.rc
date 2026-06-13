@@ -25,9 +25,6 @@ protocol.pex.set = yes
 # fixed that causes lack of diskspace not to be properly reported
 pieces.hash.on_completion.set = yes
 
-# Set whether the client should try to connect to UDP trackers
-#trackers.use_udp.set = yes
-
 # Set the max amount of memory address space used for mapping file chunks. This refers to memory mapping, not
 # physical memory allocation. Default: 1GB (max_memory_usage)
 # This may also be set using ulimit -m where 3/4 will be allocated to file chunks
