@@ -11,7 +11,7 @@ ARG MKTORRENT_VERSION=v1.1
 ARG RUTORRENT_VERSION=v5.3.1
 ARG DUMPTORRENT_VERSION=v1.7.0
 
-ARG ALPINE_VERSION=3.22
+ARG ALPINE_VERSION=3.23
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
 
 FROM --platform=${BUILDPLATFORM} alpine:${ALPINE_VERSION} AS src
@@ -103,9 +103,6 @@ RUN apk --update --no-cache add \
     xz \
     zlib-dev
 
-RUN ln -s /usr/bin/php84 /usr/bin/php \
- && ln -s /usr/bin/php-config84 /usr/bin/php-config
-
 ENV DIST_PATH="/dist"
 
 WORKDIR /usr/local/src/cares
@@ -166,7 +163,7 @@ COPY --from=src-rutorrent --chown=nobody:nogroup /src /var/www/rutorrent
 COPY --from=src-geoip2-rutorrent --chown=nobody:nogroup /src /var/www/rutorrent/plugins/geoip2
 COPY --from=src-mmdb /src /var/mmdb
 
-ENV PYTHONPATH="$PYTHONPATH:/var/www/rutorrent" \
+ENV PYTHONPATH="/var/www/rutorrent" \
   S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
   S6_KILL_GRACETIME="10000" \
   TZ="UTC" \
@@ -232,7 +229,6 @@ RUN apk --update --no-cache add \
   && addgroup -g ${PGID} rtorrent \
   && adduser -D -H -u ${PUID} -G rtorrent -s /bin/sh rtorrent \
   && curl --version \
-  && ln -s /usr/bin/php84 /usr/bin/php \
   && rm -rf /tmp/*
 
 COPY rootfs /
