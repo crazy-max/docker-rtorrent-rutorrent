@@ -25,6 +25,7 @@ execute.nothrow = sh,-c,(cat,"echo >",(cfg.rundir),"rtorrent.pid"," ",(system.pi
 
 # SCGI socket and make it group-writable and secure
 network.scgi.open_local = (cat, (cfg.rundir), "scgi.socket")
+network.scgi.use_gzip.set = false
 schedule2 = scgi_permission, 0, 0, (cat,"execute.nothrow=chmod,\"g+w,o=\",",(cfg.rundir),"scgi.socket")
 
 # Listening port for incoming peer traffic
