@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+gosu rtorrent:rtorrent php /var/www/rutorrent/env_check.php

@@ -198,7 +198,7 @@ if [ "${RT_LOG_EXECUTE}" = "true" ]; then
 fi
 if [ "${RT_LOG_XMLRPC}" = "true" ]; then
   echo "  Enabling rTorrent xmlrpc log..."
-  sed -i "s!#log\.xmlrpc.*!log\.xmlrpc = (cat,(cfg.logs),\"xmlrpc.log\")!g" /etc/rtorrent/.rtlocal.rc
+  sed -i "s!#log\.rpc.*!log\.rpc = (cat,(cfg.logs),\"xmlrpc.log\")!g" /etc/rtorrent/.rtlocal.rc
 fi
 
 # rTorrent config
@@ -260,7 +260,7 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 \$scgi_port = 0;
 \$scgi_host = "unix:///var/run/rtorrent/scgi.socket";
 
-// Same as upstream config: https://github.com/Novik/ruTorrent/blob/e839191876b8d950dc2c6617cdfb2b726979d44e/conf/config.php#L49-L52
+// Same as upstream config: https://github.com/Novik/ruTorrent/blob/v5.3.7/conf/config.php#L48-L51
 \$XMLRPCMountPoint = "/RPC2";
 \$throttleMaxSpeed = 327625*1024; // Can't be greater than 327625*1024 due to limitation in libtorrent ResourceManager::set_max_upload_unchoked function.
 

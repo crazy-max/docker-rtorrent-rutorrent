@@ -60,6 +60,10 @@ jobs:
           log_check: "ready to handle connections"
           timeout: 120
       -
+        name: Check ruTorrent environment
+        run: |
+          docker exec ${{ env.CONTAINER_NAME }} rutorrent-env-check
+      -
         name: Logs
         if: always()
         run: |
