@@ -26,7 +26,7 @@ execute.nothrow = sh,-c,(cat,"echo >",(cfg.rundir),"rtorrent.pid"," ",(system.pi
 # SCGI socket and make it group-writable and secure
 network.scgi.open_local = (cat, (cfg.rundir), "scgi.socket")
 network.scgi.use_gzip.set = false
-schedule2 = scgi_permission, 0, 0, (cat,"execute.nothrow=chmod,\"g+w,o=\",",(cfg.rundir),"scgi.socket")
+schedule = scgi_permission, 0, 0, (cat,"execute.nothrow=chmod,\"g+w,o=\",",(cfg.rundir),"scgi.socket")
 
 # Listening port for incoming peer traffic
 network.port_range.set = @RT_INC_PORT@-@RT_INC_PORT@
@@ -39,11 +39,11 @@ dht.override_port.set = @RT_DHT_PORT@
 network.xmlrpc.size_limit.set = @XMLRPC_SIZE_LIMIT@
 
 # Configure session saving interval to balance disk usage and torrent information accuracy
-schedule2 = session_save, 1200, @RT_SESSION_SAVE_SECONDS@, ((session.save))
+schedule = session_save, 1200, @RT_SESSION_SAVE_SECONDS@, ((session.save))
 
 # Save torrents immediately to prevent losing them between session saving intervals
 # Schedule task to run in background (with unique hash) to avoid seeding impact
-method.set_key = event.download.inserted_new, "schedule2 = ((d.hash)), 0, 0, ((d.save_full_session))"
+method.set_key = event.download.inserted_new, "schedule = ((d.hash)), 0, 0, ((d.save_full_session))"
 
 # Configure whether to delay tracker announces at startup
 trackers.delay_scrape = @RT_TRACKER_DELAY_SCRAPE@
@@ -65,7 +65,7 @@ log.open_file = "log",(cat,(cfg.logs),"rtorrent.log")
 log.add_output = "@RT_LOG_LEVEL@","log"
 log.add_output = "rpc_events","log"
 #log.execute = (cat,(cfg.logs),"execute.log")
-#log.xmlrpc = (cat,(cfg.logs),"xmlrpc.log")
+#log.rpc = (cat,(cfg.logs),"xmlrpc.log")
 
 # Initialize plugins after a 10 seconds delay
-schedule2 = init_plugins, 10, 0, "execute2 = {sh,-c,/usr/bin/php84 /var/www/rutorrent/php/initplugins.php rtorrent &}"
+schedule = init_plugins, 10, 0, ((execute.nothrow.bg,/usr/bin/php84,/var/www/rutorrent/php/initplugins.php,rtorrent))

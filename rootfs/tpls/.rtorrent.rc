@@ -26,13 +26,13 @@ protocol.pex.set = yes
 pieces.hash.on_completion.set = yes
 
 # Set the max amount of memory address space used for mapping file chunks. This refers to memory mapping, not
-# physical memory allocation. Default: 1GB (max_memory_usage)
+# physical memory allocation. Default: 1GB
 # This may also be set using ulimit -m where 3/4 will be allocated to file chunks
 #pieces.memory.max.set = 1GB
 
 # Alternative calls to bind and ip that should handle dynamic ip's
-#schedule2 = ip_tick,0,1800,ip=rakshasa
-#schedule2 = bind_tick,0,1800,bind=rakshasa
+#schedule = ip_tick,0,1800,network.local_address.set=rakshasa
+#schedule = bind_tick,0,1800,network.bind_address.set=rakshasa
 
 # Encryption options, set to none (default) or any combination of the following:
 # allow_incoming, try_outgoing, require, require_RC4, enable_retry, prefer_plaintext
@@ -41,15 +41,12 @@ protocol.encryption.set = allow_incoming,try_outgoing,enable_retry
 # Set the umask for this process, which is applied to all files created by the program
 system.umask.set = 0022
 
-# Add a preferred filename encoding to the list
-encoding.add = UTF-8
-
 # Watch a directory for new torrents, and stop those that have been deleted
 directory.watch.added = (cat,(cfg.watch)), load.start
-schedule2 = untied_directory, 5, 5, (cat,"stop_untied=",(cfg.watch),"*.torrent")
+schedule = untied_directory, 5, 5, (cat,"stop_untied=",(cfg.watch),"*.torrent")
 
 # Close torrents when diskspace is low
-schedule2 = monitor_diskspace, 15, 60, ((close_low_diskspace,1000M))
+schedule = monitor_diskspace, 15, 60, ((close_low_diskspace,1000M))
 
 # Move finished (without Autotools/Automove plugin on ruTorrent)
 method.insert = d.get_finished_dir, simple, "cat=$cfg.download_complete=,$d.custom1="
