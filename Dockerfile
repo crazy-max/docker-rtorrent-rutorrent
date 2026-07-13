@@ -14,6 +14,8 @@ ARG DUMPTORRENT_VERSION=v1.7.0
 ARG ALPINE_VERSION=3.23
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
 
+FROM tianon/gosu:latest AS gosu
+
 FROM --platform=${BUILDPLATFORM} alpine:${ALPINE_VERSION} AS src
 RUN apk --update --no-cache add curl git tar tree sed xz
 WORKDIR /src
@@ -158,6 +160,7 @@ RUN cp build/dumptorrent build/scrapec ${DIST_PATH}/usr/local/bin
 RUN tree ${DIST_PATH}
 
 FROM crazymax/alpine-s6:${ALPINE_S6_VERSION}
+COPY --from=gosu /gosu /usr/local/bin/
 COPY --from=builder /dist /
 COPY --from=src-rutorrent --chown=nobody:nogroup /src /var/www/rutorrent
 COPY --from=src-geoip2-rutorrent --chown=nobody:nogroup /src /var/www/rutorrent/plugins/geoip2

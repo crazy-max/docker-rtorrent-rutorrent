@@ -36,6 +36,7 @@ ___
   * [XMLRPC through nginx](#xmlrpc-through-nginx)
   * [WebDAV](#webdav)
   * [Populate .htpasswd files](#populate-htpasswd-files)
+  * [Check ruTorrent environment](#check-rutorrent-environment)
   * [Bootstrap config `.rtlocal.rc`](#bootstrap-config-rtlocalrc)
   * [Override or add a ruTorrent plugin/theme](#override-or-add-a-rutorrent-plugintheme)
   * [Edit a ruTorrent plugin configuration](#edit-a-rutorrent-plugin-configuration)
@@ -258,6 +259,14 @@ Htpasswd files used:
 * `rutorrent.htpasswd`: ruTorrent basic auth
 * `webdav.htpasswd`: WebDAV on completed downloads
 
+### Check ruTorrent environment
+
+You can run ruTorrent's bundled environment checker inside a running container:
+
+```shell
+docker exec rtorrent-rutorrent rutorrent-env-check
+```
+
 ### Bootstrap config `.rtlocal.rc`
 
 When rTorrent is started the bootstrap config [/etc/rtorrent/.rtlocal.rc](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
@@ -295,7 +304,8 @@ plugin that already exists in ruTorrent, it will be removed from ruTorrent core
 plugins and yours will be used. And you can also add a theme in `/data/rutorrent/themes/`.
 The same principle as for plugins will be used if you want to override one.
 
-> :warning: Container has to be restarted to propagate changes
+> [!WARNING]
+> Container has to be restarted to propagate changes
 
 ### Edit a ruTorrent plugin configuration
 
@@ -315,7 +325,8 @@ $partitionDirectory = null;	// if null, then we will check rtorrent download dir
 				// otherwise, set this to the absolute path for checked partition. 
 ```
 
-> :warning: Container has to be restarted to propagate changes
+> [!WARNING]
+> Container has to be restarted to propagate changes
 
 ### Increase Docker timeout to allow rTorrent to shutdown gracefully
 
