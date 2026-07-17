@@ -30,6 +30,6 @@ EOL
 if [ -z "${WAN_IP}" ]; then
   echo "rtorrent -o import=/etc/rtorrent/.rtlocal.rc" >> /etc/services.d/rtorrent/run
 else
-  echo "rtorrent -o import=/etc/rtorrent/.rtlocal.rc -i ${WAN_IP}" >> /etc/services.d/rtorrent/run
+  echo "rtorrent -o import=/etc/rtorrent/.rtlocal.rc -o network.local_address.set=${WAN_IP}" >> /etc/services.d/rtorrent/run
 fi
 chmod +x /etc/services.d/rtorrent/run
