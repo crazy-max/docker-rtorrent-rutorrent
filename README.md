@@ -114,6 +114,7 @@ linux/arm64
 * `WAN_IP`: [Public IP address](#wan-ip-address) reported to the tracker (auto if empty)
 * `WAN_IP_CMD`: Command to resolve the [Public IP address](#wan-ip-address)
 * `MEMORY_LIMIT`: PHP memory limit (default `256M`)
+* `NGINX_WORKER_PROCESSES`: Number of Nginx worker processes (default `auto`)
 * `UPLOAD_MAX_SIZE`: Upload max size (default `16M`)
 * `CLEAR_ENV`: Clear environment in FPM workers (default `yes`)
 * `OPCACHE_MEM_SIZE`: PHP OpCache memory consumption (default `128`)
