@@ -47,7 +47,7 @@ FROM src AS src-rutorrent
 RUN git init . && git remote add origin "https://github.com/Novik/ruTorrent.git"
 ARG RUTORRENT_VERSION
 RUN git fetch origin "${RUTORRENT_VERSION}" && git checkout -q FETCH_HEAD
-RUN rm -rf .git* conf/users plugins/geoip share
+RUN rm -rf .git* conf/users plugins/geoip share tests
 
 FROM composer:2 AS update-geoip2-rutorrent
 WORKDIR /app
