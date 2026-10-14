@@ -1,0 +1,10 @@
+#!/bin/sh
+# s6-svscan runs this on SIGTERM (container stop) instead of its default action.
+# Do the default teardown, then kill socklog, which ignores its down signal and
+# otherwise keeps s6-svscan waiting until the runtime SIGKILLs the container.
+# https://github.com/crazy-max/docker-rtorrent-rutorrent/issues/311
+
+s6-svscanctl -t /var/run/s6/services
+sleep 1
+pkill -KILL -f "^socklog unix" 2>/dev/null
+exit 0
