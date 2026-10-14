@@ -152,6 +152,7 @@ linux/arm64
 * `RU_HTTP_USER_AGENT`: ruTorrent HTTP user agent (default `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36`)
 * `RU_HTTP_TIME_OUT`: ruTorrent HTTP timeout in seconds (default `30`)
 * `RU_HTTP_USE_GZIP`: Use HTTP Gzip compression (default `true`)
+* `RU_HTTP_VERIFY_CERTIFICATES`: Verify HTTPS server and proxy certificates (default `true`)
 * `RU_RPC_TIME_OUT`: ruTorrent RPC timeout in seconds (default `5`)
 * `RU_LOG_RPC_CALLS`: Log ruTorrent RPC calls (default `false`)
 * `RU_LOG_RPC_FAULTS`: Log ruTorrent RPC faults (default `true`)
