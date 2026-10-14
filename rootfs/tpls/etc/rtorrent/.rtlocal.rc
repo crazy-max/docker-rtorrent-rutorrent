@@ -1,6 +1,9 @@
 # Launch as a daemon
 system.daemon.set = true
 
+# Preserve 0.16.22 paths and keep d.name consistent with single-file paths.
+system.file_name.allow_legacy_utf8.set = false
+
 # Instance layout
 method.insert = cfg.basedir, private|const|string, (cat,"/data/rtorrent/")
 method.insert = cfg.download, private|const|string, (cat,"/downloads/")
