@@ -1,0 +1,9 @@
+#!/command/with-contenv sh
+
+export HOME=/data/rtorrent
+export PWD=/data/rtorrent
+set -- rtorrent -o import=/etc/rtorrent/.rtlocal.rc
+if [ -n "${WAN_IP}" ]; then
+  set -- "$@" -o "network.local_address.set=${WAN_IP}"
+fi
+exec s6-setuidgid "${PUID}:${PGID}" "$@"

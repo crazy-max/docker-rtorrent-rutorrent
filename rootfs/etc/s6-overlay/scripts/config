@@ -1,5 +1,4 @@
-#!/usr/bin/with-contenv sh
-# shellcheck shell=sh
+#!/bin/sh
 
 #WAN_IP=${WAN_IP:-10.0.0.1}
 #WAN_IP_CMD=${WAN_IP_CMD:-"dig +short myip.opendns.com @resolver1.opendns.com"}
@@ -68,7 +67,7 @@ fi
 if [ -n "$WAN_IP" ]; then
   echo "Public IP address enforced to ${WAN_IP}"
 fi
-printf "%s" "$WAN_IP" > /var/run/s6/container_environment/WAN_IP
+printf "%s" "$WAN_IP" > /run/s6/container_environment/WAN_IP
 
 # Timezone
 echo "Setting timezone to ${TZ}..."
