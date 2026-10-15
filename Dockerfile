@@ -11,7 +11,7 @@ ARG MKTORRENT_VERSION=v1.1
 ARG RUTORRENT_VERSION=v5.3.16
 ARG DUMPTORRENT_VERSION=v1.7.0
 
-ARG ALPINE_VERSION=3.23
+ARG ALPINE_VERSION=3.24
 ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
 
 FROM tianon/gosu:latest AS gosu
@@ -98,8 +98,8 @@ RUN apk --update --no-cache add \
     nghttp2-dev \
     openssl-dev \
     pcre-dev \
-    php84-dev \
-    php84-pear \
+    php85-dev \
+    php85-pear \
     tar \
     tree \
     xz \
@@ -204,21 +204,21 @@ RUN apk --update --no-cache add \
     nginx-mod-http-dav-ext \
     nginx-mod-http-geoip2 \
     openssl \
-    php84 \
-    php84-bcmath \
-    php84-ctype \
-    php84-curl \
-    php84-dom \
-    php84-fileinfo \
-    php84-fpm \
-    php84-mbstring \
-    php84-openssl \
-    php84-posix \
-    php84-session \
-    php84-simplexml \
-    php84-sockets \
-    php84-xml \
-    php84-zip \
+    php85 \
+    php85-bcmath \
+    php85-ctype \
+    php85-curl \
+    php85-dom \
+    php85-fileinfo \
+    php85-fpm \
+    php85-mbstring \
+    php85-openssl \
+    php85-posix \
+    php85-session \
+    php85-simplexml \
+    php85-sockets \
+    php85-xml \
+    php85-zip \
     python3 \
     py3-pip \
     shadow \
