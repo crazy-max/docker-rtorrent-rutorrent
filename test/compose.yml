@@ -39,17 +39,6 @@ services:
         hard: 40000
     restart: always
 
-  rtorrent-logs:
-    image: bash
-    container_name: rtorrent-rutorrent-logs
-    command: bash -c 'tail -f /data/rtorrent/log/*.log'
-    network_mode: none
-    depends_on:
-      - rtorrent-rutorrent
-    volumes:
-      - "rtorrent-rutorrent-data:/data"
-    restart: always
-
 volumes:
   rtorrent-rutorrent-data:
   rtorrent-rutorrent-downloads:
