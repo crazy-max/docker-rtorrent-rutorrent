@@ -71,4 +71,4 @@ log.add_output = "rpc_events","log"
 #log.rpc = (cat,(cfg.logs),"xmlrpc.log")
 
 # Initialize plugins after a 10 seconds delay
-schedule = init_plugins, 10, 0, ((execute.nothrow.bg,/usr/bin/php84,/var/www/rutorrent/php/initplugins.php,rtorrent))
+schedule = init_plugins, 10, 0, ((execute.nothrow.bg,/usr/bin/php85,/var/www/rutorrent/php/initplugins.php,rtorrent))
