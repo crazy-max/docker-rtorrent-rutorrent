@@ -29,8 +29,8 @@ services:
       - "rtorrent-rutorrent.env"
       - ".env"
     volumes:
-      - "rtorrent-rutorrent-data:/data"
-      - "rtorrent-rutorrent-downloads:/downloads"
+      - "rtorrent-rutorrent-data:${DATA_DIR:-/data}"
+      - "rtorrent-rutorrent-downloads:${DOWNLOAD_DIR:-/downloads}"
       - "rtorrent-rutorrent-passwd:/passwd"
     ulimits:
       nproc: 65535
@@ -42,12 +42,12 @@ services:
   rtorrent-logs:
     image: bash
     container_name: rtorrent-rutorrent-logs
-    command: bash -c 'tail -f /data/rtorrent/log/*.log'
+    command: bash -c 'tail -f $${DATA_DIR:-/data}/rtorrent/log/*.log'
     network_mode: none
     depends_on:
       - rtorrent-rutorrent
     volumes:
-      - "rtorrent-rutorrent-data:/data"
+      - "rtorrent-rutorrent-data:${DATA_DIR:-/data}"
     restart: always
 
 volumes:
