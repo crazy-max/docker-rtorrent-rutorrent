@@ -177,11 +177,10 @@ RUN echo "net.core.rmem_max = 67108864" >> /etc/sysctl.conf \
   && echo "net.core.wmem_max = 67108864" >> /etc/sysctl.conf \
   && sysctl -p
 
-# unrar package is not available since alpine 3.15
-# dhclient package is not available since alpine 3.21
+# ruTorrent's unpack plugin requires unrar, which Alpine removed in 3.15.
+# Use the last Alpine release that packaged it until a replacement is available.
 RUN echo "@314 http://dl-cdn.alpinelinux.org/alpine/v3.14/main" >> /etc/apk/repositories \
-  && echo "@320 http://dl-cdn.alpinelinux.org/alpine/v3.20/main" >> /etc/apk/repositories \
-  && apk --update --no-cache add unrar@314 dhclient@320
+  && apk --update --no-cache add unrar@314
 
 RUN apk --update --no-cache add \
     apache2-utils \
