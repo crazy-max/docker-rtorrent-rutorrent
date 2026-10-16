@@ -332,6 +332,10 @@ $partitionDirectory = null;	// if null, then we will check rtorrent download dir
 
 ### Increase Docker timeout to allow rTorrent to shutdown gracefully
 
+The image uses native s6-overlay v3 services. During shutdown, rTorrent receives
+SIGINT so it can save its session and notify trackers before exiting. Allow
+enough time for this work using Docker's stop timeout.
+
 After issuing a shutdown command, Docker waits 10 seconds for the container to
 exit before it is killed.  If you are a seeding many torrents, rTorrent may be
 unable to gracefully close within that time period.  As a result, rTorrent is

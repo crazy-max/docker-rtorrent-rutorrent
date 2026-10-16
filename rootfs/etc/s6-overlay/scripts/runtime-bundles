@@ -1,0 +1,16 @@
+#!/command/with-contenv sh
+set -eu
+
+contents=/etc/s6-overlay/s6-rc.d/user/contents.d
+
+if [ "${RT_LOG_EXECUTE:-false}" = "true" ]; then
+  touch "${contents}/rtorrent-execute-log"
+else
+  rm -f "${contents}/rtorrent-execute-log"
+fi
+
+if [ "${RT_LOG_XMLRPC:-false}" = "true" ]; then
+  touch "${contents}/rtorrent-xmlrpc-log"
+else
+  rm -f "${contents}/rtorrent-xmlrpc-log"
+fi

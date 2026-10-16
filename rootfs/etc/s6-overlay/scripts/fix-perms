@@ -1,5 +1,4 @@
-#!/usr/bin/with-contenv sh
-# shellcheck shell=sh
+#!/bin/sh
 
 echo "Fixing perms..."
 mkdir -p /data/rtorrent \

@@ -12,7 +12,6 @@ ARG RUTORRENT_VERSION=v5.3.16
 ARG DUMPTORRENT_VERSION=v1.7.0
 
 ARG ALPINE_VERSION=3.24
-ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
 
 FROM tianon/gosu:latest AS gosu
 
@@ -79,7 +78,7 @@ RUN git fetch origin "${DUMPTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 RUN sed -i '1i #include <sys/time.h>' src/scrapec.c
 RUN rm -rf .git*
 
-FROM crazymax/alpine-s6:${ALPINE_S6_VERSION} AS builder
+FROM alpine:${ALPINE_VERSION} AS builder
 RUN apk --update --no-cache add \
     autoconf \
     automake \
@@ -159,7 +158,7 @@ RUN cmake --build build/ --config Release --parallel $(nproc)
 RUN cp build/dumptorrent build/scrapec ${DIST_PATH}/usr/local/bin
 RUN tree ${DIST_PATH}
 
-FROM crazymax/alpine-s6:${ALPINE_S6_VERSION}
+FROM alpine:${ALPINE_VERSION}
 COPY --from=gosu /gosu /usr/local/bin/
 COPY --from=builder /dist /
 COPY --from=src-rutorrent --chown=nobody:nogroup /src /var/www/rutorrent
@@ -168,7 +167,7 @@ COPY --from=src-mmdb /src /var/mmdb
 
 ENV PYTHONPATH="/var/www/rutorrent" \
   S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
-  S6_KILL_GRACETIME="10000" \
+  S6_STAGE2_HOOK="/etc/s6-overlay/scripts/runtime-bundles" \
   TZ="UTC" \
   PUID="1000" \
   PGID="1000"
@@ -221,6 +220,7 @@ RUN apk --update --no-cache add \
     php85-zip \
     python3 \
     py3-pip \
+    s6-overlay \
     shadow \
     sox \
     tar \

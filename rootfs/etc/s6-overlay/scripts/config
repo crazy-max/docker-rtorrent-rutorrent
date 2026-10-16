@@ -1,5 +1,4 @@
-#!/usr/bin/with-contenv sh
-# shellcheck shell=sh
+#!/bin/sh
 
 #WAN_IP=${WAN_IP:-10.0.0.1}
 #WAN_IP_CMD=${WAN_IP_CMD:-"dig +short myip.opendns.com @resolver1.opendns.com"}
@@ -68,7 +67,7 @@ fi
 if [ -n "$WAN_IP" ]; then
   echo "Public IP address enforced to ${WAN_IP}"
 fi
-printf "%s" "$WAN_IP" > /var/run/s6/container_environment/WAN_IP
+printf "%s" "$WAN_IP" > /run/s6/container_environment/WAN_IP
 
 # Timezone
 echo "Setting timezone to ${TZ}..."
@@ -197,10 +196,12 @@ sed -e "s!@RT_LOG_LEVEL@!$RT_LOG_LEVEL!g" \
   /tpls/etc/rtorrent/.rtlocal.rc > /etc/rtorrent/.rtlocal.rc
 if [ "${RT_LOG_EXECUTE}" = "true" ]; then
   echo "  Enabling rTorrent execute log..."
+  touch /data/rtorrent/log/execute.log
   sed -i "s!#log\.execute.*!log\.execute = (cat,(cfg.logs),\"execute.log\")!g" /etc/rtorrent/.rtlocal.rc
 fi
 if [ "${RT_LOG_XMLRPC}" = "true" ]; then
   echo "  Enabling rTorrent xmlrpc log..."
+  touch /data/rtorrent/log/xmlrpc.log
   sed -i "s!#log\.rpc.*!log\.rpc = (cat,(cfg.logs),\"xmlrpc.log\")!g" /etc/rtorrent/.rtlocal.rc
 fi
 
