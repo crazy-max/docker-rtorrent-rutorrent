@@ -8,14 +8,13 @@ permissions:
   contents: read
 
 on:
-  schedule:
-    - cron: '0 8 */6 * *'
   push:
     branches:
       - 'master'
     tags:
       - '*'
   pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -33,21 +32,17 @@ jobs:
       push: ${{ github.event_name != 'pull_request' }}
       set-meta-labels: true
       meta-images: |
-        crazymax/rtorrent-rutorrent
-        ghcr.io/crazy-max/rtorrent-rutorrent
+        ghcr.io/karkusviktor/rtorrent-rutorrent
       meta-tags: |
         type=match,pattern=(.*)-r,group=1
         type=ref,event=pr
         type=edge
       meta-labels: |
         org.opencontainers.image.title=rTorrent and ruTorrent
-        org.opencontainers.image.description=rTorrent and ruTorrent
-        org.opencontainers.image.vendor=CrazyMax
+        org.opencontainers.image.description=rTorrent and ruTorrent (ipv6 build)
+        org.opencontainers.image.vendor=karkusviktor
     secrets:
       registry-auths: |
-        - registry: docker.io
-          username: ${{ vars.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
         - registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
