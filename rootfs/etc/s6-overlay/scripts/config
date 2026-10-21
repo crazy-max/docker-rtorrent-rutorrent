@@ -35,6 +35,7 @@ RU_REMOVE_CORE_PLUGINS=${RU_REMOVE_CORE_PLUGINS:-false}
 RU_HTTP_USER_AGENT=${RU_HTTP_USER_AGENT:-Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36}
 RU_HTTP_TIME_OUT=${RU_HTTP_TIME_OUT:-30}
 RU_HTTP_USE_GZIP=${RU_HTTP_USE_GZIP:-true}
+RU_HTTP_MAX_RESPONSE_LENGTH=${RU_HTTP_MAX_RESPONSE_LENGTH:-4194304}
 RU_HTTP_VERIFY_CERTIFICATES=${RU_HTTP_VERIFY_CERTIFICATES:-true}
 RU_RPC_TIME_OUT=${RU_RPC_TIME_OUT:-5}
 RU_LOG_RPC_CALLS=${RU_LOG_RPC_CALLS:-false}
@@ -222,6 +223,7 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 \$httpUserAgent = '${RU_HTTP_USER_AGENT}';
 \$httpTimeOut = ${RU_HTTP_TIME_OUT};
 \$httpUseGzip = ${RU_HTTP_USE_GZIP};
+\$httpMaxResponseLength = ${RU_HTTP_MAX_RESPONSE_LENGTH};
 \$httpVerifyCertificates = ${RU_HTTP_VERIFY_CERTIFICATES};
 
 // Keep ruTorrent's private-network fetch guard disabled by default to avoid
