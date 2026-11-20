@@ -10,6 +10,7 @@ ARG MKTORRENT_VERSION=v1.1
 
 ARG RUTORRENT_VERSION=v5.3.18
 ARG DUMPTORRENT_VERSION=v1.7.0
+ARG UNRAR_VERSION=7.2.7
 
 ARG ALPINE_VERSION=3.24
 
@@ -77,6 +78,10 @@ ARG DUMPTORRENT_VERSION
 RUN git fetch origin "${DUMPTORRENT_VERSION}" && git checkout -q FETCH_HEAD
 RUN sed -i '1i #include <sys/time.h>' src/scrapec.c
 RUN rm -rf .git*
+
+FROM src AS src-unrar
+ARG UNRAR_VERSION
+RUN curl -sSL "https://www.rarlab.com/rar/unrarsrc-${UNRAR_VERSION}.tar.gz" | tar xz --strip 1
 
 FROM alpine:${ALPINE_VERSION} AS builder
 RUN apk --update --no-cache add \
@@ -158,6 +163,12 @@ RUN cmake --build build/ --config Release --parallel $(nproc)
 RUN cp build/dumptorrent build/scrapec ${DIST_PATH}/usr/local/bin
 RUN tree ${DIST_PATH}
 
+WORKDIR /usr/local/src/unrar
+COPY --from=src-unrar /src .
+RUN make CXXFLAGS="-O2" LDFLAGS="-pthread"
+RUN install -D -m 755 unrar ${DIST_PATH}/usr/local/bin/unrar
+RUN tree ${DIST_PATH}
+
 FROM alpine:${ALPINE_VERSION}
 COPY --from=gosu /gosu /usr/local/bin/
 COPY --from=builder /dist /
@@ -176,11 +187,6 @@ ENV PYTHONPATH="/var/www/rutorrent" \
 RUN echo "net.core.rmem_max = 67108864" >> /etc/sysctl.conf \
   && echo "net.core.wmem_max = 67108864" >> /etc/sysctl.conf \
   && sysctl -p
-
-# ruTorrent's unpack plugin requires unrar, which Alpine removed in 3.15.
-# Use the last Alpine release that packaged it until a replacement is available.
-RUN echo "@314 http://dl-cdn.alpinelinux.org/alpine/v3.14/main" >> /etc/apk/repositories \
-  && apk --update --no-cache add unrar@314
 
 RUN apk --update --no-cache add \
     apache2-utils \
