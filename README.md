@@ -294,7 +294,7 @@ properties of this file:
 * `network.scgi.open_local`: SCGI local socket and make it group-writable and secure
 * `network.listen.port.range.set`: Listening port for incoming peer traffic (`50000-50000`)
 * `dht.override_port.set`: UDP port to use for DHT (`6881`)
-* `log.open_file`: Default logging to `/data/rtorrent/log/rtorrent.log`
+* `log.open_file.flush`: Default logging to `/data/rtorrent/log/rtorrent.log`
   * Log level can be modified with the environment variable `RT_LOG_LEVEL`
   * `rpc_events` are logged be default
   * To log executed commands, add the environment variable `RT_LOG_EXECUTE`
