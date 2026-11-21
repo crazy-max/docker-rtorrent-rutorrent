@@ -62,10 +62,8 @@ system.file.allocate.set = @RT_PREALLOCATE_TYPE@
 system.files.session.fdatasync.set = @RT_SESSION_FDATASYNC@
 
 # Logging
-## levels = critical error warn notice info debug
-## groups = connection_* dht_* peer_* rpc_* storage_* thread_* tracker_* torrent_*
+## groups = errors events debug_trace connection_* dht_* net_* peer_* protocol_* rpc_* storage_* system_* torrent_* tracker_*
 log.open_file.flush = "log",(cat,(cfg.logs),"rtorrent.log")
-log.add_output = "@RT_LOG_LEVEL@","log"
 log.add_output = "rpc_events","log"
 #log.execute = (cat,(cfg.logs),"execute.log")
 #log.rpc = (cat,(cfg.logs),"xmlrpc.log")
