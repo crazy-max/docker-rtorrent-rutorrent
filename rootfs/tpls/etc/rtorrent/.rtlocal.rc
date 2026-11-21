@@ -64,7 +64,7 @@ system.files.session.fdatasync.set = @RT_SESSION_FDATASYNC@
 # Logging
 ## levels = critical error warn notice info debug
 ## groups = connection_* dht_* peer_* rpc_* storage_* thread_* tracker_* torrent_*
-log.open_file = "log",(cat,(cfg.logs),"rtorrent.log")
+log.open_file.flush = "log",(cat,(cfg.logs),"rtorrent.log")
 log.add_output = "@RT_LOG_LEVEL@","log"
 log.add_output = "rpc_events","log"
 #log.execute = (cat,(cfg.logs),"execute.log")
