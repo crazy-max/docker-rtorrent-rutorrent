@@ -18,7 +18,7 @@ ARG RUTORRENT_VERSION=v5.3.23
 # renovate: datasource=github-tags depName=tomcdj71/dumptorrent
 ARG DUMPTORRENT_VERSION=v1.7.0
 # renovate: datasource=custom.unrar depName=unrar
-ARG UNRAR_VERSION=7.2.7
+ARG UNRAR_VERSION=7.3.2
 
 ARG ALPINE_VERSION=3.24
 
