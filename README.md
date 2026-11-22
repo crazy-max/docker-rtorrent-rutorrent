@@ -134,7 +134,7 @@ linux/arm64
 
 ### rTorrent
 
-* `RT_LOG_LEVEL`: rTorrent log level (default `info`)
+* `RT_LOG_GROUPS`: Comma separated list of rTorrent log groups written to `/data/rtorrent/log/rtorrent.log` (default `errors,events`)
 * `RT_LOG_EXECUTE`: Log executed commands to `/data/rtorrent/log/execute.log` (default `false`)
 * `RT_LOG_XMLRPC`: Log XMLRPC queries to `/data/rtorrent/log/xmlrpc.log` (default `false`)
 * `RT_SESSION_SAVE_SECONDS`: Seconds between writing torrent information to disk (default `3600`)
@@ -155,6 +155,8 @@ linux/arm64
 * `RU_HTTP_MAX_RESPONSE_LENGTH`: Maximum HTTP response body size in bytes, including after gzip decompression (default `4194304`, or 4 MiB). Increase this for larger feeds or torrent metadata, within the PHP memory limit.
 * `RU_HTTP_VERIFY_CERTIFICATES`: Verify HTTPS server and proxy certificates (default `true`)
 * `RU_RPC_TIME_OUT`: ruTorrent RPC timeout in seconds (default `5`)
+* `RU_RPC_TRANSFER_TIME_OUT`: Time in seconds for a whole ruTorrent RPC request and its response (default `null`, which uses the larger of `RU_RPC_TIME_OUT` and the PHP `default_socket_timeout`)
+* `RU_RPC_MAX_RESPONSE_BYTES`: Largest rTorrent RPC response body that ruTorrent accepts, in bytes (default `104857600`, or 100 MiB, which is also the maximum)
 * `RU_LOG_RPC_CALLS`: Log ruTorrent RPC calls (default `false`)
 * `RU_LOG_RPC_FAULTS`: Log ruTorrent RPC faults (default `true`)
 * `RU_PHP_USE_GZIP`: Use PHP Gzip compression (default `false`)
@@ -168,6 +170,7 @@ linux/arm64
 * `RU_OVERWRITE_UPLOADED_TORRENTS`: Existing .torrent files will be overwritten (default `false`)
 * `RU_FORBID_USER_SETTINGS`: If true, allows for single user style configuration, even with webauth (default `false`)
 * `RU_LOCALE`: Set default locale for ruTorrent (default `UTF8`)
+* `RU_PUBLIC_URL`: Absolute public URL of ruTorrent for feed links, including the path prefix of a reverse proxy (default empty)
 
 ## Volumes
 
@@ -295,7 +298,7 @@ properties of this file:
 * `network.listen.port.range.set`: Listening port for incoming peer traffic (`50000-50000`)
 * `dht.override_port.set`: UDP port to use for DHT (`6881`)
 * `log.open_file.flush`: Default logging to `/data/rtorrent/log/rtorrent.log`
-  * Log level can be modified with the environment variable `RT_LOG_LEVEL`
+  * Log groups can be modified with the environment variable `RT_LOG_GROUPS`
   * `rpc_events` are logged be default
   * To log executed commands, add the environment variable `RT_LOG_EXECUTE`
   * To log XMLRPC queries, add the environment variable `RT_LOG_XMLRPC`

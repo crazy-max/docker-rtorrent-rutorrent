@@ -21,7 +21,7 @@ XMLRPC_AUTHBASIC_STRING=${XMLRPC_AUTHBASIC_STRING:-rTorrent XMLRPC restricted ac
 RUTORRENT_AUTHBASIC_STRING=${RUTORRENT_AUTHBASIC_STRING:-ruTorrent restricted access}
 WEBDAV_AUTHBASIC_STRING=${WEBDAV_AUTHBASIC_STRING:-WebDAV restricted access}
 
-RT_LOG_LEVEL=${RT_LOG_LEVEL:-info}
+RT_LOG_GROUPS=${RT_LOG_GROUPS:-errors,events}
 RT_LOG_EXECUTE=${RT_LOG_EXECUTE:-false}
 RT_LOG_XMLRPC=${RT_LOG_XMLRPC:-false}
 RT_SESSION_SAVE_SECONDS=${RT_SESSION_SAVE_SECONDS:-3600}
@@ -38,6 +38,8 @@ RU_HTTP_USE_GZIP=${RU_HTTP_USE_GZIP:-true}
 RU_HTTP_MAX_RESPONSE_LENGTH=${RU_HTTP_MAX_RESPONSE_LENGTH:-4194304}
 RU_HTTP_VERIFY_CERTIFICATES=${RU_HTTP_VERIFY_CERTIFICATES:-true}
 RU_RPC_TIME_OUT=${RU_RPC_TIME_OUT:-5}
+RU_RPC_TRANSFER_TIME_OUT=${RU_RPC_TRANSFER_TIME_OUT:-null}
+RU_RPC_MAX_RESPONSE_BYTES=${RU_RPC_MAX_RESPONSE_BYTES:-104857600}
 RU_LOG_RPC_CALLS=${RU_LOG_RPC_CALLS:-false}
 RU_LOG_RPC_FAULTS=${RU_LOG_RPC_FAULTS:-true}
 RU_PHP_USE_GZIP=${RU_PHP_USE_GZIP:-false}
@@ -51,6 +53,7 @@ RU_SAVE_UPLOADED_TORRENTS=${RU_SAVE_UPLOADED_TORRENTS:-true}
 RU_OVERWRITE_UPLOADED_TORRENTS=${RU_OVERWRITE_UPLOADED_TORRENTS:-false}
 RU_FORBID_USER_SETTINGS=${RU_FORBID_USER_SETTINGS:-false}
 RU_LOCALE=${RU_LOCALE:-UTF8}
+RU_PUBLIC_URL=${RU_PUBLIC_URL:-}
 
 RT_DHT_PORT=${RT_DHT_PORT:-6881}
 RT_INC_PORT=${RT_INC_PORT:-50000}
@@ -184,8 +187,7 @@ fi
 
 # rTorrent local config
 echo "Checking rTorrent local configuration..."
-sed -e "s!@RT_LOG_LEVEL@!$RT_LOG_LEVEL!g" \
-  -e "s!@RT_DHT_PORT@!$RT_DHT_PORT!g" \
+sed -e "s!@RT_DHT_PORT@!$RT_DHT_PORT!g" \
   -e "s!@RT_INC_PORT@!$RT_INC_PORT!g" \
   -e "s!@XMLRPC_SIZE_LIMIT@!$XMLRPC_SIZE_LIMIT!g" \
   -e "s!@RT_SESSION_SAVE_SECONDS@!$RT_SESSION_SAVE_SECONDS!g" \
@@ -195,6 +197,13 @@ sed -e "s!@RT_LOG_LEVEL@!$RT_LOG_LEVEL!g" \
   -e "s!@RT_RECEIVE_BUFFER_SIZE@!$RT_RECEIVE_BUFFER_SIZE!g" \
   -e "s!@RT_PREALLOCATE_TYPE@!$RT_PREALLOCATE_TYPE!g" \
   /tpls/etc/rtorrent/.rtlocal.rc > /etc/rtorrent/.rtlocal.rc
+if [ -n "${RT_LOG_LEVEL+x}" ]; then
+  echo "  WARNING: RT_LOG_LEVEL is no longer supported; use RT_LOG_GROUPS instead."
+fi
+echo "  Setting rTorrent log groups to ${RT_LOG_GROUPS}..."
+for group in ${RT_LOG_GROUPS//,/ }; do
+  sed -i "/^log\.add_output = \"rpc_events\"/i log.add_output = \"${group}\",\"log\"" /etc/rtorrent/.rtlocal.rc
+done
 if [ "${RT_LOG_EXECUTE}" = "true" ]; then
   echo "  Enabling rTorrent execute log..."
   touch /data/rtorrent/log/execute.log
@@ -233,6 +242,8 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 
 // for xmlrpc actions
 \$rpcTimeOut = ${RU_RPC_TIME_OUT};
+\$rpcTransferTimeOut = ${RU_RPC_TRANSFER_TIME_OUT};
+\$rpcMaxResponseBytes = ${RU_RPC_MAX_RESPONSE_BYTES};
 \$rpcLogCalls = ${RU_LOG_RPC_CALLS};
 \$rpcLogFaults = ${RU_LOG_RPC_FAULTS};
 
@@ -307,6 +318,9 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 
 \$enableCSRFCheck = false; // If true then Origin and Referer will be checked
 \$enabledOrigins = array(); // List of enabled domains for CSRF check (only hostnames, without protocols, port etc.). If empty, then will retrieve domain from HTTP_HOST / HTTP_X_FORWARDED_HOST
+
+// Absolute public application base, including a reverse proxy's path prefix, for feed links.
+\$publicURL = $(php85 -r 'var_export($argv[1]);' -- "${RU_PUBLIC_URL}");
 EOL
 chown nobody:nogroup "/var/www/rutorrent/conf/config.php"
 
