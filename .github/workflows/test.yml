@@ -47,7 +47,7 @@ jobs:
       -
         name: Start
         run: |
-          docker compose up -d
+          docker compose up -d --wait --wait-timeout 120
         working-directory: test
         env:
           RTORRENT_RUTORRENT_IMAGE: ${{ env.BUILD_TAG }}
