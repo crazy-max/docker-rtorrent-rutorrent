@@ -1,0 +1,80 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "helpers:pinGitHubActionDigestsToSemver",
+    "helpers:githubDigestChangelogs"
+  ],
+  "enabledManagers": [
+    "github-actions",
+    "dockerfile",
+    "composer",
+    "custom.regex"
+  ],
+  "prHourlyLimit": 0,
+  "minimumReleaseAge": "2 days",
+  "internalChecksFilter": "strict",
+  "labels": ["kind/dependencies", "bot"],
+  "semanticCommits": "disabled",
+  "commitMessagePrefix": "deps:",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^Dockerfile$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?[ \\t]*\\r?\\n[ \\t]*ARG[ \\t]+\\w+=\"?(?<currentValue>[^\\s\"]+)\"?"
+      ]
+    }
+  ],
+  "customDatasources": {
+    "curl": {
+      "defaultRegistryUrlTemplate": "https://curl.se/download.html",
+      "format": "html"
+    },
+    "unrar": {
+      "defaultRegistryUrlTemplate": "https://www.rarlab.com/rar_add.htm",
+      "format": "html"
+    }
+  },
+  "packageRules": [
+    {
+      "matchFileNames": ["Dockerfile"],
+      "commitMessagePrefix": "deps(dockerfile):"
+    },
+    {
+      "matchManagers": ["composer"],
+      "commitMessagePrefix": "deps(composer):"
+    },
+    {
+      "matchFileNames": [".github/workflows/**"],
+      "commitMessagePrefix": "deps(ci):"
+    },
+    {
+      "matchDepNames": ["c-ares/c-ares"],
+      "extractVersion": "^v(?<version>\\d+\\.\\d+\\.\\d+)$"
+    },
+    {
+      "matchDatasources": ["custom.curl"],
+      "extractVersion": "(?:^|/)curl-(?<version>\\d+\\.\\d+\\.\\d+)\\.tar\\.gz$"
+    },
+    {
+      "matchDatasources": ["custom.unrar"],
+      "extractVersion": "(?:^|/)unrarsrc-(?<version>\\d+\\.\\d+\\.\\d+)\\.tar\\.gz$"
+    },
+    {
+      "matchDatasources": ["custom.curl", "custom.unrar"],
+      // Download links do not provide release timestamps.
+      "minimumReleaseAge": null
+    },
+    {
+      "matchDepNames": ["rakshasa/libtorrent", "rakshasa/rtorrent"],
+      "groupName": "rtorrent"
+    },
+    {
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "commitMessageAction": "bump",
+      "commitMessageTopic": "{{{depName}}}",
+      "commitMessageExtra": "from {{{replace '^v' '' currentValue}}} to {{{replace '^v' '' newValue}}}"
+    }
+  ]
+}
