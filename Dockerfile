@@ -1,15 +1,23 @@
 # syntax=docker/dockerfile:1
 
+# renovate: datasource=github-releases depName=c-ares/c-ares
 ARG CARES_VERSION=1.34.9
+# renovate: datasource=custom.curl depName=curl
 ARG CURL_VERSION=8.23.0
 
+# renovate: datasource=github-tags depName=rakshasa/libtorrent
 ARG LIBTORRENT_VERSION=v0.16.28
+# renovate: datasource=github-tags depName=rakshasa/rtorrent
 ARG RTORRENT_VERSION=v0.16.28
 
+# renovate: datasource=github-tags depName=pobrn/mktorrent
 ARG MKTORRENT_VERSION=v1.1
 
+# renovate: datasource=github-tags depName=Novik/ruTorrent
 ARG RUTORRENT_VERSION=v5.3.23
+# renovate: datasource=github-tags depName=tomcdj71/dumptorrent
 ARG DUMPTORRENT_VERSION=v1.7.0
+# renovate: datasource=custom.unrar depName=unrar
 ARG UNRAR_VERSION=7.2.7
 
 ARG ALPINE_VERSION=3.24
