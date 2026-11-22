@@ -317,7 +317,7 @@ cat > /var/www/rutorrent/conf/config.php <<EOL
 \$enabledOrigins = array(); // List of enabled domains for CSRF check (only hostnames, without protocols, port etc.). If empty, then will retrieve domain from HTTP_HOST / HTTP_X_FORWARDED_HOST
 
 // Absolute public application base, including a reverse proxy's path prefix, for feed links.
-\$publicURL = '${RU_PUBLIC_URL}';
+\$publicURL = $(php85 -r 'var_export($argv[1]);' -- "${RU_PUBLIC_URL}");
 EOL
 chown nobody:nogroup "/var/www/rutorrent/conf/config.php"
 
