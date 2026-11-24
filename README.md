@@ -37,6 +37,7 @@ ___
   * [WebDAV](#webdav)
   * [Populate .htpasswd files](#populate-htpasswd-files)
   * [Check ruTorrent environment](#check-rutorrent-environment)
+  * [Initialize plugins with a user profile](#initialize-plugins-with-a-user-profile)
   * [Bootstrap config `.rtlocal.rc`](#bootstrap-config-rtlocalrc)
   * [Override or add a ruTorrent plugin/theme](#override-or-add-a-rutorrent-plugintheme)
   * [Edit a ruTorrent plugin configuration](#edit-a-rutorrent-plugin-configuration)
@@ -169,6 +170,7 @@ linux/arm64
 * `RU_SAVE_UPLOADED_TORRENTS`: Save torrents files added wia ruTorrent in `/data/rutorrent/share/torrents` (default `true`)
 * `RU_OVERWRITE_UPLOADED_TORRENTS`: Existing .torrent files will be overwritten (default `false`)
 * `RU_FORBID_USER_SETTINGS`: If true, allows for single user style configuration, even with webauth (default `false`)
+* `RU_INIT_PLUGINS_USER`: [Plugin startup profile](#initialize-plugins-with-a-user-profile) (default `rtorrent`)
 * `RU_LOCALE`: Set default locale for ruTorrent (default `UTF8`)
 * `RU_PUBLIC_URL`: Absolute public URL of ruTorrent for feed links, including the path prefix of a reverse proxy (default empty)
 
@@ -272,6 +274,22 @@ You can run ruTorrent's bundled environment checker inside a running container:
 ```shell
 docker exec rtorrent-rutorrent rutorrent-env-check
 ```
+
+### Initialize plugins with a user profile
+
+With Basic Auth and per-user settings enabled (`RU_FORBID_USER_SETTINGS=false`),
+ruTorrent stores settings under `/data/rutorrent/share/users/<username>/`.
+Set `RU_INIT_PLUGINS_USER` to your Basic Auth username so plugins load the same
+saved settings when rTorrent starts:
+
+```yaml
+environment:
+  RU_INIT_PLUGINS_USER: bob
+```
+
+This selects one startup profile for the shared rTorrent instance. It does not
+create a login or migrate settings between profiles. Basic Auth credentials
+remain in `/passwd/rutorrent.htpasswd`.
 
 ### Bootstrap config `.rtlocal.rc`
 
