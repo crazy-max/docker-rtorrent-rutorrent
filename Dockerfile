@@ -14,7 +14,7 @@ ARG RTORRENT_VERSION=v0.16.28
 ARG MKTORRENT_VERSION=v1.1
 
 # renovate: datasource=github-tags depName=Novik/ruTorrent
-ARG RUTORRENT_VERSION=v5.3.23
+ARG RUTORRENT_VERSION=v5.3.25
 # renovate: datasource=github-tags depName=tomcdj71/dumptorrent
 ARG DUMPTORRENT_VERSION=v1.7.0
 # renovate: datasource=custom.unrar depName=unrar
