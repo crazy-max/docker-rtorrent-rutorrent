@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+exec /usr/bin/php85 /var/www/rutorrent/php/initplugins.php "${RU_INIT_PLUGINS_USER:-rtorrent}"
