@@ -14,22 +14,42 @@
   "prHourlyLimit": 0,
   "minimumReleaseAge": "2 days",
   "internalChecksFilter": "strict",
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "commitMessageSuffix": ""
+  },
   "labels": ["kind/dependencies", "bot"],
   "semanticCommits": "disabled",
-  "commitMessagePrefix": "deps:",
+  "commitMessagePrefix": "deps{{#if isVulnerabilityAlert}}(security){{/if}}:",
   "customManagers": [
     {
       "customType": "regex",
       "managerFilePatterns": ["/^Dockerfile$/"],
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?[ \\t]*\\r?\\n[ \\t]*ARG[ \\t]+\\w+=\"?(?<currentValue>[^\\s\"]+)\"?"
+        "# renovate: datasource=(?<datasource>github-tags|custom\\.release-archive) depName=(?<depName>\\S+)\\r?\\nARG \\w+_VERSION=(?<currentValue>\\S+)\\r?\\nARG \\w+_(?:COMMIT|SHA256)=(?<currentDigest>[a-f0-9]+)",
+        "# renovate: datasource=(?<datasource>custom\\.unrar) depName=(?<depName>\\S+)\\r?\\nARG UNRAR_VERSION=(?<currentValue>\\S+)"
       ]
     }
   ],
   "customDatasources": {
-    "curl": {
-      "defaultRegistryUrlTemplate": "https://curl.se/download.html",
-      "format": "html"
+    "release-archive": {
+      "defaultRegistryUrlTemplate": "https://api.github.com/repos/{{packageName}}/releases?per_page=100",
+      "transformTemplates": [
+        "{\
+          'releases': [$map($[draft = false and prerelease = false], function($r) { (\
+            $name := $substringAfter('{{packageName}}', '/');\
+            $version := $replace($replace($r.tag_name, /^(curl-|v)/, ''), '_', '.');\
+            $asset := $r.assets[name = $name & '-' & $version & '.tar.gz' and\
+              $match($string(digest), /^sha256:[a-f0-9]{64}$/)];\
+            $exists($asset) and $match($version, /^[0-9]+\\.[0-9]+\\.[0-9]+$/) ? {\
+              'version': $version,\
+              'digest': $substringAfter($asset.digest, 'sha256:'),\
+              'releaseTimestamp': $r.published_at, 'changelogUrl': $r.html_url\
+            }\
+          ) })],\
+          'sourceUrl': 'https://github.com/{{packageName}}'\
+        }"
+      ]
     },
     "unrar": {
       "defaultRegistryUrlTemplate": "https://www.rarlab.com/rar_add.htm",
@@ -39,30 +59,22 @@
   "packageRules": [
     {
       "matchFileNames": ["Dockerfile"],
-      "commitMessagePrefix": "deps(dockerfile):"
+      "commitMessagePrefix": "deps(dockerfile{{#if isVulnerabilityAlert}},security{{/if}}):"
     },
     {
       "matchManagers": ["composer"],
-      "commitMessagePrefix": "deps(composer):"
+      "commitMessagePrefix": "deps(composer{{#if isVulnerabilityAlert}},security{{/if}}):"
     },
     {
       "matchFileNames": [".github/workflows/**"],
-      "commitMessagePrefix": "deps(ci):"
-    },
-    {
-      "matchDepNames": ["c-ares/c-ares"],
-      "extractVersion": "^v(?<version>\\d+\\.\\d+\\.\\d+)$"
-    },
-    {
-      "matchDatasources": ["custom.curl"],
-      "extractVersion": "(?:^|/)curl-(?<version>\\d+\\.\\d+\\.\\d+)\\.tar\\.gz$"
+      "commitMessagePrefix": "deps(ci{{#if isVulnerabilityAlert}},security{{/if}}):"
     },
     {
       "matchDatasources": ["custom.unrar"],
       "extractVersion": "(?:^|/)unrarsrc-(?<version>\\d+\\.\\d+\\.\\d+)\\.tar\\.gz$"
     },
     {
-      "matchDatasources": ["custom.curl", "custom.unrar"],
+      "matchDatasources": ["custom.unrar"],
       // Download links do not provide release timestamps.
       "minimumReleaseAge": null
     },

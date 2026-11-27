@@ -1,60 +1,72 @@
 # syntax=docker/dockerfile:1
 
-# renovate: datasource=github-releases depName=c-ares/c-ares
+# renovate: datasource=custom.release-archive depName=c-ares/c-ares
 ARG CARES_VERSION=1.34.9
-# renovate: datasource=custom.curl depName=curl
+ARG CARES_SHA256=9364b70a12eb59a06830fb488d9357f90100dff0d98b23ea3593a183d43e6f2f
+# renovate: datasource=custom.release-archive depName=curl/curl
 ARG CURL_VERSION=8.23.0
+ARG CURL_SHA256=e3de77cfa6367083c776a26647fc9f633b538c06c3baa73d931a252ac8f72b49
 
 # renovate: datasource=github-tags depName=rakshasa/libtorrent
 ARG LIBTORRENT_VERSION=v0.16.28
+ARG LIBTORRENT_COMMIT=392030e0fddbe4e423d059d9322382cf44aaaaf6
 # renovate: datasource=github-tags depName=rakshasa/rtorrent
 ARG RTORRENT_VERSION=v0.16.28
+ARG RTORRENT_COMMIT=0c23d278a7838402d4cec9689bf71e051332be67
 
 # renovate: datasource=github-tags depName=pobrn/mktorrent
 ARG MKTORRENT_VERSION=v1.1
+ARG MKTORRENT_COMMIT=b20ef699b4ee5ded2f078ead776c7deac969e19a
 
 # renovate: datasource=github-tags depName=Novik/ruTorrent
 ARG RUTORRENT_VERSION=v5.3.25
+ARG RUTORRENT_COMMIT=91f966a01bc35a25598ce7f024855625113b31d7
 # renovate: datasource=github-tags depName=tomcdj71/dumptorrent
 ARG DUMPTORRENT_VERSION=v1.7.0
+ARG DUMPTORRENT_COMMIT=ddf988d3099637c93dc0247854ca711c0a2a0289
 # renovate: datasource=custom.unrar depName=unrar
 ARG UNRAR_VERSION=7.3.2
 
+# renovate: datasource=docker depName=alpine versioning=docker
 ARG ALPINE_VERSION=3.24
 
 FROM tianon/gosu:latest AS gosu
 
 FROM --platform=${BUILDPLATFORM} alpine:${ALPINE_VERSION} AS src
-RUN apk --update --no-cache add curl git tar tree sed xz
+RUN apk --update --no-cache add tar tree sed xz
 WORKDIR /src
 
 FROM src AS src-cares
 ARG CARES_VERSION
-RUN curl -sSL "https://github.com/c-ares/c-ares/releases/download/v${CARES_VERSION}/c-ares-${CARES_VERSION}.tar.gz" | tar xz --strip 1
+ARG CARES_SHA256
+ADD --checksum=sha256:${CARES_SHA256} "https://github.com/c-ares/c-ares/releases/download/v${CARES_VERSION}/c-ares-${CARES_VERSION}.tar.gz" /tmp/source.tar.gz
+RUN tar xzf /tmp/source.tar.gz --strip 1
 
 FROM src AS src-curl
 ARG CURL_VERSION
-RUN curl -sSL "https://curl.se/download/curl-${CURL_VERSION}.tar.gz" | tar xz --strip 1
+ARG CURL_SHA256
+ADD --checksum=sha256:${CURL_SHA256} "https://curl.se/download/curl-${CURL_VERSION}.tar.gz" /tmp/source.tar.gz
+RUN tar xzf /tmp/source.tar.gz --strip 1
 
 FROM src AS src-libtorrent
-RUN git init . && git remote add origin "https://github.com/rakshasa/libtorrent.git"
 ARG LIBTORRENT_VERSION
-RUN git fetch origin "${LIBTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+ARG LIBTORRENT_COMMIT
+ADD --checksum=${LIBTORRENT_COMMIT} "https://github.com/rakshasa/libtorrent.git#${LIBTORRENT_VERSION}" .
 
 FROM src AS src-rtorrent
-RUN git init . && git remote add origin "https://github.com/rakshasa/rtorrent.git"
 ARG RTORRENT_VERSION
-RUN git fetch origin "${RTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+ARG RTORRENT_COMMIT
+ADD --checksum=${RTORRENT_COMMIT} "https://github.com/rakshasa/rtorrent.git#${RTORRENT_VERSION}" .
 
 FROM src AS src-mktorrent
-RUN git init . && git remote add origin "https://github.com/pobrn/mktorrent.git"
 ARG MKTORRENT_VERSION
-RUN git fetch origin "${MKTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+ARG MKTORRENT_COMMIT
+ADD --checksum=${MKTORRENT_COMMIT} "https://github.com/pobrn/mktorrent.git#${MKTORRENT_VERSION}" .
 
 FROM src AS src-rutorrent
-RUN git init . && git remote add origin "https://github.com/Novik/ruTorrent.git"
 ARG RUTORRENT_VERSION
-RUN git fetch origin "${RUTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+ARG RUTORRENT_COMMIT
+ADD --checksum=${RUTORRENT_COMMIT} "https://github.com/Novik/ruTorrent.git#${RUTORRENT_VERSION}" .
 RUN rm -rf .git* conf/users plugins/geoip share tests
 
 FROM composer:2 AS update-geoip2-rutorrent
@@ -77,19 +89,20 @@ COPY geoip2-rutorrent /src
 COPY --from=vendor-geoip2-rutorrent /app/vendor /src/vendor
 
 FROM src AS src-mmdb
-RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
-  && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-Country.mmdb"
+ADD --chmod=0644 "https://raw.githubusercontent.com/crazy-max/geoip-updater/mmdb/GeoLite2-City.mmdb" ./GeoLite2-City.mmdb
+ADD --chmod=0644 "https://raw.githubusercontent.com/crazy-max/geoip-updater/mmdb/GeoLite2-Country.mmdb" ./GeoLite2-Country.mmdb
 
 FROM src AS src-dumptorrent
-RUN git init . && git remote add origin "https://github.com/tomcdj71/dumptorrent.git"
 ARG DUMPTORRENT_VERSION
-RUN git fetch origin "${DUMPTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+ARG DUMPTORRENT_COMMIT
+ADD --checksum=${DUMPTORRENT_COMMIT} "https://github.com/tomcdj71/dumptorrent.git#${DUMPTORRENT_VERSION}" .
 RUN sed -i '1i #include <sys/time.h>' src/scrapec.c
 RUN rm -rf .git*
 
 FROM src AS src-unrar
 ARG UNRAR_VERSION
-RUN curl -sSL "https://www.rarlab.com/rar/unrarsrc-${UNRAR_VERSION}.tar.gz" | tar xz --strip 1
+ADD "https://www.rarlab.com/rar/unrarsrc-${UNRAR_VERSION}.tar.gz" /tmp/source.tar.gz
+RUN tar xzf /tmp/source.tar.gz --strip 1
 
 FROM alpine:${ALPINE_VERSION} AS builder
 RUN apk --update --no-cache add \
